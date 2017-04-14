@@ -21,7 +21,7 @@ echo "#javadoc -d $modelFolder/docs/html -cp $repastPosition/repast.simphony.dat
 echo "#post process the graph.dot file with the following command" >> run_umlgraph
 echo "#dot -Tjpg -o tmp.jpg graph1.dot" >> run_umlgraph
 echo "#if no output file is produced try the following commend" >> run_umlgraph
-echo "#sed 's/<any>/any/g' graph.dot > graph1.dot" >> run_umlgraph
+echo "#sed -i 's/<any>/any/g' graph.dot" >> run_umlgraph
 
 echo "" >> run_umlgraph
 echo "#command to generate a graph file for a single class to be post processed with graphviz dot" >> run_umlgraph
