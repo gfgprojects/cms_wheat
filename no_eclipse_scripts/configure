@@ -13,8 +13,8 @@ echo "java -Duser.dir=$modelFolder -cp $repastPosition/repast.simphony.runtime_$
 
 outputfolder=$(sed -n '1p' pathsuml.txt)
 overviewfile=$(sed -n '2p' pathsuml.txt)
-docletpath=$(sed -n '2p' pathsuml.txt)
-packages=$(sed -n '2p' pathsuml.txt)
+docletpath=$(sed -n '3p' pathsuml.txt)
+packages=$(sed -n '4p' pathsuml.txt)
 
 echo "#command to generate doc for all classes. Replace the argument containing the underscore before uncommenting" > run_umlgraph
 echo "#javadoc -d $modelFolder/$outputfolder -cp $repastPosition/repast.simphony.dataLoader_$repastVersion/bin:$repastPosition/repast.simphony.core_$repastVersion/bin:$repastPosition/repast.simphony.essentials_$repastVersion/bin:$repastPosition/repast.simphony.data_$repastVersion/bin:$repastPosition/repast.simphony.gis_$repastVersion/bin:$repastPosition/repast.simphony.gis.visualization_$repastVersion/bin:$repastPosition/repast.simphony.data.ui_$repastVersion/bin:$librariesFolder/jts/lib/*:$librariesFolder/geotools-16.1/*:. -overview $overviewfile -sourcepath $modelFolder/src  -docletpath $docletpath -doclet org.umlgraph.doclet.UmlGraphDoc -collapsible -inferrel $packages" >> run_umlgraph
