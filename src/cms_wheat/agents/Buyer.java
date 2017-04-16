@@ -22,10 +22,11 @@ import repast.simphony.essentials.RepastEssentials;
  *
  */
 public class Buyer {
-	public String name,originOfConsumedResources;
-	public double latitude,longitude,demandShare,sizeInGuiDisplay;
+	public String name,iso3Code,originOfConsumedResources;
+	public double latitude,longitude,perCapitaConsumption,demandShare,sizeInGuiDisplay;
 	public boolean importAllowed=true;
 	public ArrayList<Double> demandPrices=new ArrayList<Double>();
+	public ArrayList<Integer> populationInputs=new ArrayList<Integer>();
 	public ArrayList<ElementOfSupplyOrDemandCurve> demandCurve,tmpDemandCurve;
 	public ArrayList<Contract> latestContractsList=new ArrayList<Contract>();
 	public ArrayList<Contract> latestContractsInPossibleMarketSessionsList=new ArrayList<Contract>();
@@ -52,11 +53,14 @@ public class Buyer {
 
 
 
-	public Buyer(String buyerName,double buyerLatitude,double buyerLongitude,double buyerDemandShare,ArrayList<Double> possiblePrices,int demandFunctionIntercept,int demandFunctionSlope){
+	public Buyer(String buyerName,String buyerIso3Code,double buyerLatitude,double buyerLongitude,double buyerPerCapitaConsumption,ArrayList<Integer> producerPopulationInputs,ArrayList<Double> possiblePrices){
 		name=buyerName;
+		iso3Code=buyerIso3Code;
 		latitude=buyerLatitude;
 		longitude=buyerLongitude;
-		demandShare=buyerDemandShare;
+		perCapitaConsumption=buyerPerCapitaConsumption;
+		populationInputs=producerPopulationInputs;
+		demandShare=perCapitaConsumption*populationInputs.get(0)/Cms_builder.globalProduction;
 		averageConsumption=(int)(demandShare*Cms_builder.globalProduction/Cms_builder.productionCycleLength);
 		minimumConsumption=(int)(Cms_builder.consumptionShareToSetMinimumConsumption*averageConsumption);
 		maximumConsumption=(int)(Cms_builder.consumptionShareToSetMaximumConsumption*averageConsumption);
@@ -66,10 +70,11 @@ public class Buyer {
 		stock=0;
 		domesticStock=0;
 		sizeInGuiDisplay=demandShare*100;
-		initialInterceptOfTheDemandFunction=demandFunctionIntercept;
-//		slopeOfTheDemandFunction=demandFunctionSlope;
+		initialInterceptOfTheDemandFunction=2*averageConsumption;
 		slopeOfTheDemandFunction=(int)(initialInterceptOfTheDemandFunction/possiblePrices.get(possiblePrices.size()-1));
-		if(Cms_builder.verboseFlag){System.out.println("Created buyer:    "+name+", latitude: "+latitude+", longitude: "+longitude+" minimum consumption "+minimumConsumption+" stock "+stock);}
+		if(Cms_builder.verboseFlag){System.out.println("Created buyer:    "+name+", latitude: "+latitude+", longitude: "+longitude+" minimum consumption "+minimumConsumption+" maximum consumption "+maximumConsumption+" stock "+stock);}
+		if(Cms_builder.verboseFlag){System.out.println("   population:    "+populationInputs);}
+
 		demandPrices=possiblePrices;
 	}
 

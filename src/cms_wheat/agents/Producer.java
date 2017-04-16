@@ -13,10 +13,11 @@ import java.util.ArrayList;
  *
  */
 public class Producer {
-	public String name,markets,varieties;
+	public String name,iso3Code,markets,varieties;
 	public double latitude,longitude,productionShare,sizeInGuiDisplay;
 	public boolean exportAllowed=true;
 	public ArrayList<Double> supplyPrices=new ArrayList<Double>();
+	public ArrayList<Integer> productionInputs=new ArrayList<Integer>();
 	public ArrayList<Double> marketSessionsPricesRecord=new ArrayList<Double>();
 	public ArrayList<ElementOfSupplyOrDemandCurve> supplyCurve=new ArrayList<ElementOfSupplyOrDemandCurve>();
 	public ArrayList<MarketSession> marketSessionsList=new ArrayList<MarketSession>();
@@ -26,21 +27,52 @@ public class Producer {
 	int initialProduction,targetProduction,stock,numberOfMarkets,totalMarketSessions,remainingMarketSessions,offerInThisSession,production;
 	double sumOfSellingPrices,averageSellingPrice;
 
-
-	public Producer(String producerName,double producerLatitude,double producerLongitude,double producerProductionShare,String producerMarkets,String producerVarieties,ArrayList<Double> possiblePrices){
+/**
+ *The Cms_builder calls the constructor giving as parameters the values found in a line of the producers.csv file located in the data folder.
+ *<br>
+ *The format of each line is the following:
+ *<br>
+ *name,ISO3code,latitude,longitude,productionShare,listOfMarkets,listOfProducedVarietyes,listOfPossiblePrices,timeOfProduction
+ *<br>
+ *the production share is the ratio between the producer production and the total production of the commodity.
+ *<br>
+ *When the producer sells in more than one market, the market names are separated by the | character in the listOfMarkets
+ *<br>
+ *When the producer makes more than one variety, the varieties names are separated by the | character in the listOfProducedVarieties. However, the present version of the model does not handle multiple products and the user should modify the code to achieve this result.
+ *<br>
+ *Note that the last element of the line is not used in this constructor. It is used by the setup method.
+ *<br>
+ *example:
+ *<br>
+ *China,39.9390731,120.1172706,0.05,market1|market 2,variety 1|variety 2,2 
+ *<br>
+ *This line gives the geographic coordinates of China and says that this country sells in two markets, makes two variety of the product and obtain the production in the second period (if periods corresponds to month, it realizes the production in February)
+ * @param producerName
+ * @param producerIso3Code
+ * @param producerLatitude
+ * @param producerLongitude
+ * @param producerMarkets
+ * @param producerVarieties
+ * @param producerProductionInputs
+ * @param possiblePrices
+ */
+	public Producer(String producerName,String producerIso3Code,double producerLatitude,double producerLongitude,String producerMarkets,String producerVarieties,ArrayList<Integer> producerProductionInputs,ArrayList<Double> possiblePrices){
 		name=producerName;
+		iso3Code=producerIso3Code;
 		latitude=producerLatitude;
 		longitude=producerLongitude;
-		productionShare=producerProductionShare;
-		sizeInGuiDisplay=productionShare*100;
 		markets=producerMarkets;
 		String[] partsTmpMarkets=markets.split("\\|");
 		numberOfMarkets=partsTmpMarkets.length;
 		varieties=producerVarieties;
-		if(Cms_builder.verboseFlag){System.out.println("Created producer: "+name+", latitude: "+latitude+", longitude: "+longitude);}
+		supplyPrices=possiblePrices;
+		productionInputs=producerProductionInputs;
+		productionShare=(double)productionInputs.get(0)/Cms_builder.globalProduction;
+		sizeInGuiDisplay=productionShare*100;
+		if(Cms_builder.verboseFlag){System.out.println("Created producer: "+name+", ISO3.code "+iso3Code+", latitude: "+latitude+", longitude: "+longitude);}
 		if(Cms_builder.verboseFlag){System.out.println("        sells in "+numberOfMarkets+" market(s): "+markets);}
 		if(Cms_builder.verboseFlag){System.out.println("        produces: "+varieties);}
-		supplyPrices=possiblePrices;
+		if(Cms_builder.verboseFlag){System.out.println("        prod. inputs: "+productionInputs);}
 	}
 
 	public void stepExportAllowedFlag(){

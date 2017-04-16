@@ -61,15 +61,7 @@ public class Cms_builder implements ContextBuilder<Object> {
 
 public Context<Object> build(Context<Object> context) {
 
-	GeographyParameters<Object> geoParams = new GeographyParameters<Object>();
-	GeographyFactory factory = GeographyFactoryFinder.createGeographyFactory(null);
-	Geography<Object> geography = factory.createGeography("Geography", context, geoParams);
-	GeometryFactory fac = new GeometryFactory();
-
-	distanceCalculator=new GeodeticCalculator(geography.getCRS());
-
-
-	Parameters params = RunEnvironment.getInstance().getParameters();
+Parameters params = RunEnvironment.getInstance().getParameters();
 	verboseFlag=(boolean)params.getValue("verboseFlag");
 	autarkyAtTheBeginning=(boolean)params.getValue("autarkyAtTheBeginning");
 	productionCycleLength=(int)params.getValue("productionCycleLength");
@@ -102,6 +94,15 @@ public Context<Object> build(Context<Object> context) {
 		System.out.println("");
 	}
 
+	GeographyParameters<Object> geoParams = new GeographyParameters<Object>();
+	GeographyFactory factory = GeographyFactoryFinder.createGeographyFactory(null);
+	Geography<Object> geography = factory.createGeography("Geography", context, geoParams);
+	GeometryFactory fac = new GeometryFactory();
+
+	distanceCalculator=new GeodeticCalculator(geography.getCRS());
+
+	
+	
 	if(verboseFlag){
 		System.out.println("");
 	}
@@ -119,7 +120,11 @@ public Context<Object> build(Context<Object> context) {
 	}
 	for(int i=1;i<lines.size()-1;i++){
 		String[] parts = ((String)lines.get(i)).split(",");
-		aProducer=new Producer(parts[0],new Double(parts[1]),new Double(parts[2]),new Double(parts[3]),parts[4],parts[5],bidAndAskPrices);
+		ArrayList<Integer> tmpProductionInputs=new ArrayList<Integer>();
+		for(int j=7;j<parts.length;j++){
+			tmpProductionInputs.add(new Integer(parts[j]));
+		}
+		aProducer=new Producer(parts[0],parts[1],new Double(parts[2]),new Double(parts[3]),parts[4],parts[5],tmpProductionInputs,bidAndAskPrices);
 		aProducer.setup((new Integer(parts[6])).intValue());
 		tmpMarkets=tmpMarkets+"|"+parts[4];
 		tmpVarieties=tmpVarieties+"|"+parts[5];
@@ -131,6 +136,7 @@ public Context<Object> build(Context<Object> context) {
 	if(verboseFlag){
 		System.out.println("");
 	}
+	
 	//Buyers creation
 	try{
 		lines=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/buyers.csv"), Charset.forName("UTF-8"));
@@ -139,7 +145,12 @@ public Context<Object> build(Context<Object> context) {
 	}
 	for(int i=1;i<lines.size()-1;i++){
 		String[] parts = ((String)lines.get(i)).split(",");
-		aBuyer=new Buyer(parts[0],new Double(parts[1]),new Double(parts[2]),new Double(parts[3]),bidAndAskPrices,new Integer(parts[4]),new Integer(parts[5]));
+		ArrayList<Integer> tmpPopulationInputs=new ArrayList<Integer>();
+		for(int j=5;j<parts.length;j++){
+			int tmpPop = (int)((new Double(parts[j])).doubleValue()*1000);
+			tmpPopulationInputs.add(new Integer(tmpPop));
+		}
+		aBuyer=new Buyer(parts[0],parts[1],new Double(parts[2]),new Double(parts[3]),new Double(parts[4]),tmpPopulationInputs,bidAndAskPrices);
 		context.add(aBuyer);
 		coord = new Coordinate(aBuyer.getLongitude(),aBuyer.getLatitude());
 		geom = fac.createPoint(coord);
@@ -148,6 +159,8 @@ public Context<Object> build(Context<Object> context) {
 	if(verboseFlag){
 		System.out.println("");
 	}
+
+	
 	//Markets creation
 
 
@@ -257,6 +270,7 @@ public Context<Object> build(Context<Object> context) {
 			}
 		}
 	}
+	
 
 	if(verboseFlag){
 		System.out.println();
