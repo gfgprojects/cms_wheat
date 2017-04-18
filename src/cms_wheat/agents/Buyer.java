@@ -52,7 +52,29 @@ public class Buyer {
 	int interceptOfTheDemandFunction,initialInterceptOfTheDemandFunction,tmpIntercept,slopeOfTheDemandFunction,demandToBeMoved;
 
 
-
+/**
+ *The Cms_builder calls the constructor giving as parameters the values found in a line of the buyers.csv file located in the data folder.
+ *<br>
+ *The format of each line is the following:
+ *<br>
+ *name,ISO3code,latitude,longitude,perCapitaConsumption,populationInputsInThousands
+ *<br>
+ *make sure the perCapitaConsumption unit measure is the same used for production in the producers.csv file. in this way, the aggregate use of the resource that can be faced with the aggregate production can be obtained as follows: 
+ *<br>perCapitaConsumption*populationInputsInThousands*1000
+ *<br>
+ *example:
+ *<br>
+ *China_mainland,CHN,36.6094323800447,103.865365256658,0.0863886342124878,1188450.231,1202982.955,...
+ *<br>
+ *This line gives the geographic coordinates of China and says that the per capita consumption is 0.0863886342124878, the population in the first considered period is 1188450.231 thousands, the population in the second considered period is 1202982.955 thousands 
+ * @param buyerName string
+ * @param buyerIso3Code string
+ * @param buyerLatitude double
+ * @param buyerLongitude double
+ * @param buyerPerCapitaConsumption double
+ * @param producerPopulationInputs array list of double
+ * @param possiblePrices array list of double
+ */
 	public Buyer(String buyerName,String buyerIso3Code,double buyerLatitude,double buyerLongitude,double buyerPerCapitaConsumption,ArrayList<Integer> producerPopulationInputs,ArrayList<Double> possiblePrices){
 		name=buyerName;
 		iso3Code=buyerIso3Code;

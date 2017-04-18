@@ -7,6 +7,7 @@ import cms_wheat.utils.ElementOfSupplyOrDemandCurve;
 import cms_wheat.agents.MarketSession;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 /**
  * The Producer class hold all the relevant variable for a producer; It has methods for performing the producer's actions. The realization of production and the decision on the quantity offered in each market session are of particular importance.  
  * @author Gianfranco Giulioni
@@ -18,6 +19,7 @@ public class Producer {
 	public boolean exportAllowed=true;
 	public ArrayList<Double> supplyPrices=new ArrayList<Double>();
 	public ArrayList<Integer> productionInputs=new ArrayList<Integer>();
+	Iterator<Integer> productionInputsIterator;
 	public ArrayList<Double> marketSessionsPricesRecord=new ArrayList<Double>();
 	public ArrayList<ElementOfSupplyOrDemandCurve> supplyCurve=new ArrayList<ElementOfSupplyOrDemandCurve>();
 	public ArrayList<MarketSession> marketSessionsList=new ArrayList<MarketSession>();
@@ -32,29 +34,27 @@ public class Producer {
  *<br>
  *The format of each line is the following:
  *<br>
- *name,ISO3code,latitude,longitude,productionShare,listOfMarkets,listOfProducedVarietyes,listOfPossiblePrices,timeOfProduction
- *<br>
- *the production share is the ratio between the producer production and the total production of the commodity.
+ *name,ISO3code,latitude,longitude,listOfMarkets,listOfProducedVarietyes,timeOfProduction,productionInputs
  *<br>
  *When the producer sells in more than one market, the market names are separated by the | character in the listOfMarkets
  *<br>
  *When the producer makes more than one variety, the varieties names are separated by the | character in the listOfProducedVarieties. However, the present version of the model does not handle multiple products and the user should modify the code to achieve this result.
  *<br>
- *Note that the last element of the line is not used in this constructor. It is used by the setup method.
+ *Note that the timeOfProduction is not used by this constructor, but it is used by the setup method.
  *<br>
  *example:
  *<br>
- *China,39.9390731,120.1172706,0.05,market1|market 2,variety 1|variety 2,2 
+ *China_mainland,CHN,36.6094323800447,103.865365256658,Shanghai|Mumbay,wheat,06,101587008,106390000,...
  *<br>
- *This line gives the geographic coordinates of China and says that this country sells in two markets, makes two variety of the product and obtain the production in the second period (if periods corresponds to month, it realizes the production in February)
- * @param producerName
- * @param producerIso3Code
- * @param producerLatitude
- * @param producerLongitude
- * @param producerMarkets
- * @param producerVarieties
- * @param producerProductionInputs
- * @param possiblePrices
+ *This line gives the geographic coordinates of China and says that this country sells in two markets, we consider the generic item wheat whose production is obtained in the sixth period (if periods corresponds to month, it realizes the production in June), the produced quantity in the fist considered period is 101587008, in the second period is 106390000 and so on.
+ * @param producerName string
+ * @param producerIso3Code string
+ * @param producerLatitude double
+ * @param producerLongitude double
+ * @param producerMarkets string
+ * @param producerVarieties string
+ * @param producerProductionInputs arrayList of integers
+ * @param possiblePrices arrayList of double
  */
 	public Producer(String producerName,String producerIso3Code,double producerLatitude,double producerLongitude,String producerMarkets,String producerVarieties,ArrayList<Integer> producerProductionInputs,ArrayList<Double> possiblePrices){
 		name=producerName;
@@ -67,7 +67,11 @@ public class Producer {
 		varieties=producerVarieties;
 		supplyPrices=possiblePrices;
 		productionInputs=producerProductionInputs;
-		productionShare=(double)productionInputs.get(0)/Cms_builder.globalProduction;
+		productionInputsIterator=productionInputs.iterator();
+		production=productionInputsIterator.next();
+		productionInputsIterator.remove();
+//		productionShare=(double)productionInputs.get(0)/Cms_builder.globalProduction;
+		productionShare=(double)production/Cms_builder.globalProduction;
 		sizeInGuiDisplay=productionShare*100;
 		if(Cms_builder.verboseFlag){System.out.println("Created producer: "+name+", ISO3.code "+iso3Code+", latitude: "+latitude+", longitude: "+longitude);}
 		if(Cms_builder.verboseFlag){System.out.println("        sells in "+numberOfMarkets+" market(s): "+markets);}
@@ -113,15 +117,17 @@ public class Producer {
 
 	public void makeProduction(){
 			if(Cms_builder.verboseFlag){System.out.println(name+" state before production stock: "+stock+" remaining sessions: "+remainingMarketSessions);}
-production=(new Double(targetProduction*(1+(RandomHelper.nextDouble()*2-1.0)*Cms_builder.productionRateOfChangeControl))).intValue();
-/*
-			if(RepastEssentials.GetTickCount()>119 && RepastEssentials.GetTickCount()<123){
-				production=(new Double(targetProduction*(1-Cms_builder.productionRateOfChangeControl))).intValue();				
+			production=(new Double(targetProduction*(1+(RandomHelper.nextDouble()*2-1.0)*Cms_builder.productionRateOfChangeControl))).intValue();
+			
+			if(RepastEssentials.GetTickCount()>Cms_builder.startUsingInputsFromTimeTick && productionInputs.size()>0){
+				if(Cms_builder.verboseFlag){System.out.println(name+" production taken from input record");}
+				production=productionInputsIterator.next();
+				targetProduction=production;
+				productionInputsIterator.remove();
+//				System.out.println("time "+RepastEssentials.GetTickCount()+" country "+name+" production: "+production);
 			}
-			if(RepastEssentials.GetTickCount()>131 && RepastEssentials.GetTickCount()<135){
-				production=targetProduction;				
-			}
-*/
+			
+			
 			stock+=production;
 			remainingMarketSessions=totalMarketSessions;
 		if(Cms_builder.verboseFlag){System.out.println(name+" production realized: "+production);}
