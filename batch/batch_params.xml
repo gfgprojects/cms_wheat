@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <sweep runs="1">
-<parameter name="verboseFlag" type="constant" constant_type="boolean" value="false"></parameter>
+<parameter name="verboseFlag" type="constant" constant_type="boolean" value="true"></parameter>
 <parameter name="autarkyAtTheBeginning" type="constant" constant_type="boolean" value="true"></parameter>
 <parameter name="productionCycleLength" type="constant" constant_type="int" value="12"></parameter>
 <parameter name="exportPolicyDecisionInterval" type="constant" constant_type="int" value="12"></parameter>
@@ -11,15 +11,16 @@
 <parameter name="weightOfDistanceInInitializingIntercept" type="constant" constant_type="double" value="0.05"></parameter>
 <parameter name="consumptionShareToSetMinimumConsumption" type="constant" constant_type="double" value="0.7"></parameter>
 <parameter name="consumptionShareToSetMaximumConsumption" type="constant" constant_type="double" value="1.3"></parameter>
-<parameter name="percentageOfPriceMarkDownInNewlyAccessibleMarkets" type="constant" constant_type="double" value="0.1"></parameter>
 <parameter name="productionRateOfChangeControl" type="constant" constant_type="double" value="0.0"></parameter>
 <parameter name="probabilityToAllowExport" type="constant" constant_type="double" value="1.0"></parameter>
 <parameter name="probabilityToAllowImport" type="constant" constant_type="double" value="1.0"></parameter>
 <parameter name="toleranceInMovingDemand" type="constant" constant_type="double" value="0.0"></parameter>
 <parameter name="shareOfDemandToBeMoved" type="constant" constant_type="double" value="0.1"></parameter>
+<parameter name="percentageOfPriceMarkDownInNewlyAccessibleMarkets" type="constant" constant_type="double" value="0.1"></parameter>
 <parameter name="percentageChangeInTargetProduction" type="constant" constant_type="double" value="0.0"></parameter>
 <parameter name="priceThresholdToIncreaseTargetProduction" type="constant" constant_type="double" value="8.0"></parameter>
 <parameter name="priceThresholdToDecreaseTargetProduction" type="constant" constant_type="double" value="2.0"></parameter>
-<parameter name="batchStoppingTime" type="constant" constant_type="int" value="30"></parameter>
+<parameter name="startUsingInputsFromTimeTick" type="constant" constant_type="int" value="50"></parameter>
+<parameter name="batchStoppingTime" type="constant" constant_type="int" value="0"></parameter>
 </sweep>
 
