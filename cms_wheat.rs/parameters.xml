@@ -10,21 +10,30 @@
 						defaultValue="0.1" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
+									
 		/>
 				<parameter name="consumptionShareToSetMinimumConsumption" displayName="consumptionShareToSetMinimumConsumption" type="double" 
 						defaultValue="0.2" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
-		/>
-				<parameter name="consumptionShareToSetMaximumConsumption" displayName="consumptionShareToSetMaximumConsumption" type="double" 
-						defaultValue="1.8" 
-						isReadOnly="false" 
-						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
+									
 		/>
 				<parameter name="minimumImportQuantity" displayName="minimumImportQuantity" type="int" 
 						defaultValue="10" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+									
+		/>
+				<parameter name="priceThresholdToDecreaseTargetProduction" displayName="priceThresholdToDecreaseTargetProduction" type="double" 
+						defaultValue="2.0" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
+									
+		/>
+				<parameter name="consumptionShareToSetMaximumConsumption" displayName="consumptionShareToSetMaximumConsumption" type="double" 
+						defaultValue="1.8" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									
 		/>
 				<parameter name="importPolicyDecisionInterval" displayName="importPolicyDecisionInterval" type="int" 
@@ -49,18 +58,18 @@
 						defaultValue="12" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
-		/>
-				<parameter name="producersPricesMemoryLength" displayName="producersPricesMemoryLength" type="int" 
-						defaultValue="12" 
-						isReadOnly="false" 
-						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
-
 				<parameter name="batchStoppingTime" displayName="batchStoppingTime" type="int" 
 						defaultValue="2" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+									
+		/>
+				<parameter name="priceThresholdToIncreaseTargetProduction" displayName="priceThresholdToIncreaseTargetProduction" type="double" 
+						defaultValue="8.0" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									
 		/>
 				<parameter name="randomSeed" displayName="Default Random Seed" type="int" 
@@ -70,15 +79,27 @@
 									
 		/>
 				<parameter name="globalProduction" displayName="global production" type="int" 
-						defaultValue="500000" 
+						defaultValue="500000000" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+									
+		/>
+				<parameter name="percentageChangeInTargetProduction" displayName="percentageChangeInTargetProduction" type="double" 
+						defaultValue="0.0" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									
 		/>
 				<parameter name="probabilityToAllowImport" displayName="probabilityToAllowImport" type="double" 
 						defaultValue="1.0" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
+									
+		/>
+				<parameter name="startUsingInputsFromTimeTick" displayName="startUsingInputsFromTimeTick" type="int" 
+						defaultValue="50" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
 				<parameter name="weightOfDistanceInInitializingIntercept" displayName="weightOfDistanceInInitializingIntercept" type="double" 
@@ -99,24 +120,6 @@
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									
 		/>
-				<parameter name="percentageChangeInTargetProduction" displayName="percentageChangeInTargetProduction" type="double" 
-						defaultValue="0.0" 
-						isReadOnly="false" 
-						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
-									
-		/>
-				<parameter name="priceThresholdToIncreaseTargetProduction" displayName="priceThresholdToIncreaseTargetProduction" type="double" 
-						defaultValue="8.0" 
-						isReadOnly="false" 
-						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
-									
-		/>
-				<parameter name="priceThresholdToDecreaseTargetProduction" displayName="priceThresholdToDecreaseTargetProduction" type="double" 
-						defaultValue="2.0" 
-						isReadOnly="false" 
-						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
-									
-		/>
 				<parameter name="verboseFlag" displayName="verbose flag" type="boolean" 
 						defaultValue="false" 
 						isReadOnly="false" 
@@ -129,7 +132,12 @@
 						converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter"
 									
 		/>
-
+				<parameter name="producersPricesMemoryLength" displayName="producersPricesMemoryLength" type="int" 
+						defaultValue="12" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+									
+		/>
 		</parameters>
 
 
