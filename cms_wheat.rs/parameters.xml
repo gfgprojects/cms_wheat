@@ -7,7 +7,7 @@
 									
 		/>
 				<parameter name="productionRateOfChangeControl" displayName="productionRateOfChangeControl" type="double" 
-						defaultValue="0.1" 
+						defaultValue="0.0" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									
@@ -97,7 +97,7 @@
 									
 		/>
 				<parameter name="startUsingInputsFromTimeTick" displayName="startUsingInputsFromTimeTick" type="int" 
-						defaultValue="50" 
+						defaultValue="200" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
@@ -120,6 +120,12 @@
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									
 		/>
+				<parameter name="transportCostsTuner" displayName="transportCostsTuner" type="double" 
+						defaultValue="1.0" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
+									
+		/>
 				<parameter name="verboseFlag" displayName="verbose flag" type="boolean" 
 						defaultValue="false" 
 						isReadOnly="false" 
@@ -127,7 +133,7 @@
 									
 		/>
 				<parameter name="autarkyAtTheBeginning" displayName="autarkyAtTheBeginning" type="boolean" 
-						defaultValue="true" 
+						defaultValue="false" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter"
 									
