@@ -55,9 +55,8 @@ public class Cms_builder implements ContextBuilder<Object> {
 
 	
 	int batchStoppingTime=2;
-	public static int productionCycleLength,exportPolicyDecisionInterval,importPolicyDecisionInterval,globalProduction,minimumImportQuantity,producersPricesMemoryLength;
-	public static double consumptionShareToSetMinimumConsumption,consumptionShareToSetMaximumConsumption,productionRateOfChangeControl,probabilityToAllowExport,probabilityToAllowImport,toleranceInMovingDemand,shareOfDemandToBeMoved,percentageOfPriceMarkDownInNewlyAccessibleMarkets,weightOfDistanceInInitializingIntercept,percentageChangeInTargetProduction,priceThresholdToIncreaseTargetProduction,priceThresholdToDecreaseTargetProduction;
-
+	public static int productionCycleLength,exportPolicyDecisionInterval,importPolicyDecisionInterval,globalProduction,minimumImportQuantity,producersPricesMemoryLength,startUsingInputsFromTimeTick;
+	public static double consumptionShareToSetMinimumConsumption,consumptionShareToSetMaximumConsumption,productionRateOfChangeControl,probabilityToAllowExport,probabilityToAllowImport,toleranceInMovingDemand,shareOfDemandToBeMoved,percentageOfPriceMarkDownInNewlyAccessibleMarkets,weightOfDistanceInInitializingIntercept,percentageChangeInTargetProduction,priceThresholdToIncreaseTargetProduction,priceThresholdToDecreaseTargetProduction,transportCostsTuner;
 
 public Context<Object> build(Context<Object> context) {
 
@@ -82,6 +81,8 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 	percentageChangeInTargetProduction=(double)params.getValue("percentageChangeInTargetProduction");
 	priceThresholdToIncreaseTargetProduction=(double)params.getValue("priceThresholdToIncreaseTargetProduction");
 	priceThresholdToDecreaseTargetProduction=(double)params.getValue("priceThresholdToDecreaseTargetProduction");
+	transportCostsTuner=(double)params.getValue("transportCostsTuner");
+	startUsingInputsFromTimeTick=(int)params.getValue("startUsingInputsFromTimeTick");
 	batchStoppingTime=(int)params.getValue("batchStoppingTime");
 
 
@@ -150,7 +151,19 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 			int tmpPop = (int)((new Double(parts[j])).doubleValue()*1000);
 			tmpPopulationInputs.add(new Integer(tmpPop));
 		}
-		aBuyer=new Buyer(parts[0],parts[1],new Double(parts[2]),new Double(parts[3]),new Double(parts[4]),tmpPopulationInputs,bidAndAskPrices);
+
+		ArrayList<Integer> tmpPopulationInputsAdjustedForPeriodicity=new ArrayList<Integer>();
+		for(int j=0;j<tmpPopulationInputs.size()-1;j++){
+			tmpPopulationInputsAdjustedForPeriodicity.add(tmpPopulationInputs.get(j));
+			double popChange=(double)(tmpPopulationInputs.get(j+1)-tmpPopulationInputs.get(j))/productionCycleLength;
+			for(int z=1;z<productionCycleLength;z++){
+				tmpPopulationInputsAdjustedForPeriodicity.add(tmpPopulationInputs.get(j)+(int)(z*popChange));				
+			}
+		}
+		tmpPopulationInputsAdjustedForPeriodicity.add(tmpPopulationInputs.get(tmpPopulationInputs.size()-1));
+		
+
+		aBuyer=new Buyer(parts[0],parts[1],new Double(parts[2]),new Double(parts[3]),new Double(parts[4]),tmpPopulationInputsAdjustedForPeriodicity,bidAndAskPrices);
 		context.add(aBuyer);
 		coord = new Coordinate(aBuyer.getLongitude(),aBuyer.getLatitude());
 		geom = fac.createPoint(coord);

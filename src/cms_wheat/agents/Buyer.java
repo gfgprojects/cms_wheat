@@ -10,6 +10,7 @@ import cms_wheat.utils.DemandFunctionParameters;
 import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.Collections;
+import java.util.Iterator;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import repast.simphony.random.RandomHelper;
@@ -27,6 +28,7 @@ public class Buyer {
 	public boolean importAllowed=true;
 	public ArrayList<Double> demandPrices=new ArrayList<Double>();
 	public ArrayList<Integer> populationInputs=new ArrayList<Integer>();
+	Iterator<Integer> populationInputsIterator;
 	public ArrayList<ElementOfSupplyOrDemandCurve> demandCurve,tmpDemandCurve;
 	public ArrayList<Contract> latestContractsList=new ArrayList<Contract>();
 	public ArrayList<Contract> latestContractsInPossibleMarketSessionsList=new ArrayList<Contract>();
@@ -44,7 +46,7 @@ public class Buyer {
 	public double quantityBoughtInLatestMarketSession;
 	public double pricePayedInLatestMarketSession;
 	public String varietyBoughtInLatestMarketSession,latestMarket;
-	public int averageConsumption,minimumConsumption,maximumConsumption,realizedConsumption,domesticConsumption,gapToTarget,gapToChargeToEachPossibleMarketSession,stock,domesticStock,demandToBeReallocated;
+	public int averageConsumption,minimumConsumption,maximumConsumption,realizedConsumption,domesticConsumption,gapToTarget,gapToChargeToEachPossibleMarketSession,stock,domesticStock,demandToBeReallocated,population;
 	Producer aProducer;
 	boolean latestPeriodVisitedMarketSessionNotFound,reallocateDemand,parametersHoldeNotFound;
 	Contract aContract,aContract1;
@@ -82,7 +84,10 @@ public class Buyer {
 		longitude=buyerLongitude;
 		perCapitaConsumption=buyerPerCapitaConsumption;
 		populationInputs=producerPopulationInputs;
-		demandShare=perCapitaConsumption*populationInputs.get(0)/Cms_builder.globalProduction;
+		populationInputsIterator=populationInputs.iterator();
+		population=populationInputsIterator.next();
+		populationInputsIterator.remove();
+		demandShare=perCapitaConsumption*population/Cms_builder.globalProduction;
 		averageConsumption=(int)(demandShare*Cms_builder.globalProduction/Cms_builder.productionCycleLength);
 		minimumConsumption=(int)(Cms_builder.consumptionShareToSetMinimumConsumption*averageConsumption);
 		maximumConsumption=(int)(Cms_builder.consumptionShareToSetMaximumConsumption*averageConsumption);
@@ -92,8 +97,10 @@ public class Buyer {
 		stock=0;
 		domesticStock=0;
 		sizeInGuiDisplay=demandShare*100;
-		initialInterceptOfTheDemandFunction=2*averageConsumption;
-		slopeOfTheDemandFunction=(int)(initialInterceptOfTheDemandFunction/possiblePrices.get(possiblePrices.size()-1));
+		initialInterceptOfTheDemandFunction=(int)((0.25)*averageConsumption);
+//		slopeOfTheDemandFunction=(int)(3*initialInterceptOfTheDemandFunction/possiblePrices.get(possiblePrices.size()-1));
+//		slopeOfTheDemandFunction=(int)(1*averageConsumption/possiblePrices.get(possiblePrices.size()-1));
+		slopeOfTheDemandFunction=(int)(0.1*averageConsumption/5);
 		if(Cms_builder.verboseFlag){System.out.println("Created buyer:    "+name+", latitude: "+latitude+", longitude: "+longitude+" minimum consumption "+minimumConsumption+" maximum consumption "+maximumConsumption+" stock "+stock);}
 		if(Cms_builder.verboseFlag){System.out.println("   population:    "+populationInputs);}
 
@@ -198,7 +205,7 @@ public class Buyer {
 						Cms_builder.distanceCalculator.setStartingGeographicPoint(longitude, latitude);
 						Cms_builder.distanceCalculator.setDestinationGeographicPoint(aProducer.getLongitude(),aProducer.getLatitude());
 						distanceFromSellerInKm=(int) Math.round(Cms_builder.distanceCalculator.getOrthodromicDistance()/1000);
-						transportCosts= ((new BigDecimal(distanceFromSellerInKm/100.0)).divide(new BigDecimal(100.0)).setScale(2,RoundingMode.HALF_EVEN)).doubleValue();
+						transportCosts=Cms_builder.transportCostsTuner*((new BigDecimal(distanceFromSellerInKm/100.0)).divide(new BigDecimal(100.0)).setScale(2,RoundingMode.HALF_EVEN)).doubleValue();
 						latestContractsInPossibleMarketSessionsList.add(new Contract(aMarketSession.getMarketName(),aMarketSession.getProducerName(),name,aMarketSession.getMarketPrice(),transportCosts,0));
 					}
 					Collections.sort(latestContractsInPossibleMarketSessionsList,new ContractComparator());
@@ -343,7 +350,7 @@ public class Buyer {
 
 		if(Cms_builder.verboseFlag){System.out.println("           "+name+" distance From "+theProducer.getName()+" "+distanceFromSellerInKm+" kilometers");}
 
-		transportCosts= ((new BigDecimal(distanceFromSellerInKm/100.0)).divide(new BigDecimal(100.0)).setScale(2,RoundingMode.HALF_EVEN)).doubleValue();
+		transportCosts=Cms_builder.transportCostsTuner*((new BigDecimal(distanceFromSellerInKm/100.0)).divide(new BigDecimal(100.0)).setScale(2,RoundingMode.HALF_EVEN)).doubleValue();
 		if(Cms_builder.verboseFlag){System.out.println("           "+name+" transport cost "+transportCosts);}
 
 		parametersHoldeNotFound=true;
@@ -473,7 +480,10 @@ public class Buyer {
 	public void accountConsumption(){
 		if(Cms_builder.verboseFlag){System.out.println("           "+name+" stock before: "+stock+" minimum Consumption: "+minimumConsumption);}
 		gapToTarget=0;
-		if(stock<minimumConsumption){
+//		gapToTarget=averageConsumption-stock;		
+
+//		if(stock<minimumConsumption){
+		if(stock<averageConsumption){
 			gapToTarget=averageConsumption-stock;
 		}
 		if(stock>maximumConsumption){
@@ -481,8 +491,10 @@ public class Buyer {
 		}
 
 		if(gapToTarget!=0){
-			System.out.println(name+" stock "+stock+" minimumConsumption "+minimumConsumption+" maximumConsumption "+maximumConsumption+" gap to Target "+gapToTarget);
-			if(Cms_builder.verboseFlag){System.out.println(name+" stock "+stock+" minimumConsumption "+minimumConsumption+" maximumConsumption "+maximumConsumption+" gap to Target "+gapToTarget);}
+			System.out.println(name+" stock "+stock+" averageConsumption "+averageConsumption+" minimumConsumption "+minimumConsumption+" maximumConsumption "+maximumConsumption+" gap to Target "+gapToTarget);
+			System.out.println("   "+name+" population "+population+" perCapitaConsumption "+perCapitaConsumption+" periodicConsumptionTarget "+averageConsumption);
+			if(Cms_builder.verboseFlag){System.out.println(name+" stock "+stock+" averageConsumption "+averageConsumption+" minimumConsumption "+minimumConsumption+" maximumConsumption "+maximumConsumption+" gap to Target "+gapToTarget);}
+			if(Cms_builder.verboseFlag){System.out.println("   "+name+" population "+population+" perCapitaConsumption "+perCapitaConsumption+" periodicConsumptionTarget "+averageConsumption);}
 		}
 		realizedConsumption=stock;
 		domesticConsumption=domesticStock;
@@ -491,18 +503,17 @@ public class Buyer {
 //		if(gapToTarget>0){System.out.println("           time "+RepastEssentials.GetTickCount()+" "+name+" consumption: "+realizedConsumption+" minC "+minimumConsumption);}
 
 		if(Cms_builder.verboseFlag){System.out.println("           "+name+" stock after: "+stock+" minC - C "+gapToTarget);}
-/*
-		if(desiredConsumption<=stock){
-			realizedConsumption=desiredConsumption;	       
-			stock+=-realizedConsumption;
-			if(Cms_builder.verboseFlag){System.out.println("           "+name+" stock after: "+stock+" target: "+stockTargetLevel+" gap to target "+gapToTarget);}
+
+		if(RepastEssentials.GetTickCount()>Cms_builder.startUsingInputsFromTimeTick && populationInputs.size()>0){
+			if(Cms_builder.verboseFlag){System.out.println(name+" population taken from input record");}
+			population=populationInputsIterator.next();
+			populationInputsIterator.remove();
+			averageConsumption=(int)(1.02*perCapitaConsumption*population/Cms_builder.productionCycleLength);
+			minimumConsumption=(int)(Cms_builder.consumptionShareToSetMinimumConsumption*averageConsumption);
+			maximumConsumption=(int)(Cms_builder.consumptionShareToSetMaximumConsumption*averageConsumption);
+//			System.out.println("time "+RepastEssentials.GetTickCount()+" country "+name+" reference consumption: "+averageConsumption);
 		}
-		else{
-			realizedConsumption=stock;
-			stock=0;
-			if(Cms_builder.verboseFlag){System.out.println("           "+name+" stock after: "+stock+" target: "+stockTargetLevel+" gap to target "+gapToTarget);}
-		}	
-*/
+
 	}
 	
 	public void setMustImportFlag(boolean buyerMustImport){
@@ -520,6 +531,9 @@ public class Buyer {
 	}
 	public String getName(){
 		return name;
+	}
+	public String getIso3Code(){
+		return iso3Code;
 	}
 	public double getLatitude(){
 		return latitude;
@@ -572,7 +586,8 @@ public class Buyer {
 	public int getMaximumConsumption(){
 		return maximumConsumption;
 	}
-	
-
+	public int getAverageConsumption(){
+		return averageConsumption;
+	}	
 
 }
