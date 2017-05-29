@@ -97,10 +97,10 @@ public class Buyer {
 		stock=0;
 		domesticStock=0;
 		sizeInGuiDisplay=demandShare*100;
-		initialInterceptOfTheDemandFunction=(int)((0.25)*averageConsumption);
+		initialInterceptOfTheDemandFunction=(int)((Cms_builder.demandFunctionInterceptTuner)*averageConsumption);
 //		slopeOfTheDemandFunction=(int)(3*initialInterceptOfTheDemandFunction/possiblePrices.get(possiblePrices.size()-1));
 //		slopeOfTheDemandFunction=(int)(1*averageConsumption/possiblePrices.get(possiblePrices.size()-1));
-		slopeOfTheDemandFunction=(int)(0.1*averageConsumption/5);
+		slopeOfTheDemandFunction=(int)(Cms_builder.demandFunctionSlopeTuner*averageConsumption/5);
 		if(Cms_builder.verboseFlag){System.out.println("Created buyer:    "+name+", latitude: "+latitude+", longitude: "+longitude+" minimum consumption "+minimumConsumption+" maximum consumption "+maximumConsumption+" stock "+stock);}
 		if(Cms_builder.verboseFlag){System.out.println("   population:    "+populationInputs);}
 
@@ -482,8 +482,8 @@ public class Buyer {
 		gapToTarget=0;
 //		gapToTarget=averageConsumption-stock;		
 
-//		if(stock<minimumConsumption){
-		if(stock<averageConsumption){
+		if(stock<minimumConsumption){
+//		if(stock<averageConsumption){
 			gapToTarget=averageConsumption-stock;
 		}
 		if(stock>maximumConsumption){
@@ -508,10 +508,9 @@ public class Buyer {
 			if(Cms_builder.verboseFlag){System.out.println(name+" population taken from input record");}
 			population=populationInputsIterator.next();
 			populationInputsIterator.remove();
-			averageConsumption=(int)(1.02*perCapitaConsumption*population/Cms_builder.productionCycleLength);
+			averageConsumption=(int)(1.0*perCapitaConsumption*population/Cms_builder.productionCycleLength);
 			minimumConsumption=(int)(Cms_builder.consumptionShareToSetMinimumConsumption*averageConsumption);
 			maximumConsumption=(int)(Cms_builder.consumptionShareToSetMaximumConsumption*averageConsumption);
-//			System.out.println("time "+RepastEssentials.GetTickCount()+" country "+name+" reference consumption: "+averageConsumption);
 		}
 
 	}
