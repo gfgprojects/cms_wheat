@@ -9,8 +9,8 @@
 <parameter name="producersPricesMemoryLength" type="constant" constant_type="int" value="12"></parameter>
 <parameter name="minimumImportQuantity" type="constant" constant_type="int" value="10"></parameter>
 <parameter name="weightOfDistanceInInitializingIntercept" type="constant" constant_type="double" value="0.05"></parameter>
-<parameter name="consumptionShareToSetMinimumConsumption" type="constant" constant_type="double" value="0.2"></parameter>
-<parameter name="consumptionShareToSetMaximumConsumption" type="constant" constant_type="double" value="1.8"></parameter>
+<parameter name="consumptionShareToSetMinimumConsumption" type="constant" constant_type="double" value="0.9"></parameter>
+<parameter name="consumptionShareToSetMaximumConsumption" type="constant" constant_type="double" value="1.28"></parameter>
 <parameter name="productionRateOfChangeControl" type="constant" constant_type="double" value="0.0"></parameter>
 <parameter name="probabilityToAllowExport" type="constant" constant_type="double" value="1.0"></parameter>
 <parameter name="probabilityToAllowImport" type="constant" constant_type="double" value="1.0"></parameter>
@@ -20,8 +20,10 @@
 <parameter name="percentageChangeInTargetProduction" type="constant" constant_type="double" value="0.0"></parameter>
 <parameter name="priceThresholdToIncreaseTargetProduction" type="constant" constant_type="double" value="8.0"></parameter>
 <parameter name="priceThresholdToDecreaseTargetProduction" type="constant" constant_type="double" value="2.0"></parameter>
-<parameter name="transportCostsTuner" type="constant" constant_type="double" value="0.3"></parameter>
-<parameter name="startUsingInputsFromTimeTick" type="constant" constant_type="int" value="200"></parameter>
+<parameter name="transportCostsTuner" type="constant" constant_type="double" value="0.5"></parameter>
+<parameter name="demandFunctionInterceptTuner" type="constant" constant_type="double" value="0.2"></parameter>
+<parameter name="demandFunctionSlopeTuner" type="constant" constant_type="double" value="0.1"></parameter>
+<parameter name="startUsingInputsFromTimeTick" type="constant" constant_type="int" value="199"></parameter>
 <parameter name="batchStoppingTime" type="constant" constant_type="int" value="600"></parameter>
 </sweep>
 
