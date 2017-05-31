@@ -101,6 +101,8 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 	GeographyFactory factory = GeographyFactoryFinder.createGeographyFactory(null);
 	Geography<Object> geography = factory.createGeography("Geography", context, geoParams);
 	GeometryFactory fac = new GeometryFactory();
+	
+	context.addProjection(geography);
 
 	distanceCalculator=new GeodeticCalculator(geography.getCRS());
 
