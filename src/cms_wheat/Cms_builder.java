@@ -102,7 +102,6 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 	Geography<Object> geography = factory.createGeography("Geography", context, geoParams);
 	GeometryFactory fac = new GeometryFactory();
 	
-	context.addProjection(geography);
 
 	distanceCalculator=new GeodeticCalculator(geography.getCRS());
 
@@ -302,14 +301,27 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 		}
 		aBuyer.setMustImportFlag(tmpMustImportFlag);
 	}
+//loading crude oil prices
+	
+	try{
+		lines=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/monthly_crude_oil_price.csv"), Charset.forName("UTF-8"));
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
 
+		String[] parts = ((String)lines.get(1)).split(",");
+		ArrayList<Double> tmpCrudeOilPricesInputs=new ArrayList<Double>();
+		for(int j=1;j<parts.length;j++){
+			tmpCrudeOilPricesInputs.add(new Double(parts[j]));
+		}
+		
 
 	//System.out.println("Scheduling events");
 	if(verboseFlag){
 		System.out.println("");
 	}
 	schedule = RunEnvironment.getInstance().getCurrentSchedule();
-	Cms_scheduler cms_schduler=new Cms_scheduler(context);
+	Cms_scheduler cms_schduler=new Cms_scheduler(context,tmpCrudeOilPricesInputs);
 	cms_schduler.scheduleEvents();
 
 	if(verboseFlag){

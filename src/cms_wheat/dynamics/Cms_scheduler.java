@@ -1,4 +1,6 @@
 package cms_wheat.dynamics;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import cms_wheat.Cms_builder;
 import cms_wheat.agents.Producer;
@@ -17,6 +19,9 @@ import repast.simphony.engine.schedule.IAction;
 public class Cms_scheduler{
 	public IndexedIterable<Object> buyersList,producersList,marketsList;
 	public Context<Object> cmsContext;
+	public ArrayList<Double> crudeOilPrices;
+	Iterator<Double> crudeOilPricesIterator;
+	public static double crudeOilPrice;
 	ScheduleParameters scheduleParameters;
 	DefaultActionFactory statActionFactory;
 	IAction statAction;
@@ -24,8 +29,13 @@ public class Cms_scheduler{
 
 //	public int productionFreq=10;
 
-	public Cms_scheduler(Context<Object> theContext){
+	public Cms_scheduler(Context<Object> theContext,ArrayList<Double> crudeOil){
 		cmsContext=theContext;
+		crudeOilPrices=crudeOil;
+		crudeOilPricesIterator=crudeOilPrices.iterator();
+		crudeOilPrice=crudeOilPricesIterator.next();
+		crudeOilPricesIterator.remove();
+
 		try{
 			buyersList=cmsContext.getObjects(Class.forName("cms_wheat.agents.Buyer"));
 			producersList=cmsContext.getObjects(Class.forName("cms_wheat.agents.Producer"));
@@ -51,11 +61,14 @@ public class Cms_scheduler{
 			Cms_builder.schedule.schedule(scheduleParameters,this,"schedulePrintEndSimulationTimeStep");
 		}
 
-		scheduleParameters=ScheduleParameters.createRepeating(1,Cms_builder.importPolicyDecisionInterval,40.0);
+		scheduleParameters=ScheduleParameters.createRepeating(1,Cms_builder.importPolicyDecisionInterval,41.0);
 		Cms_builder.schedule.schedule(scheduleParameters,this,"scheduleStepBuyersImportPolicy");
 
-		scheduleParameters=ScheduleParameters.createRepeating(1,Cms_builder.exportPolicyDecisionInterval,39.0);
+		scheduleParameters=ScheduleParameters.createRepeating(1,Cms_builder.exportPolicyDecisionInterval,40.0);
 		Cms_builder.schedule.schedule(scheduleParameters,this,"scheduleStepProducersExportPolicy");
+
+		scheduleParameters=ScheduleParameters.createRepeating(1,1,39.0);
+		Cms_builder.schedule.schedule(scheduleParameters,this,"scheduleUnpdateCrudeOilPrice");
 
 		scheduleParameters=ScheduleParameters.createRepeating(1,1,38.0);
 		Cms_builder.schedule.schedule(scheduleParameters,this,"scheduleBuyersStepBuyingStrategy");
@@ -114,7 +127,14 @@ public class Cms_scheduler{
 		statAction=statActionFactory.createActionForIterable(buyersList,"stepBuyingStrategy",false,producersList);
 		statAction.execute();
 	}
-
+	public void scheduleUnpdateCrudeOilPrice(){
+		if(RepastEssentials.GetTickCount()>Cms_builder.startUsingInputsFromTimeTick && crudeOilPrices.size()>0){
+			crudeOilPrice=crudeOilPricesIterator.next();
+			crudeOilPricesIterator.remove();
+			if(Cms_builder.verboseFlag){System.out.println("Global: crude oil price updated: "+crudeOilPrice);}
+//			System.out.println("Global: crude oil price updated: "+crudeOilPrice);
+		}
+	}
 	public void scheduleMarketsPerformSessions(){
 		if(Cms_builder.verboseFlag){
 			System.out.println();

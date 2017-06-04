@@ -118,6 +118,10 @@ public class Producer {
 	public void makeProduction(){
 			if(Cms_builder.verboseFlag){System.out.println(name+" state before production stock: "+stock+" remaining sessions: "+remainingMarketSessions);}
 			production=(new Double(targetProduction*(1+(RandomHelper.nextDouble()*2-1.0)*Cms_builder.productionRateOfChangeControl))).intValue();
+
+			if(RepastEssentials.GetTickCount()<150){
+				production=(new Double(targetProduction*(1+(RandomHelper.nextDouble()*2-1.0)*0.05))).intValue();
+				}
 			
 			if(RepastEssentials.GetTickCount()>Cms_builder.startUsingInputsFromTimeTick && productionInputs.size()>0){
 				if(Cms_builder.verboseFlag){System.out.println(name+" production taken from input record");}
@@ -126,6 +130,21 @@ public class Producer {
 				productionInputsIterator.remove();
 //				System.out.println("time "+RepastEssentials.GetTickCount()+" country "+name+" production: "+production);
 			}
+/*			
+			//satart annealing
+			else{
+				if((RepastEssentials.GetTickCount() % 100) <= 12 && (RepastEssentials.GetTickCount()/100)>1){
+					production=(new Double(initialProduction*(1+(RandomHelper.nextDouble()*2-1.0)*0.2))).intValue();
+					targetProduction=production;
+					System.out.println(RepastEssentials.GetTickCount()+" annealing "+name+" "+production);
+				}
+				else{
+					production=initialProduction;
+					targetProduction=production;
+				}
+			}
+			//end annealing:w
+*/			
 			
 			
 			stock+=production;
@@ -161,10 +180,13 @@ public class Producer {
 	}
 	public void setup(int producerTimeOfFirstProduction){
 		timeOfFirstProduction=producerTimeOfFirstProduction;
-		initialProduction=(int)(productionShare*Cms_builder.globalProduction);
-		targetProduction=initialProduction;
-		production=targetProduction;
-		stock=(int)(productionShare*Cms_builder.globalProduction*((double)timeOfFirstProduction/Cms_builder.productionCycleLength));
+	//	initialProduction=(int)(productionShare*Cms_builder.globalProduction);
+	//	targetProduction=initialProduction;
+	//	production=targetProduction;
+	//	stock=(int)(productionShare*Cms_builder.globalProduction*((double)timeOfFirstProduction/Cms_builder.productionCycleLength));
+		initialProduction=production;
+		targetProduction=production;
+		stock=(int)(initialProduction*((double)timeOfFirstProduction/Cms_builder.productionCycleLength));	
 		totalMarketSessions=numberOfMarkets*Cms_builder.productionCycleLength;
 		remainingMarketSessions=numberOfMarkets*timeOfFirstProduction;
 		if(Cms_builder.verboseFlag){System.out.println("        time of First production "+timeOfFirstProduction+" production "+(int)(productionShare*Cms_builder.globalProduction)+" stock "+stock+" total market sessions "+totalMarketSessions+" remaining market sessions "+remainingMarketSessions);}
@@ -178,6 +200,9 @@ public class Producer {
 	}
 	public String getName(){
 		return name;
+	}
+	public String getIso3Code(){
+		return iso3Code;
 	}
 	public String getMarkets(){
 		return markets;

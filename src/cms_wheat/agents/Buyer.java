@@ -347,7 +347,6 @@ public class Buyer {
 		Cms_builder.distanceCalculator.setStartingGeographicPoint(longitude, latitude);
 		Cms_builder.distanceCalculator.setDestinationGeographicPoint(theProducer.getLongitude(),theProducer.getLatitude());
 		distanceFromSellerInKm=(int) Math.round(Cms_builder.distanceCalculator.getOrthodromicDistance()/1000);
-
 		if(Cms_builder.verboseFlag){System.out.println("           "+name+" distance From "+theProducer.getName()+" "+distanceFromSellerInKm+" kilometers");}
 
 		transportCosts=Cms_builder.transportCostsTuner*((new BigDecimal(distanceFromSellerInKm/100.0)).divide(new BigDecimal(100.0)).setScale(2,RoundingMode.HALF_EVEN)).doubleValue();
