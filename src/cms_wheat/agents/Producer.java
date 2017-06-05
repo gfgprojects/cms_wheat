@@ -7,6 +7,8 @@ import cms_wheat.utils.ElementOfSupplyOrDemandCurve;
 import cms_wheat.agents.MarketSession;
 import cms_wheat.dynamics.Cms_scheduler;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Iterator;
 /**
@@ -27,8 +29,12 @@ public class Producer {
 	public double priceEarnedInLatestMarketSession,quantitySoldInLatestMarketSession;
 	public String varietySoldInLatestMarketSession;
 	int timeOfFirstProduction=1;
-	int initialProduction,targetProduction,stock,numberOfMarkets,totalMarketSessions,remainingMarketSessions,offerInThisSession,production;
-	double sumOfSellingPrices,averageSellingPrice,fuelPrice;
+	int initialProduction,targetProduction,stock,numberOfMarkets,totalMarketSessions,remainingMarketSessions,offerInThisSession,production,toBeSoldInEachMarketSessionToExhaustStock;
+	double sumOfSellingPrices,averageSellingPrice,fuelPrice,productionCosts,reservationPrice;
+	double markUp=1.0; //reservatioPrice=(1+markUp)*productionCosts
+	double crudeOilBarrelPerNHectars=0.02;
+	double QuantityMultiplierToDecreaseReservatioPrice=1.2;//QuantityMultiplierToDecreaseReservatioPrice*toBeSoldInEachMarketSessionToExhaustStock
+	double shareOfRemainingSessionsToDecreaseReservationPrice=0.5;
 
 /**
  *The Cms_builder calls the constructor giving as parameters the values found in a line of the producers.csv file located in the data folder.
@@ -93,6 +99,11 @@ public class Producer {
 
 	public ArrayList<ElementOfSupplyOrDemandCurve> getSupplyCurve(String theVariety){
 		offerInThisSession=(int)stock/remainingMarketSessions;
+		if(offerInThisSession>QuantityMultiplierToDecreaseReservatioPrice*toBeSoldInEachMarketSessionToExhaustStock && remainingMarketSessions<shareOfRemainingSessionsToDecreaseReservationPrice*totalMarketSessions ){
+			reservationPrice=(new BigDecimal(reservationPrice-reservationPrice/remainingMarketSessions).setScale(3,RoundingMode.HALF_EVEN)).doubleValue();
+		}
+//		reservationPrice=(new BigDecimal(reservationPrice-reservationPrice/remainingMarketSessions).setScale(3,RoundingMode.HALF_EVEN)).doubleValue();
+//		System.out.println(name+" reservatio price "+reservationPrice);
 		supplyCurve=new ArrayList<ElementOfSupplyOrDemandCurve>();
 		for(Double aPrice : supplyPrices){
 			supplyCurve.add(new ElementOfSupplyOrDemandCurve(aPrice,(double)offerInThisSession));
@@ -144,13 +155,16 @@ public class Producer {
 					targetProduction=production;
 				}
 			}
-			//end annealing:w
+			//end annealing
 */			
 			fuelPrice=Cms_scheduler.crudeOilPrice;
-			System.out.println(name+ " fuel price "+fuelPrice);
-			
+			productionCosts=fuelPrice*crudeOilBarrelPerNHectars;
+			reservationPrice=(new BigDecimal((1+markUp)*productionCosts).setScale(3,RoundingMode.HALF_EVEN)).doubleValue();
+			System.out.println(name+ " fuel price "+fuelPrice+" productionCosts "+productionCosts+" reservatioPrice "+reservationPrice);
+			 
 			stock+=production;
 			remainingMarketSessions=totalMarketSessions;
+			toBeSoldInEachMarketSessionToExhaustStock=stock/remainingMarketSessions;
 		if(Cms_builder.verboseFlag){System.out.println(name+" production realized: "+production);}
 		if(Cms_builder.verboseFlag){System.out.println(name+" state after production stock: "+stock+" remaining sessions: "+remainingMarketSessions);}
 
