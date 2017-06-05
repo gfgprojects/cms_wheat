@@ -5,6 +5,7 @@ import repast.simphony.random.RandomHelper;
 import cms_wheat.Cms_builder;
 import cms_wheat.utils.ElementOfSupplyOrDemandCurve;
 import cms_wheat.agents.MarketSession;
+import cms_wheat.dynamics.Cms_scheduler;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,7 +28,7 @@ public class Producer {
 	public String varietySoldInLatestMarketSession;
 	int timeOfFirstProduction=1;
 	int initialProduction,targetProduction,stock,numberOfMarkets,totalMarketSessions,remainingMarketSessions,offerInThisSession,production;
-	double sumOfSellingPrices,averageSellingPrice;
+	double sumOfSellingPrices,averageSellingPrice,fuelPrice;
 
 /**
  *The Cms_builder calls the constructor giving as parameters the values found in a line of the producers.csv file located in the data folder.
@@ -145,7 +146,8 @@ public class Producer {
 			}
 			//end annealing:w
 */			
-			
+			fuelPrice=Cms_scheduler.crudeOilPrice;
+			System.out.println(name+ " fuel price "+fuelPrice);
 			
 			stock+=production;
 			remainingMarketSessions=totalMarketSessions;
