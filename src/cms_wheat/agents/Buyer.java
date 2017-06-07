@@ -2,6 +2,7 @@ package cms_wheat.agents;
 
 import cms_wheat.Cms_builder;
 import cms_wheat.agents.Producer;
+import cms_wheat.dynamics.Cms_scheduler;
 import cms_wheat.utils.ElementOfSupplyOrDemandCurve;
 import cms_wheat.utils.Contract;
 import cms_wheat.utils.ContractComparator;
@@ -173,7 +174,7 @@ public class Buyer {
 			}
 
 			if(Cms_builder.verboseFlag){System.out.println("         buyer: "+name+" possible market sessions "+possibleMarketSessionsList.size()+" continue buying in "+continueBuyingMarketSessionsList.size()+" start buying in "+startBuyingMarketSessionsList.size()+" of them");}
-				if(Cms_builder.verboseFlag){System.out.println("         buyer: "+name+"; in previous period "+name+" bought in "+latestContractsList.size()+" sessions. Here are the data: ");}
+			if(Cms_builder.verboseFlag){System.out.println("         buyer: "+name+"; in previous period "+name+" bought in "+latestContractsList.size()+" sessions. Here are the data: ");}
 
 			Collections.sort(latestContractsList,new ContractComparator());
 			for(Contract aContract : latestContractsList){
@@ -205,7 +206,8 @@ public class Buyer {
 						Cms_builder.distanceCalculator.setStartingGeographicPoint(longitude, latitude);
 						Cms_builder.distanceCalculator.setDestinationGeographicPoint(aProducer.getLongitude(),aProducer.getLatitude());
 						distanceFromSellerInKm=(int) Math.round(Cms_builder.distanceCalculator.getOrthodromicDistance()/1000);
-						transportCosts=Cms_builder.transportCostsTuner*((new BigDecimal(distanceFromSellerInKm/100.0)).divide(new BigDecimal(100.0)).setScale(2,RoundingMode.HALF_EVEN)).doubleValue();
+						//						transportCosts=Cms_builder.transportCostsTuner*((new BigDecimal(distanceFromSellerInKm/100.0)).divide(new BigDecimal(100.0)).setScale(2,RoundingMode.HALF_EVEN)).doubleValue();
+						transportCosts=Cms_builder.transportCostsTuner*((new BigDecimal((Cms_scheduler.crudeOilPrice/10)*distanceFromSellerInKm/100.0)).divide(new BigDecimal(100.0)).setScale(2,RoundingMode.HALF_EVEN)).doubleValue();
 						latestContractsInPossibleMarketSessionsList.add(new Contract(aMarketSession.getMarketName(),aMarketSession.getProducerName(),name,aMarketSession.getMarketPrice(),transportCosts,0));
 					}
 					Collections.sort(latestContractsInPossibleMarketSessionsList,new ContractComparator());
@@ -270,13 +272,19 @@ public class Buyer {
 				}
 				//buyers with more than one contract move demand from the highest price to the lowest price session  
 				if(latestContractsInPossibleMarketSessionsList.size()>1){ 
-				if(Cms_builder.verboseFlag){System.out.println("              moving quantity bought in most expensive market session to cheapest market session");}
+					if(Cms_builder.verboseFlag){System.out.println("              moving quantity bought in most expensive market session to cheapest market session");}
 					aContract=latestContractsInPossibleMarketSessionsList.get(0);
 					aContract1=latestContractsInPossibleMarketSessionsList.get(latestContractsInPossibleMarketSessionsList.size()-1);
 					demandToBeMoved=0;
 					if((1+Cms_builder.toleranceInMovingDemand)*aContract.getPricePlusTransport()<aContract1.getPricePlusTransport()){
-//					if((Cms_builder.toleranceInMovingDemand)*aContract.getPrice()<aContract1.getPrice()){
-					demandToBeMoved=(int)(aContract1.getQuantity()*Cms_builder.shareOfDemandToBeMoved);
+						//					if((Cms_builder.toleranceInMovingDemand)*aContract.getPrice()<aContract1.getPrice()){
+						//if buying a very small quantity from the most expensive country the next line neutralizes the mechanism
+//						demandToBeMoved=(int)(aContract1.getQuantity()*Cms_builder.shareOfDemandToBeMoved);
+						demandToBeMoved=(int)(aContract.getQuantity()*Cms_builder.shareOfDemandToBeMoved);
+						if(demandToBeMoved<Cms_builder.minimumImportQuantity){
+							demandToBeMoved=Cms_builder.minimumImportQuantity;
+						}
+						//					System.out.println(name+" moving "+demandToBeMoved);
 						for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
 							if(aContract.getMarketName().equals(aParametersHolder.getMarketName()) && aContract.getProducerName().equals(aParametersHolder.getProducerName())){
 								aParametersHolder.increaseInterceptBy(demandToBeMoved);
@@ -285,59 +293,63 @@ public class Buyer {
 								aParametersHolder.decreaseInterceptBy(demandToBeMoved);
 							}
 						}
-					}
-				}
-
-				if(Cms_builder.verboseFlag){System.out.println("              setting demand function for newly open market sessions");}
-				//buyers update parameter in sessions that was not available in the previous period
-				aContract=latestContractsInPossibleMarketSessionsList.get(0);
-				for(MarketSession aMarketSession : startBuyingMarketSessionsList){
-					parametersHoldeNotFound=true;
-					for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
-						if(aMarketSession.getMarketName().equals(aParametersHolder.getMarketName()) && aMarketSession.getProducerName().equals(aParametersHolder.getProducerName())){
-							parametersHoldeNotFound=false;
-							aParametersHolder.setIntercept((int)(slopeOfTheDemandFunction*aContract.getPricePlusTransport()*(1-Cms_builder.percentageOfPriceMarkDownInNewlyAccessibleMarkets)));
 						}
 					}
-					if(parametersHoldeNotFound){
-						aParametersHolder=new DemandFunctionParameters((int)(slopeOfTheDemandFunction*aContract.getPricePlusTransport()),aMarketSession.getMarketName(),aMarketSession.getProducerName());
-						demandFunctionParametersList.add(aParametersHolder);
+
+					if(Cms_builder.verboseFlag){System.out.println("              setting demand function for newly open market sessions");}
+					//buyers update parameter in sessions that was not available in the previous period
+					aContract=latestContractsInPossibleMarketSessionsList.get(0);
+					for(MarketSession aMarketSession : startBuyingMarketSessionsList){
+						parametersHoldeNotFound=true;
+						for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
+							if(aMarketSession.getMarketName().equals(aParametersHolder.getMarketName()) && aMarketSession.getProducerName().equals(aParametersHolder.getProducerName())){
+								parametersHoldeNotFound=false;
+								aParametersHolder.setIntercept((int)(slopeOfTheDemandFunction*aContract.getPricePlusTransport()*(1-Cms_builder.percentageOfPriceMarkDownInNewlyAccessibleMarkets)));
+							}
+						}
+						if(parametersHoldeNotFound){
+							aParametersHolder=new DemandFunctionParameters((int)(slopeOfTheDemandFunction*aContract.getPricePlusTransport()),aMarketSession.getMarketName(),aMarketSession.getProducerName());
+							demandFunctionParametersList.add(aParametersHolder);
+						}
 					}
+					//increasing the intercept of the available market sessions parameters holder to fill the gap to minimum consumption  
+					if(Cms_builder.verboseFlag){System.out.println("              moving demand functions to fill the gap to target level of inventories"); }
+					gapToChargeToEachPossibleMarketSession=gapToTarget/possibleMarketSessionsList.size();
+					if(Cms_builder.verboseFlag){System.out.println("                gap to target in each market session "+gapToChargeToEachPossibleMarketSession);}
+					for(MarketSession aMarketSession : possibleMarketSessionsList){
+						for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
+							if(aMarketSession.getMarketName().equals(aParametersHolder.getMarketName()) && aMarketSession.getProducerName().equals(aParametersHolder.getProducerName())){
+								aParametersHolder.increaseInterceptBy(gapToChargeToEachPossibleMarketSession);
+							}
+						}
+					}
+
+
 				}
-				//increasing the intercept of the available market sessions parameters holder to fill the gap to minimum consumption  
-				if(Cms_builder.verboseFlag){System.out.println("              moving demand functions to fill the gap to target level of inventories"); }
-				gapToChargeToEachPossibleMarketSession=gapToTarget/possibleMarketSessionsList.size();
-				if(Cms_builder.verboseFlag){System.out.println("                gap to target in each market session "+gapToChargeToEachPossibleMarketSession);}
+
+
+				if(Cms_builder.verboseFlag){System.out.println("         -----------------------------------------------------------------");}
+				latestContractsList=new ArrayList<Contract>();
+			}
+			else{
 				for(MarketSession aMarketSession : possibleMarketSessionsList){
-					for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
-						if(aMarketSession.getMarketName().equals(aParametersHolder.getMarketName()) && aMarketSession.getProducerName().equals(aParametersHolder.getProducerName())){
-							aParametersHolder.increaseInterceptBy(gapToChargeToEachPossibleMarketSession);
+					aProducer=aMarketSession.getProducer();
+					if(name.equals(aProducer.getName())){
+						demandFunctionParametersList.add(new DemandFunctionParameters(initialInterceptOfTheDemandFunction,aMarketSession.getMarketName(),aMarketSession.getProducerName()));					
+					}
+					else{
+						Cms_builder.distanceCalculator.setStartingGeographicPoint(longitude, latitude);
+						Cms_builder.distanceCalculator.setDestinationGeographicPoint(aProducer.getLongitude(),aProducer.getLatitude());
+						distanceFromSellerInKm=(int) Math.round(Cms_builder.distanceCalculator.getOrthodromicDistance()/1000);
+						tmpIntercept=(int) Math.round(Math.min(initialInterceptOfTheDemandFunction,aProducer.getProduction())-Cms_builder.weightOfDistanceInInitializingIntercept*distanceFromSellerInKm);
+						if(tmpIntercept<0){
+							tmpIntercept=0;
 						}
+
+						demandFunctionParametersList.add(new DemandFunctionParameters(tmpIntercept,aMarketSession.getMarketName(),aMarketSession.getProducerName()));
 					}
 				}
-
-
 			}
-
-
-			if(Cms_builder.verboseFlag){System.out.println("         -----------------------------------------------------------------");}
-			latestContractsList=new ArrayList<Contract>();
-		}
-		else{
-			for(MarketSession aMarketSession : possibleMarketSessionsList){
-				aProducer=aMarketSession.getProducer();
-				if(name.equals(aProducer.getName())){
-					demandFunctionParametersList.add(new DemandFunctionParameters(initialInterceptOfTheDemandFunction,aMarketSession.getMarketName(),aMarketSession.getProducerName()));					
-				}
-				else{
-					Cms_builder.distanceCalculator.setStartingGeographicPoint(longitude, latitude);
-					Cms_builder.distanceCalculator.setDestinationGeographicPoint(aProducer.getLongitude(),aProducer.getLatitude());
-					distanceFromSellerInKm=(int) Math.round(Cms_builder.distanceCalculator.getOrthodromicDistance()/1000);
-					tmpIntercept=(int) Math.round(initialInterceptOfTheDemandFunction-Cms_builder.weightOfDistanceInInitializingIntercept*distanceFromSellerInKm);
-					demandFunctionParametersList.add(new DemandFunctionParameters(tmpIntercept,aMarketSession.getMarketName(),aMarketSession.getProducerName()));
-				}
-			}
-		}
 	}
 
 
@@ -349,7 +361,8 @@ public class Buyer {
 		distanceFromSellerInKm=(int) Math.round(Cms_builder.distanceCalculator.getOrthodromicDistance()/1000);
 		if(Cms_builder.verboseFlag){System.out.println("           "+name+" distance From "+theProducer.getName()+" "+distanceFromSellerInKm+" kilometers");}
 
-		transportCosts=Cms_builder.transportCostsTuner*((new BigDecimal(distanceFromSellerInKm/100.0)).divide(new BigDecimal(100.0)).setScale(2,RoundingMode.HALF_EVEN)).doubleValue();
+//		transportCosts=Cms_builder.transportCostsTuner*((new BigDecimal(distanceFromSellerInKm/100.0)).divide(new BigDecimal(100.0)).setScale(2,RoundingMode.HALF_EVEN)).doubleValue();
+		transportCosts=Cms_builder.transportCostsTuner*((new BigDecimal((Cms_scheduler.crudeOilPrice/10)*distanceFromSellerInKm/100.0)).divide(new BigDecimal(100.0)).setScale(2,RoundingMode.HALF_EVEN)).doubleValue();
 		if(Cms_builder.verboseFlag){System.out.println("           "+name+" transport cost "+transportCosts);}
 
 		parametersHoldeNotFound=true;

@@ -103,7 +103,7 @@ public class Producer {
 			reservationPrice=(new BigDecimal(reservationPrice-reservationPrice/remainingMarketSessions).setScale(3,RoundingMode.HALF_EVEN)).doubleValue();
 		}
 //		reservationPrice=(new BigDecimal(reservationPrice-reservationPrice/remainingMarketSessions).setScale(3,RoundingMode.HALF_EVEN)).doubleValue();
-//		System.out.println(name+" reservatio price "+reservationPrice);
+//		System.out.println(name+" reservation price "+reservationPrice);
 		supplyCurve=new ArrayList<ElementOfSupplyOrDemandCurve>();
 		for(Double aPrice : supplyPrices){
 			supplyCurve.add(new ElementOfSupplyOrDemandCurve(aPrice,(double)offerInThisSession));
@@ -111,6 +111,9 @@ public class Producer {
 		if(Cms_builder.verboseFlag){System.out.println("           "+name+" stock "+stock+" remaining market sessions "+remainingMarketSessions);}
 		if(Cms_builder.verboseFlag){System.out.println("           supply curve sent to market by "+name+" for product "+theVariety+" (some points)");}
 		return supplyCurve;
+	}
+	public double getReservationPrice(){
+		return reservationPrice;
 	}
 	public void setQuantitySoldInLatestMarketSession(String theVariety, double marketPrice, double soldQuantity){
 		varietySoldInLatestMarketSession=theVariety;
@@ -160,7 +163,7 @@ public class Producer {
 			fuelPrice=Cms_scheduler.crudeOilPrice;
 			productionCosts=fuelPrice*crudeOilBarrelPerNHectars;
 			reservationPrice=(new BigDecimal((1+markUp)*productionCosts).setScale(3,RoundingMode.HALF_EVEN)).doubleValue();
-			System.out.println(name+ " fuel price "+fuelPrice+" productionCosts "+productionCosts+" reservatioPrice "+reservationPrice);
+//			System.out.println(name+ " fuel price "+fuelPrice+" productionCosts "+productionCosts+" reservatioPrice "+reservationPrice);
 			 
 			stock+=production;
 			remainingMarketSessions=totalMarketSessions;

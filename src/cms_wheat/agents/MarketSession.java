@@ -109,7 +109,7 @@ public class MarketSession {
 				lookingFroEquilibrium=false;
 				marketPrice=tmpElement.getPrice();
 			}
-			
+
 			qsqdRatio=1;
 			//when demand curve is too high, resize quantity to that supplied
 			if(marketPrice==sessionSupplyCurve.get(sessionSupplyCurve.size()-1).getPrice()){
@@ -120,6 +120,13 @@ public class MarketSession {
 			}
 
 		}
+
+		if(marketPrice<theProducer.getReservationPrice()){
+			marketPrice=theProducer.getReservationPrice();
+//			System.out.println(theProducer.getName()+ " reservation Price "+theProducer.getReservationPrice()+" market price "+marketPrice);
+		}
+
+
 		if(Cms_builder.verboseFlag){System.out.println("           market price is "+marketPrice);}
 		if(Cms_builder.verboseFlag){System.out.println("           BUYERS COMPUTE BOUGHT QUANTITY ");}
 
