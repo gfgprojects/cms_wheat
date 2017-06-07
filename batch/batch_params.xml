@@ -1,13 +1,13 @@
 <?xml version="1.0" ?>
 <sweep runs="1">
-<parameter name="verboseFlag" type="constant" constant_type="boolean" value="false"></parameter>
+<parameter name="verboseFlag" type="constant" constant_type="boolean" value="true"></parameter>
 <parameter name="autarkyAtTheBeginning" type="constant" constant_type="boolean" value="false"></parameter>
 <parameter name="productionCycleLength" type="constant" constant_type="int" value="12"></parameter>
 <parameter name="exportPolicyDecisionInterval" type="constant" constant_type="int" value="12"></parameter>
 <parameter name="importPolicyDecisionInterval" type="constant" constant_type="int" value="12"></parameter>
 <parameter name="globalProduction" type="constant" constant_type="int" value="5000000"></parameter>
 <parameter name="producersPricesMemoryLength" type="constant" constant_type="int" value="12"></parameter>
-<parameter name="minimumImportQuantity" type="constant" constant_type="int" value="10"></parameter>
+<parameter name="minimumImportQuantity" type="constant" constant_type="int" value="100"></parameter>
 <parameter name="weightOfDistanceInInitializingIntercept" type="constant" constant_type="double" value="0.05"></parameter>
 <parameter name="consumptionShareToSetMinimumConsumption" type="constant" constant_type="double" value="0.9"></parameter>
 <parameter name="consumptionShareToSetMaximumConsumption" type="constant" constant_type="double" value="1.28"></parameter>
@@ -24,6 +24,6 @@
 <parameter name="demandFunctionInterceptTuner" type="constant" constant_type="double" value="0.2"></parameter>
 <parameter name="demandFunctionSlopeTuner" type="constant" constant_type="double" value="0.1"></parameter>
 <parameter name="startUsingInputsFromTimeTick" type="constant" constant_type="int" value="199"></parameter>
-<parameter name="batchStoppingTime" type="constant" constant_type="int" value="600"></parameter>
+<parameter name="batchStoppingTime" type="constant" constant_type="int" value="20"></parameter>
 </sweep>
 
