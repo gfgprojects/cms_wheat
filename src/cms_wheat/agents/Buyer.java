@@ -53,7 +53,7 @@ public class Buyer {
 	Contract aContract,aContract1;
 	DemandFunctionParameters aParametersHolder;
 	int interceptOfTheDemandFunction,initialInterceptOfTheDemandFunction,tmpIntercept,slopeOfTheDemandFunction,demandToBeMoved;
-
+	double oilPriceWeightInTransportCosts=0.01;
 
 /**
  *The Cms_builder calls the constructor giving as parameters the values found in a line of the buyers.csv file located in the data folder.
@@ -207,7 +207,7 @@ public class Buyer {
 						Cms_builder.distanceCalculator.setDestinationGeographicPoint(aProducer.getLongitude(),aProducer.getLatitude());
 						distanceFromSellerInKm=(int) Math.round(Cms_builder.distanceCalculator.getOrthodromicDistance()/1000);
 						//						transportCosts=Cms_builder.transportCostsTuner*((new BigDecimal(distanceFromSellerInKm/100.0)).divide(new BigDecimal(100.0)).setScale(2,RoundingMode.HALF_EVEN)).doubleValue();
-						transportCosts=Cms_builder.transportCostsTuner*((new BigDecimal((Cms_scheduler.crudeOilPrice/10)*distanceFromSellerInKm/100.0)).divide(new BigDecimal(100.0)).setScale(2,RoundingMode.HALF_EVEN)).doubleValue();
+						transportCosts=((new BigDecimal(Cms_builder.transportCostsTuner*distanceFromSellerInKm/10000.0+oilPriceWeightInTransportCosts*Cms_scheduler.crudeOilPrice*distanceFromSellerInKm/100000.0)).setScale(2,RoundingMode.HALF_EVEN)).doubleValue();
 						latestContractsInPossibleMarketSessionsList.add(new Contract(aMarketSession.getMarketName(),aMarketSession.getProducerName(),name,aMarketSession.getMarketPrice(),transportCosts,0));
 					}
 					Collections.sort(latestContractsInPossibleMarketSessionsList,new ContractComparator());
@@ -362,7 +362,8 @@ public class Buyer {
 		if(Cms_builder.verboseFlag){System.out.println("           "+name+" distance From "+theProducer.getName()+" "+distanceFromSellerInKm+" kilometers");}
 
 //		transportCosts=Cms_builder.transportCostsTuner*((new BigDecimal(distanceFromSellerInKm/100.0)).divide(new BigDecimal(100.0)).setScale(2,RoundingMode.HALF_EVEN)).doubleValue();
-		transportCosts=Cms_builder.transportCostsTuner*((new BigDecimal((Cms_scheduler.crudeOilPrice/10)*distanceFromSellerInKm/100.0)).divide(new BigDecimal(100.0)).setScale(2,RoundingMode.HALF_EVEN)).doubleValue();
+		transportCosts=((new BigDecimal(Cms_builder.transportCostsTuner*distanceFromSellerInKm/10000.0+oilPriceWeightInTransportCosts*Cms_scheduler.crudeOilPrice*distanceFromSellerInKm/100000.0)).setScale(2,RoundingMode.HALF_EVEN)).doubleValue();
+System.out.println(name+" transport cost "+transportCosts);
 		if(Cms_builder.verboseFlag){System.out.println("           "+name+" transport cost "+transportCosts);}
 
 		parametersHoldeNotFound=true;
