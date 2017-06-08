@@ -363,7 +363,6 @@ public class Buyer {
 
 //		transportCosts=Cms_builder.transportCostsTuner*((new BigDecimal(distanceFromSellerInKm/100.0)).divide(new BigDecimal(100.0)).setScale(2,RoundingMode.HALF_EVEN)).doubleValue();
 		transportCosts=((new BigDecimal(Cms_builder.transportCostsTuner*distanceFromSellerInKm/10000.0+oilPriceWeightInTransportCosts*Cms_scheduler.crudeOilPrice*distanceFromSellerInKm/100000.0)).setScale(2,RoundingMode.HALF_EVEN)).doubleValue();
-System.out.println(name+" transport cost "+transportCosts);
 		if(Cms_builder.verboseFlag){System.out.println("           "+name+" transport cost "+transportCosts);}
 
 		parametersHoldeNotFound=true;
