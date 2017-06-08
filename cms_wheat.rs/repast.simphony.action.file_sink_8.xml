@@ -11,7 +11,8 @@
     <string>TargetProduction</string>
     <string>AverageSellingPrice</string>
     <string>Iso3Code</string>
+    <string>ReservationPrice</string>
   </sourceIds>
-  <fileName>output/z_peoducers.csv</fileName>
+  <fileName>output/z_producers.csv</fileName>
   <addTimeStamp>false</addTimeStamp>
 </repast.simphony.data2.engine.FileSinkDescriptor>
