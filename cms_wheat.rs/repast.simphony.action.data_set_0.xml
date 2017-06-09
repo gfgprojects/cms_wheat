@@ -96,14 +96,6 @@
         <methodName>getAverageConsumption</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
-    <entry>
-      <string>TransportCosts</string>
-      <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>TransportCosts</id>
-        <className>cms_wheat.agents.Buyer</className>
-        <methodName>getTransportCosts</methodName>
-      </repast.simphony.data2.engine.MethodDataSourceDefinition>
-    </entry>
   </methodDataSources>
   <countSources class="linked-hash-map"/>
   <customNADataSources class="linked-hash-map"/>
