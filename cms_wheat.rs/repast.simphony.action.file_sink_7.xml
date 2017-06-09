@@ -13,6 +13,7 @@
     <string>MaximumConsumption</string>
     <string>Iso3Code</string>
     <string>AverageConsumption</string>
+    <string>TransportCosts</string>
   </sourceIds>
   <fileName>output/z_buyers.csv</fileName>
   <addTimeStamp>false</addTimeStamp>
