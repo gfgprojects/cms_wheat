@@ -53,7 +53,7 @@ public class Buyer {
 	Contract aContract,aContract1;
 	DemandFunctionParameters aParametersHolder;
 	int interceptOfTheDemandFunction,initialInterceptOfTheDemandFunction,tmpIntercept,slopeOfTheDemandFunction,demandToBeMoved;
-	double oilPriceWeightInTransportCosts=0.01;
+	double oilPriceWeightInTransportCosts=0.0;
 
 /**
  *The Cms_builder calls the constructor giving as parameters the values found in a line of the buyers.csv file located in the data folder.
@@ -560,6 +560,9 @@ public class Buyer {
 	}
 	public int getStock(){
 		return stock;
+	}
+	public double getTransportCosts(){
+		return transportCosts;
 	}
 	public int getRealizedConsumption(){
 		return realizedConsumption;

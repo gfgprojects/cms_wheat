@@ -158,6 +158,9 @@ public class Cms_scheduler{
 			System.out.println("PRODUCERS: MAKE PRODUCTION");
 		}
 	}
+	public double getCrudeOilPrice(){
+		return crudeOilPrice;
+	}
 
 
 }
