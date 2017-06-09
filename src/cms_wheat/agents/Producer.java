@@ -133,11 +133,11 @@ public class Producer {
 	public void makeProduction(){
 			if(Cms_builder.verboseFlag){System.out.println(name+" state before production stock: "+stock+" remaining sessions: "+remainingMarketSessions);}
 			production=(new Double(targetProduction*(1+(RandomHelper.nextDouble()*2-1.0)*Cms_builder.productionRateOfChangeControl))).intValue();
-
+/*
 			if(RepastEssentials.GetTickCount()<150){
 				production=(new Double(targetProduction*(1+(RandomHelper.nextDouble()*2-1.0)*0.05))).intValue();
 				}
-			
+	*/		
 			if(RepastEssentials.GetTickCount()>Cms_builder.startUsingInputsFromTimeTick && productionInputs.size()>0){
 				if(Cms_builder.verboseFlag){System.out.println(name+" production taken from input record");}
 				production=productionInputsIterator.next();

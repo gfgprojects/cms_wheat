@@ -41,13 +41,13 @@ public class Buyer {
 	double tmpDemandedQuantity;
 	double transportCosts;
 	private ElementOfSupplyOrDemandCurve tmpElement;
-	int distanceFromSellerInKm;
+	int contractsBackwarRunner;
 	ListIterator<ElementOfSupplyOrDemandCurve> demandCurveIterator;
 	private boolean demandPriceLowerThanMarketPrice,mustImport;
 	public double quantityBoughtInLatestMarketSession;
 	public double pricePayedInLatestMarketSession;
 	public String varietyBoughtInLatestMarketSession,latestMarket;
-	public int averageConsumption,minimumConsumption,maximumConsumption,realizedConsumption,domesticConsumption,gapToTarget,gapToChargeToEachPossibleMarketSession,stock,domesticStock,demandToBeReallocated,population;
+	public int distanceFromSellerInKm,averageConsumption,minimumConsumption,maximumConsumption,realizedConsumption,domesticConsumption,gapToTarget,gapToChargeToEachPossibleMarketSession,stock,domesticStock,demandToBeReallocated,population;
 	Producer aProducer;
 	boolean latestPeriodVisitedMarketSessionNotFound,reallocateDemand,parametersHoldeNotFound;
 	Contract aContract,aContract1;
@@ -274,7 +274,16 @@ public class Buyer {
 				if(latestContractsInPossibleMarketSessionsList.size()>1){ 
 					if(Cms_builder.verboseFlag){System.out.println("              moving quantity bought in most expensive market session to cheapest market session");}
 					aContract=latestContractsInPossibleMarketSessionsList.get(0);
-					aContract1=latestContractsInPossibleMarketSessionsList.get(latestContractsInPossibleMarketSessionsList.size()-1);
+					contractsBackwarRunner=latestContractsInPossibleMarketSessionsList.size()-1;
+					aContract1=latestContractsInPossibleMarketSessionsList.get(contractsBackwarRunner);
+
+					while(latestContractsInPossibleMarketSessionsList.get(contractsBackwarRunner).getQuantity()<1 && contractsBackwarRunner>0){
+						aContract1=latestContractsInPossibleMarketSessionsList.get(contractsBackwarRunner);
+						contractsBackwarRunner--;
+					}
+
+//					System.out.println(name+" cback run "+contractsBackwarRunner);
+
 					demandToBeMoved=0;
 					if((1+Cms_builder.toleranceInMovingDemand)*aContract.getPricePlusTransport()<aContract1.getPricePlusTransport()){
 						//					if((Cms_builder.toleranceInMovingDemand)*aContract.getPrice()<aContract1.getPrice()){
