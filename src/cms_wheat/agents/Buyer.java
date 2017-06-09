@@ -279,7 +279,8 @@ public class Buyer {
 					if((1+Cms_builder.toleranceInMovingDemand)*aContract.getPricePlusTransport()<aContract1.getPricePlusTransport()){
 						//					if((Cms_builder.toleranceInMovingDemand)*aContract.getPrice()<aContract1.getPrice()){
 						//if buying a very small quantity from the most expensive country the next line neutralizes the mechanism
-						demandToBeMoved=(int)(aContract1.getQuantity()*Cms_builder.shareOfDemandToBeMoved);
+						demandToBeMoved=(int)(averageConsumption*Cms_builder.shareOfDemandToBeMoved);
+//						demandToBeMoved=(int)(aContract1.getQuantity()*Cms_builder.shareOfDemandToBeMoved);
 //						demandToBeMoved=(int)(aContract.getQuantity()*Cms_builder.shareOfDemandToBeMoved);
 						if(demandToBeMoved<Cms_builder.minimumImportQuantity){
 							demandToBeMoved=Cms_builder.minimumImportQuantity;
