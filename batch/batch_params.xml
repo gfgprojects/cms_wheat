@@ -9,8 +9,8 @@
 <parameter name="producersPricesMemoryLength" type="constant" constant_type="int" value="12"></parameter>
 <parameter name="minimumImportQuantity" type="constant" constant_type="int" value="100"></parameter>
 <parameter name="weightOfDistanceInInitializingIntercept" type="constant" constant_type="double" value="0.05"></parameter>
-<parameter name="consumptionShareToSetMinimumConsumption" type="constant" constant_type="double" value="0.9"></parameter>
-<parameter name="consumptionShareToSetMaximumConsumption" type="constant" constant_type="double" value="1.1"></parameter>
+<parameter name="consumptionShareToSetMinimumConsumption" type="constant" constant_type="double" value="0.95"></parameter>
+<parameter name="consumptionShareToSetMaximumConsumption" type="constant" constant_type="double" value="1.05"></parameter>
 <parameter name="productionRateOfChangeControl" type="constant" constant_type="double" value="0.0"></parameter>
 <parameter name="probabilityToAllowExport" type="constant" constant_type="double" value="1.0"></parameter>
 <parameter name="probabilityToAllowImport" type="constant" constant_type="double" value="1.0"></parameter>
