@@ -15,7 +15,7 @@
 <parameter name="probabilityToAllowExport" type="constant" constant_type="double" value="1.0"></parameter>
 <parameter name="probabilityToAllowImport" type="constant" constant_type="double" value="1.0"></parameter>
 <parameter name="toleranceInMovingDemand" type="constant" constant_type="double" value="0.0"></parameter>
-<parameter name="shareOfDemandToBeMoved" type="constant" constant_type="double" value="0.01"></parameter>
+<parameter name="shareOfDemandToBeMoved" type="constant" constant_type="double" value="0.05"></parameter>
 <parameter name="percentageOfPriceMarkDownInNewlyAccessibleMarkets" type="constant" constant_type="double" value="0.1"></parameter>
 <parameter name="percentageChangeInTargetProduction" type="constant" constant_type="double" value="0.0"></parameter>
 <parameter name="priceThresholdToIncreaseTargetProduction" type="constant" constant_type="double" value="8.0"></parameter>
