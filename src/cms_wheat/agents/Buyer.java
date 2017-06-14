@@ -7,6 +7,7 @@ import cms_wheat.utils.ElementOfSupplyOrDemandCurve;
 import cms_wheat.utils.Contract;
 import cms_wheat.utils.ContractComparator;
 import cms_wheat.utils.DemandFunctionParameters;
+import cms_wheat.utils.ZoneInfoHolder;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
@@ -25,7 +26,7 @@ import repast.simphony.essentials.RepastEssentials;
  */
 public class Buyer {
 	public String name,iso3Code,originOfConsumedResources;
-	public double latitude,longitude,perCapitaConsumption,demandShare,sizeInGuiDisplay;
+	public double latitude,longitude,perCapitaConsumption,demandShare,sizeInGuiDisplay,transportCosts;
 	public boolean importAllowed=true;
 	public ArrayList<Double> demandPrices=new ArrayList<Double>();
 	public ArrayList<Integer> populationInputs=new ArrayList<Integer>();
@@ -36,10 +37,11 @@ public class Buyer {
 	public ArrayList<MarketSession> tmpMarketSessionsList;
 	public ArrayList<MarketSession> possibleMarketSessionsList,continueBuyingMarketSessionsList,startBuyingMarketSessionsList;
 	public ArrayList<DemandFunctionParameters> demandFunctionParametersList=new ArrayList<DemandFunctionParameters>();
+	ArrayList<ZoneInfoHolder> zoneInformationHoldersList;
+	ZoneInfoHolder myZoneInfoHolder,aZoneInfoHolder;
 
 
-	double tmpDemandedQuantity;
-	double transportCosts;
+	double tmpDemandedQuantity,tmpDoubleValue;
 	private ElementOfSupplyOrDemandCurve tmpElement;
 	int contractsBackwarRunner;
 	ListIterator<ElementOfSupplyOrDemandCurve> demandCurveIterator;
@@ -52,8 +54,9 @@ public class Buyer {
 	boolean latestPeriodVisitedMarketSessionNotFound,reallocateDemand,parametersHoldeNotFound;
 	Contract aContract,aContract1;
 	DemandFunctionParameters aParametersHolder;
-	int interceptOfTheDemandFunction,initialInterceptOfTheDemandFunction,tmpIntercept,slopeOfTheDemandFunction,demandToBeMoved;
+	int interceptOfTheDemandFunction,initialInterceptOfTheDemandFunction,tmpIntercept,tmpIntValue,slopeOfTheDemandFunction,demandToBeMoved;
 	double oilPriceWeightInTransportCosts=0.0;
+	double shareOfProductionABuyerIsWillingToBuyFromAProducerWithNoExcessSupply=0.01;
 
 /**
  *The Cms_builder calls the constructor giving as parameters the values found in a line of the buyers.csv file located in the data folder.
@@ -106,6 +109,15 @@ public class Buyer {
 		if(Cms_builder.verboseFlag){System.out.println("   population:    "+populationInputs);}
 
 		demandPrices=possiblePrices;
+	}
+	
+	public void setZoneInfoHolder(ArrayList<ZoneInfoHolder> zonesList){
+		zoneInformationHoldersList=zonesList;
+		for(ZoneInfoHolder anInfoHolder : zoneInformationHoldersList){
+			if(name.equals(anInfoHolder.getName())){
+				myZoneInfoHolder=anInfoHolder;
+			}
+		}
 	}
 
 
@@ -231,7 +243,7 @@ public class Buyer {
 						}
 					}
 
-					//overwriting the intercept for the parameter holder of the cheapest among the new available market sessions with the demandToBeReallocated (this can be avoided because the byers has no previous contracts so the demandToBeReallocated is 0)
+					//overwriting the intercept for the parameter holder of the cheapest among the new available market sessions with the demandToBeReallocated (this can be avoided because the buyers has no previous contracts so the demandToBeReallocated is 0)
 					aContract=latestContractsInPossibleMarketSessionsList.get(0);
 					parametersHoldeNotFound=true;
 					for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
@@ -262,7 +274,7 @@ public class Buyer {
 				for(Contract aContract : latestContractsInPossibleMarketSessionsList){
 					if(Cms_builder.verboseFlag){System.out.println("                 renew "+aContract.getPricePlusTransport()+" price: "+aContract.getPrice()+" market: "+aContract.getMarketName()+" producer: "+aContract.getProducerName()+" quantity "+aContract.getQuantity());}
 				}
-				//buyers move the demand to be reallocated to the producer with the lowest price
+				//buyers move the demand belonging to closed market sessions to the producer with the lowest price
 				if(Cms_builder.verboseFlag){System.out.println("              moving quantity bought in closed market session(s) to cheapest market session");}
 				aContract=latestContractsInPossibleMarketSessionsList.get(0);
 				for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
@@ -288,7 +300,7 @@ public class Buyer {
 					if((1+Cms_builder.toleranceInMovingDemand)*aContract.getPricePlusTransport()<aContract1.getPricePlusTransport()){
 						//					if((Cms_builder.toleranceInMovingDemand)*aContract.getPrice()<aContract1.getPrice()){
 						//if buying a very small quantity from the most expensive country the next line neutralizes the mechanism
-						demandToBeMoved=(int)(averageConsumption*Cms_builder.shareOfDemandToBeMoved);
+						demandToBeMoved=(int)(Math.min(averageConsumption*Cms_builder.shareOfDemandToBeMoved,aContract1.getQuantity()));
 //						demandToBeMoved=(int)(aContract1.getQuantity()*Cms_builder.shareOfDemandToBeMoved);
 //						demandToBeMoved=(int)(aContract.getQuantity()*Cms_builder.shareOfDemandToBeMoved);
 						if(demandToBeMoved<Cms_builder.minimumImportQuantity){
@@ -342,21 +354,43 @@ public class Buyer {
 				latestContractsList=new ArrayList<Contract>();
 			}
 			else{
+//				System.out.println(name+" "+myZoneInfoHolder.getName()+" excess supply "+myZoneInfoHolder.getExcessSupply()+" excess demand "+myZoneInfoHolder.getExcessDemand());
 				for(MarketSession aMarketSession : possibleMarketSessionsList){
 					aProducer=aMarketSession.getProducer();
 					if(name.equals(aProducer.getName())){
-						demandFunctionParametersList.add(new DemandFunctionParameters(initialInterceptOfTheDemandFunction,aMarketSession.getMarketName(),aMarketSession.getProducerName()));					
+						initialInterceptOfTheDemandFunction=(int)((1+Cms_builder.demandFunctionSlopeTuner)*Math.min(myZoneInfoHolder.getConsumption(),myZoneInfoHolder.getProduction()));
+						aParametersHolder=new DemandFunctionParameters(initialInterceptOfTheDemandFunction,aMarketSession.getMarketName(),aMarketSession.getProducerName());
+						aParametersHolder.setSlope(Cms_builder.demandFunctionSlopeTuner*Math.min(myZoneInfoHolder.getConsumption(),myZoneInfoHolder.getProduction())/5);
+						demandFunctionParametersList.add(aParametersHolder);					
 					}
-					else{
+					else{//if producer is different from buyer
 						Cms_builder.distanceCalculator.setStartingGeographicPoint(longitude, latitude);
 						Cms_builder.distanceCalculator.setDestinationGeographicPoint(aProducer.getLongitude(),aProducer.getLatitude());
 						distanceFromSellerInKm=(int) Math.round(Cms_builder.distanceCalculator.getOrthodromicDistance()/1000);
-						tmpIntercept=(int) Math.round(Math.min(initialInterceptOfTheDemandFunction,aProducer.getProduction())-Cms_builder.weightOfDistanceInInitializingIntercept*distanceFromSellerInKm);
-						if(tmpIntercept<0){
-							tmpIntercept=0;
+//						System.out.println("distance "+distanceFromSellerInKm);
+						//identify producer's zone
+						for(ZoneInfoHolder tmpZoneInfoHolder : zoneInformationHoldersList){
+							if(tmpZoneInfoHolder.getName().equals(aProducer.getName())){
+							aZoneInfoHolder=tmpZoneInfoHolder;
+							}
+						}
+						//create the parameter holder 
+						if(myZoneInfoHolder.getExcessDemand()>0 && aZoneInfoHolder.getExcessSupply()>0){
+							tmpDoubleValue=myZoneInfoHolder.getExcessDemand()*aZoneInfoHolder.getShareOfExcessSupply();
+							tmpIntercept=(int) Math.round((1+Cms_builder.demandFunctionSlopeTuner-Cms_builder.weightOfDistanceInInitializingIntercept)*tmpDoubleValue);
+							if(tmpIntercept<0){
+								tmpIntercept=0;
+							}
+							aParametersHolder=new DemandFunctionParameters(tmpIntercept,aMarketSession.getMarketName(),aMarketSession.getProducerName());
+							aParametersHolder.setSlope(Cms_builder.demandFunctionSlopeTuner*tmpDoubleValue/5);
+						}
+						else{
+							tmpDoubleValue=shareOfProductionABuyerIsWillingToBuyFromAProducerWithNoExcessSupply*aZoneInfoHolder.getProduction();
+							aParametersHolder=new DemandFunctionParameters((int)((1+Cms_builder.demandFunctionSlopeTuner)*tmpDoubleValue),aMarketSession.getMarketName(),aMarketSession.getProducerName());							
+							aParametersHolder.setSlope(Cms_builder.demandFunctionSlopeTuner*tmpDoubleValue/5);
 						}
 
-						demandFunctionParametersList.add(new DemandFunctionParameters(tmpIntercept,aMarketSession.getMarketName(),aMarketSession.getProducerName()));
+						demandFunctionParametersList.add(aParametersHolder);
 					}
 				}
 			}
@@ -513,8 +547,9 @@ public class Buyer {
 		}
 
 		if(gapToTarget!=0){
-			System.out.println(name+" stock "+stock+" averageConsumption "+averageConsumption+" minimumConsumption "+minimumConsumption+" maximumConsumption "+maximumConsumption+" gap to Target "+gapToTarget);
-			System.out.println("   "+name+" population "+population+" perCapitaConsumption "+perCapitaConsumption+" periodicConsumptionTarget "+averageConsumption);
+//to screen
+//			System.out.println(name+" stock "+stock+" averageConsumption "+averageConsumption+" minimumConsumption "+minimumConsumption+" maximumConsumption "+maximumConsumption+" gap to Target "+gapToTarget);
+//			System.out.println("   "+name+" population "+population+" perCapitaConsumption "+perCapitaConsumption+" periodicConsumptionTarget "+averageConsumption);
 			if(Cms_builder.verboseFlag){System.out.println(name+" stock "+stock+" averageConsumption "+averageConsumption+" minimumConsumption "+minimumConsumption+" maximumConsumption "+maximumConsumption+" gap to Target "+gapToTarget);}
 			if(Cms_builder.verboseFlag){System.out.println("   "+name+" population "+population+" perCapitaConsumption "+perCapitaConsumption+" periodicConsumptionTarget "+averageConsumption);}
 		}
