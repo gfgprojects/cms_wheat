@@ -31,7 +31,7 @@ public class Producer {
 	int timeOfFirstProduction=1;
 	int initialProduction,targetProduction,stock,numberOfMarkets,totalMarketSessions,remainingMarketSessions,offerInThisSession,production,toBeSoldInEachMarketSessionToExhaustStock;
 	double sumOfSellingPrices,averageSellingPrice,fuelPrice,productionCosts,reservationPrice;
-	double markUp=0.0; //reservatioPrice=(1+markUp)*productionCosts
+	double markUp=-0.2; //reservatioPrice=(1+markUp)*productionCosts
 	double crudeOilBarrelPerNHectars=0.1;
 	double QuantityMultiplierToDecreaseReservationPrice=1.2;//QuantityMultiplierToDecreaseReservationPrice*toBeSoldInEachMarketSessionToExhaustStock
 	double shareOfRemainingSessionsToDecreaseReservationPrice=0.5;
@@ -99,9 +99,11 @@ public class Producer {
 
 	public ArrayList<ElementOfSupplyOrDemandCurve> getSupplyCurve(String theVariety){
 		offerInThisSession=(int)stock/remainingMarketSessions;
+/*
 		if(offerInThisSession>QuantityMultiplierToDecreaseReservationPrice*toBeSoldInEachMarketSessionToExhaustStock && remainingMarketSessions<shareOfRemainingSessionsToDecreaseReservationPrice*totalMarketSessions ){
 			reservationPrice=(new BigDecimal(reservationPrice-reservationPrice/remainingMarketSessions).setScale(3,RoundingMode.HALF_EVEN)).doubleValue();
 		}
+*/
 //		reservationPrice=(new BigDecimal(reservationPrice-reservationPrice/remainingMarketSessions).setScale(3,RoundingMode.HALF_EVEN)).doubleValue();
 //		System.out.println(name+" reservation price "+reservationPrice);
 		supplyCurve=new ArrayList<ElementOfSupplyOrDemandCurve>();
