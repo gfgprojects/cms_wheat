@@ -55,7 +55,7 @@ public class Buyer {
 	Contract aContract,aContract1;
 	DemandFunctionParameters aParametersHolder;
 	int interceptOfTheDemandFunction,initialInterceptOfTheDemandFunction,tmpIntercept,tmpIntValue,slopeOfTheDemandFunction,demandToBeMoved;
-	double oilPriceWeightInTransportCosts=0.0;
+	double oilPriceWeightInTransportCosts=0.1;
 	double shareOfProductionABuyerIsWillingToBuyFromAProducerWithNoExcessSupply=0.01;
 
 /**
