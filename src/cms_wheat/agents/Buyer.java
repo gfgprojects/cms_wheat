@@ -55,7 +55,7 @@ public class Buyer {
 	Contract aContract,aContract1;
 	DemandFunctionParameters aParametersHolder;
 	int interceptOfTheDemandFunction,initialInterceptOfTheDemandFunction,tmpIntercept,tmpIntValue,slopeOfTheDemandFunction,demandToBeMoved;
-	double oilPriceWeightInTransportCosts=0.05;
+	double oilPriceWeightInTransportCosts=0.01;
 	double shareOfProductionABuyerIsWillingToBuyFromAProducerWithNoExcessSupply=0.01;
 
 /**
@@ -300,9 +300,9 @@ public class Buyer {
 					if((1+Cms_builder.toleranceInMovingDemand)*aContract.getPricePlusTransport()<aContract1.getPricePlusTransport()){
 						//					if((Cms_builder.toleranceInMovingDemand)*aContract.getPrice()<aContract1.getPrice()){
 						//if buying a very small quantity from the most expensive country the next line neutralizes the mechanism
-//						demandToBeMoved=(int)(Math.min(averageConsumption*Cms_builder.shareOfDemandToBeMoved,aContract1.getQuantity()));
+						demandToBeMoved=(int)(Math.min(averageConsumption*Cms_builder.shareOfDemandToBeMoved,aContract1.getQuantity()));
 //						demandToBeMoved=(int)(aContract1.getQuantity()*Cms_builder.shareOfDemandToBeMoved);
-						demandToBeMoved=(int)(aContract.getQuantity()*Cms_builder.shareOfDemandToBeMoved);
+//						demandToBeMoved=(int)(aContract.getQuantity()*Cms_builder.shareOfDemandToBeMoved);
 						if(demandToBeMoved<Cms_builder.minimumImportQuantity){
 							demandToBeMoved=Cms_builder.minimumImportQuantity;
 						}
@@ -537,7 +537,6 @@ public class Buyer {
 		if(Cms_builder.verboseFlag){System.out.println("           "+name+" stock before: "+stock+" minimum Consumption: "+minimumConsumption);}
 		gapToTarget=0;
 		gapToTarget=averageConsumption-stock;		
-
 /*
 		if(stock<minimumConsumption){
 			gapToTarget=averageConsumption-stock;
