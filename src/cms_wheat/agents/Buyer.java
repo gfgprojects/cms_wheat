@@ -536,16 +536,16 @@ public class Buyer {
 	public void accountConsumption(){
 		if(Cms_builder.verboseFlag){System.out.println("           "+name+" stock before: "+stock+" minimum Consumption: "+minimumConsumption);}
 		gapToTarget=0;
-//		gapToTarget=averageConsumption-stock;		
+		gapToTarget=averageConsumption-stock;		
 
+/*
 		if(stock<minimumConsumption){
-//		if(stock<averageConsumption){
 			gapToTarget=averageConsumption-stock;
 		}
 		if(stock>maximumConsumption){
 			gapToTarget=averageConsumption-stock;
 		}
-
+*/
 		if(gapToTarget!=0){
 //to screen
 //			System.out.println(name+" stock "+stock+" averageConsumption "+averageConsumption+" minimumConsumption "+minimumConsumption+" maximumConsumption "+maximumConsumption+" gap to Target "+gapToTarget);
