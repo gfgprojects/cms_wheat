@@ -310,9 +310,13 @@ public class Buyer {
 						for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
 							if(aContract.getMarketName().equals(aParametersHolder.getMarketName()) && aContract.getProducerName().equals(aParametersHolder.getProducerName())){
 								aParametersHolder.increaseInterceptBy(demandToBeMoved);
+								tmpIntValue=aParametersHolder.getIntercept();
+								aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
 							}
 							if(aContract1.getMarketName().equals(aParametersHolder.getMarketName()) && aContract1.getProducerName().equals(aParametersHolder.getProducerName())){
 								aParametersHolder.decreaseInterceptBy(demandToBeMoved);
+								tmpIntValue=aParametersHolder.getIntercept();
+								aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
 							}
 						}
 						}
@@ -420,6 +424,7 @@ public class Buyer {
 		}
 		if(parametersHoldeNotFound){
 			interceptOfTheDemandFunction=initialInterceptOfTheDemandFunction;
+			slopeOfTheDemandFunction=(int)(Cms_builder.demandFunctionSlopeTuner*interceptOfTheDemandFunction/5);
 		}
 
 // create and fill a dummy demand curve

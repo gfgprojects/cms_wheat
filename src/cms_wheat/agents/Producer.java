@@ -31,7 +31,7 @@ public class Producer {
 	int timeOfFirstProduction=1;
 	int initialProduction,targetProduction,stock,numberOfMarkets,totalMarketSessions,remainingMarketSessions,offerInThisSession,production,toBeSoldInEachMarketSessionToExhaustStock;
 	double sumOfSellingPrices,averageSellingPrice,fuelPrice,productionCosts,reservationPrice;
-	double markUp=-0.4; //reservatioPrice=(1+markUp)*productionCosts
+	double markUp=-0.6; //reservatioPrice=(1+markUp)*productionCosts
 	double crudeOilBarrelPerNHectars=0.1;
 	double QuantityMultiplierToDecreaseReservationPrice=1.2;//QuantityMultiplierToDecreaseReservationPrice*toBeSoldInEachMarketSessionToExhaustStock
 	double shareOfRemainingSessionsToDecreaseReservationPrice=0.5;
