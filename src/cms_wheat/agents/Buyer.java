@@ -413,6 +413,7 @@ public class Buyer {
 		for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
 			if(aParametersHolder.getMarketName().equals(theMarketName) && aParametersHolder.getProducerName().equals(theProducer.getName())){
 				interceptOfTheDemandFunction=aParametersHolder.getIntercept();
+				slopeOfTheDemandFunction=aParametersHolder.getSlope();
 				parametersHoldeNotFound=false;
 				if(Cms_builder.verboseFlag){System.out.println("           "+name+" new intercept of the demand function "+interceptOfTheDemandFunction);}
 			}

@@ -42,5 +42,8 @@ public class DemandFunctionParameters{
 	public String getProducerName(){
 		return producer;
 	}
+	public int getSlope(){
+		return slope;
+	}
 
 }
