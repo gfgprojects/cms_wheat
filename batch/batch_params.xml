@@ -15,14 +15,14 @@
 <parameter name="probabilityToAllowExport" type="constant" constant_type="double" value="1.0"></parameter>
 <parameter name="probabilityToAllowImport" type="constant" constant_type="double" value="1.0"></parameter>
 <parameter name="toleranceInMovingDemand" type="constant" constant_type="double" value="0.0"></parameter>
-<parameter name="shareOfDemandToBeMoved" type="constant" constant_type="double" value="0.1"></parameter>
+<parameter name="shareOfDemandToBeMoved" type="constant" constant_type="double" value="0.01"></parameter>
 <parameter name="percentageOfPriceMarkDownInNewlyAccessibleMarkets" type="constant" constant_type="double" value="0.1"></parameter>
 <parameter name="percentageChangeInTargetProduction" type="constant" constant_type="double" value="0.0"></parameter>
 <parameter name="priceThresholdToIncreaseTargetProduction" type="constant" constant_type="double" value="8.0"></parameter>
 <parameter name="priceThresholdToDecreaseTargetProduction" type="constant" constant_type="double" value="2.0"></parameter>
 <parameter name="transportCostsTuner" type="constant" constant_type="double" value="0.01"></parameter>
 <parameter name="demandFunctionInterceptTuner" type="constant" constant_type="double" value="0.1"></parameter>
-<parameter name="demandFunctionSlopeTuner" type="constant" constant_type="double" value="0.15"></parameter>
+<parameter name="demandFunctionSlopeTuner" type="constant" constant_type="double" value="0.3"></parameter>
 <parameter name="startUsingInputsFromTimeTick" type="constant" constant_type="int" value="199"></parameter>
 <parameter name="batchStoppingTime" type="constant" constant_type="int" value="600"></parameter>
 </sweep>
