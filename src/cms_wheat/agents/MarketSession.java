@@ -164,6 +164,9 @@ public class MarketSession {
 	public double getOfferedQuantity(){
 		return offeredQuantity;
 	}
+	public double getQsQdRatio(){
+		return qsqdRatio;
+	}	
 	public String getSessionDescription(){
 		return theProducer.getName()+" @ "+market;
 	}

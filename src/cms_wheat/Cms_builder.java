@@ -126,7 +126,9 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 		String[] parts = ((String)lines.get(i)).split(",");
 		ArrayList<Integer> tmpProductionInputs=new ArrayList<Integer>();
 		for(int j=7;j<parts.length;j++){
-			tmpProductionInputs.add(new Integer(parts[j]));
+			Integer tmpInt=new Integer(parts[j]);
+			int tmpIntegerValue=(int)(tmpInt*0.9);
+			tmpProductionInputs.add(new Integer(tmpIntegerValue));
 		}
 		aProducer=new Producer(parts[0],parts[1],new Double(parts[2]),new Double(parts[3]),parts[4],parts[5],tmpProductionInputs,bidAndAskPrices);
 		aProducer.setup((new Integer(parts[6])).intValue());
