@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <parameters>
 					<parameter name="consumptionShareToSetMinimumConsumption" displayName="consumptionShareToSetMinimumConsumption" type="double" 
-						defaultValue="0.2" 
+						defaultValue="0.95" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									
 		/>
 				<parameter name="consumptionShareToSetMaximumConsumption" displayName="consumptionShareToSetMaximumConsumption" type="double" 
-						defaultValue="1.8" 
+						defaultValue="1.05" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									
@@ -43,13 +43,13 @@
 									
 		/>
 				<parameter name="transportCostsTuner" displayName="transportCostsTuner" type="double" 
-						defaultValue="1.0" 
+						defaultValue="0.05" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									
 		/>
 				<parameter name="globalProduction" displayName="global production" type="int" 
-						defaultValue="500000000" 
+						defaultValue="300000000" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
@@ -97,7 +97,7 @@
 									
 		/>
 				<parameter name="minimumImportQuantity" displayName="minimumImportQuantity" type="int" 
-						defaultValue="10" 
+						defaultValue="100" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
@@ -133,7 +133,7 @@
 									
 		/>
 				<parameter name="startUsingInputsFromTimeTick" displayName="startUsingInputsFromTimeTick" type="int" 
-						defaultValue="200" 
+						defaultValue="199" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
@@ -145,7 +145,7 @@
 									
 		/>
 				<parameter name="demandFunctionInterceptTuner" displayName="demandFunctionInterceptTuner" type="double" 
-						defaultValue="0.2" 
+						defaultValue="0.1" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									

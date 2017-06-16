@@ -40,6 +40,14 @@
         <methodName>getQuantityExchanged</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
+    <entry>
+      <string>OfferedQuantity</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>OfferedQuantity</id>
+        <className>cms_wheat.agents.MarketSession</className>
+        <methodName>getOfferedQuantity</methodName>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
+    </entry>
   </methodDataSources>
   <countSources class="linked-hash-map"/>
   <customNADataSources class="linked-hash-map"/>

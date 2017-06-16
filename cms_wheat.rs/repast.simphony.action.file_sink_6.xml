@@ -8,6 +8,7 @@
     <string>SessionDescription</string>
     <string>MarketPrice</string>
     <string>QuantityExchanged</string>
+    <string>OfferedQuantity</string>
   </sourceIds>
   <fileName>output/z_sessions.csv</fileName>
   <addTimeStamp>false</addTimeStamp>
