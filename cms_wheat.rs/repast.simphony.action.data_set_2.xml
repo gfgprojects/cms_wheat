@@ -48,6 +48,14 @@
         <methodName>getOfferedQuantity</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
+    <entry>
+      <string>QsQdRatio</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>QsQdRatio</id>
+        <className>cms_wheat.agents.MarketSession</className>
+        <methodName>getQsQdRatio</methodName>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
+    </entry>
   </methodDataSources>
   <countSources class="linked-hash-map"/>
   <customNADataSources class="linked-hash-map"/>
