@@ -134,6 +134,8 @@ public class Producer {
 
 	public void makeProduction(){
 			if(Cms_builder.verboseFlag){System.out.println(name+" state before production stock: "+stock+" remaining sessions: "+remainingMarketSessions);}
+//we assume that the stock as absorbed by unconsidered uses
+			stock=0;
 			production=(new Double(targetProduction*(1+(RandomHelper.nextDouble()*2-1.0)*Cms_builder.productionRateOfChangeControl))).intValue();
 /*
 			if(RepastEssentials.GetTickCount()<150){
