@@ -36,7 +36,8 @@ public class Producer {
 	double fixUnitCost=1.0;
 	double QuantityMultiplierToDecreaseReservationPrice=1.2;//QuantityMultiplierToDecreaseReservationPrice*toBeSoldInEachMarketSessionToExhaustStock
 	double shareOfRemainingSessionsToDecreaseReservationPrice=0.5;
-
+	double toleranceInReducingSupply=0.05; //if sold quantity is below the supply quantity by this percentage, reduce supply by the following parameter 
+	double shareOfSupplyToBeReducedInCaseOfUnsoldProducts=0.05;
 /**
  *The Cms_builder calls the constructor giving as parameters the values found in a line of the producers.csv file located in the data folder.
  *<br>
@@ -99,7 +100,13 @@ public class Producer {
 	}
 
 	public ArrayList<ElementOfSupplyOrDemandCurve> getSupplyCurve(String theVariety){
-		offerInThisSession=(int)stock/remainingMarketSessions;
+		//if unsold quantity exists
+		if(quantitySoldInLatestMarketSession*(1+toleranceInReducingSupply)<offerInThisSession){
+			offerInThisSession+=-shareOfSupplyToBeReducedInCaseOfUnsoldProducts*offerInThisSession;
+		}//if unsold quantity does not exist
+		else{
+			offerInThisSession=(int)stock/remainingMarketSessions;
+		}
 /*
 		if(offerInThisSession>QuantityMultiplierToDecreaseReservationPrice*toBeSoldInEachMarketSessionToExhaustStock && remainingMarketSessions<shareOfRemainingSessionsToDecreaseReservationPrice*totalMarketSessions ){
 			reservationPrice=(new BigDecimal(reservationPrice-reservationPrice/remainingMarketSessions).setScale(3,RoundingMode.HALF_EVEN)).doubleValue();
