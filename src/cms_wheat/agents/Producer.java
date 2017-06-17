@@ -31,8 +31,9 @@ public class Producer {
 	int timeOfFirstProduction=1;
 	int initialProduction,targetProduction,stock,numberOfMarkets,totalMarketSessions,remainingMarketSessions,offerInThisSession,production,toBeSoldInEachMarketSessionToExhaustStock;
 	double sumOfSellingPrices,averageSellingPrice,fuelPrice,productionCosts,reservationPrice;
-	double markUp=-0.7; //reservatioPrice=(1+markUp)*productionCosts
+	double markUp=-0.9; //reservatioPrice=(1+markUp)*productionCosts
 	double crudeOilBarrelPerNHectars=0.1;
+	double fixUnitCost=1.0;
 	double QuantityMultiplierToDecreaseReservationPrice=1.2;//QuantityMultiplierToDecreaseReservationPrice*toBeSoldInEachMarketSessionToExhaustStock
 	double shareOfRemainingSessionsToDecreaseReservationPrice=0.5;
 
@@ -165,7 +166,7 @@ public class Producer {
 			//end annealing
 */			
 			fuelPrice=Cms_scheduler.crudeOilPrice;
-			productionCosts=fuelPrice*crudeOilBarrelPerNHectars;
+			productionCosts=fixUnitCost+fuelPrice*crudeOilBarrelPerNHectars;
 			reservationPrice=(new BigDecimal((1+markUp)*productionCosts).setScale(3,RoundingMode.HALF_EVEN)).doubleValue();
 //			System.out.println(name+ " fuel price "+fuelPrice+" productionCosts "+productionCosts+" reservatioPrice "+reservationPrice);
 			 
