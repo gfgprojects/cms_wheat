@@ -33,7 +33,7 @@ public class Producer {
 	double sumOfSellingPrices,averageSellingPrice,fuelPrice,productionCosts,reservationPrice;
 	double markUp=-0.6; //reservatioPrice=(1+markUp)*productionCosts
 	double crudeOilBarrelPerNHectars=0.1;
-	double fixUnitCost=1.0;
+	double fixUnitCost=0.1;
 	double QuantityMultiplierToDecreaseReservationPrice=1.2;//QuantityMultiplierToDecreaseReservationPrice*toBeSoldInEachMarketSessionToExhaustStock
 	double shareOfRemainingSessionsToDecreaseReservationPrice=0.5;
 	double toleranceInReducingSupply=0.05; //if sold quantity is below the supply quantity by this percentage, reduce supply by the following parameter 
