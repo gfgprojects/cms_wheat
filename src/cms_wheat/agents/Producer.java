@@ -100,6 +100,8 @@ public class Producer {
 	}
 
 	public ArrayList<ElementOfSupplyOrDemandCurve> getSupplyCurve(String theVariety){
+		offerInThisSession=(int)(production/12);
+/*
 		//if unsold quantity exists
 		if(quantitySoldInLatestMarketSession*(1+toleranceInReducingSupply)<offerInThisSession){
 			offerInThisSession+=-shareOfSupplyToBeReducedInCaseOfUnsoldProducts*offerInThisSession;
@@ -107,6 +109,8 @@ public class Producer {
 		else{
 			offerInThisSession=(int)stock/remainingMarketSessions;
 		}
+*/
+
 /*
 		if(offerInThisSession>QuantityMultiplierToDecreaseReservationPrice*toBeSoldInEachMarketSessionToExhaustStock && remainingMarketSessions<shareOfRemainingSessionsToDecreaseReservationPrice*totalMarketSessions ){
 			reservationPrice=(new BigDecimal(reservationPrice-reservationPrice/remainingMarketSessions).setScale(3,RoundingMode.HALF_EVEN)).doubleValue();
