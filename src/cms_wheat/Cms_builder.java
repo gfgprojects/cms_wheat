@@ -43,7 +43,7 @@ public class Cms_builder implements ContextBuilder<Object> {
 	Coordinate coord;
 	Point geom;
 	RepastMapLayer mapLayer;
-	List<String> lines;
+	List<String> lines,linesBuyersFeed,linesBuyersOtherUses,linesBuyersSeed;
 	String tmpVarieties="";
 	String tmpMarkets="";
 	ArrayList<Market> marketsList;
@@ -146,15 +146,27 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 	//Buyers creation
 	try{
 		lines=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/buyers.csv"), Charset.forName("UTF-8"));
+		linesBuyersFeed=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/buyers_Feed.csv"), Charset.forName("UTF-8"));
+		linesBuyersOtherUses=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/buyers_Other_Uses.csv"), Charset.forName("UTF-8"));
+		linesBuyersSeed=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/buyers_Seed.csv"), Charset.forName("UTF-8"));
 	} catch (IOException e) {
 		e.printStackTrace();
 	}
 	for(int i=1;i<lines.size()-1;i++){
 		String[] parts = ((String)lines.get(i)).split(",");
+		String[] partsFeed = ((String)linesBuyersFeed.get(i)).split(",");
+		String[] partsOtherUses = ((String)linesBuyersOtherUses.get(i)).split(",");
+		String[] partsSeed = ((String)linesBuyersSeed.get(i)).split(",");
 		ArrayList<Integer> tmpPopulationInputs=new ArrayList<Integer>();
+		ArrayList<Integer> tmpOtherDemandComponentsInputs=new ArrayList<Integer>();
 		for(int j=5;j<parts.length;j++){
 			int tmpPop = (int)((new Double(parts[j])).doubleValue()*1000);
 			tmpPopulationInputs.add(new Integer(tmpPop));
+			int tmpFeed=new Integer(partsFeed[j-1]);
+			int tmpOtherUses=new Integer(partsOtherUses[j-1]);
+			int tmpSeed=new Integer(partsSeed[j-1]);
+			int tmpOtherDemandComponents=tmpFeed+tmpOtherUses+tmpSeed;
+			tmpOtherDemandComponentsInputs.add(new Integer(tmpOtherDemandComponents));
 		}
 		ArrayList<Integer> tmpPopulationInputsAdjustedForPeriodicity=new ArrayList<Integer>();
 		for(int j=0;j<tmpPopulationInputs.size()-1;j++){
