@@ -30,7 +30,8 @@ public class Buyer {
 	public boolean importAllowed=true;
 	public ArrayList<Double> demandPrices=new ArrayList<Double>();
 	public ArrayList<Integer> populationInputs=new ArrayList<Integer>();
-	Iterator<Integer> populationInputsIterator;
+	public ArrayList<Integer> demandInputs=new ArrayList<Integer>();
+	Iterator<Integer> populationInputsIterator,demandInputsIterator;
 	public ArrayList<ElementOfSupplyOrDemandCurve> demandCurve,tmpDemandCurve;
 	public ArrayList<Contract> latestContractsList=new ArrayList<Contract>();
 	public ArrayList<Contract> latestContractsInPossibleMarketSessionsList=new ArrayList<Contract>();
@@ -78,21 +79,25 @@ public class Buyer {
  * @param buyerLatitude double
  * @param buyerLongitude double
  * @param buyerPerCapitaConsumption double
- * @param producerPopulationInputs array list of double
+ * @param buyerPopulationInputs array list of double
  * @param possiblePrices array list of double
  */
-	public Buyer(String buyerName,String buyerIso3Code,double buyerLatitude,double buyerLongitude,double buyerPerCapitaConsumption,ArrayList<Integer> producerPopulationInputs,ArrayList<Double> possiblePrices){
+	public Buyer(String buyerName,String buyerIso3Code,double buyerLatitude,double buyerLongitude,double buyerPerCapitaConsumption,ArrayList<Integer> buyerPopulationInputs,ArrayList<Integer> buyerDemandInputs,ArrayList<Double> possiblePrices){
 		name=buyerName;
 		iso3Code=buyerIso3Code;
 		latitude=buyerLatitude;
 		longitude=buyerLongitude;
 		perCapitaConsumption=buyerPerCapitaConsumption;
-		populationInputs=producerPopulationInputs;
+		populationInputs=buyerPopulationInputs;
+		demandInputs=buyerDemandInputs;
 		populationInputsIterator=populationInputs.iterator();
 		population=populationInputsIterator.next();
 		populationInputsIterator.remove();
 		demandShare=perCapitaConsumption*population/Cms_builder.globalProduction;
-		averageConsumption=(int)(demandShare*Cms_builder.globalProduction/Cms_builder.productionCycleLength);
+//		averageConsumption=(int)(demandShare*Cms_builder.globalProduction/Cms_builder.productionCycleLength);
+		demandInputsIterator=demandInputs.iterator();
+		averageConsumption=demandInputsIterator.next();
+		demandInputsIterator.remove();
 		minimumConsumption=(int)(Cms_builder.consumptionShareToSetMinimumConsumption*averageConsumption);
 		maximumConsumption=(int)(Cms_builder.consumptionShareToSetMaximumConsumption*averageConsumption);
 
@@ -107,7 +112,8 @@ public class Buyer {
 		slopeOfTheDemandFunction=(int)(Cms_builder.demandFunctionSlopeTuner*averageConsumption/5);
 		if(Cms_builder.verboseFlag){System.out.println("Created buyer:    "+name+", latitude: "+latitude+", longitude: "+longitude+" minimum consumption "+minimumConsumption+" maximum consumption "+maximumConsumption+" stock "+stock);}
 		if(Cms_builder.verboseFlag){System.out.println("   population:    "+populationInputs);}
-
+//		System.out.println("buyer "+name+"   avC:    "+averageConsumption);
+//		System.out.println("buyer "+name+"   demand:    "+demandInputs);
 		demandPrices=possiblePrices;
 	}
 	
@@ -570,7 +576,9 @@ public class Buyer {
 			if(Cms_builder.verboseFlag){System.out.println(name+" population taken from input record");}
 			population=populationInputsIterator.next();
 			populationInputsIterator.remove();
-			averageConsumption=(int)(1.0*perCapitaConsumption*population/Cms_builder.productionCycleLength);
+//			averageConsumption=(int)(1.0*perCapitaConsumption*population/Cms_builder.productionCycleLength);
+			averageConsumption=demandInputsIterator.next();
+			demandInputsIterator.remove();
 			minimumConsumption=(int)(Cms_builder.consumptionShareToSetMinimumConsumption*averageConsumption);
 			maximumConsumption=(int)(Cms_builder.consumptionShareToSetMaximumConsumption*averageConsumption);
 		}

@@ -166,8 +166,10 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 			int tmpOtherUses=new Integer(partsOtherUses[j-1]);
 			int tmpSeed=new Integer(partsSeed[j-1]);
 			int tmpOtherDemandComponents=tmpFeed+tmpOtherUses+tmpSeed;
+//			tmpOtherDemandComponents=0;
 			tmpOtherDemandComponentsInputs.add(new Integer(tmpOtherDemandComponents));
 		}
+		//build periodic population time series (ex montly) starting from yearly time series
 		ArrayList<Integer> tmpPopulationInputsAdjustedForPeriodicity=new ArrayList<Integer>();
 		for(int j=0;j<tmpPopulationInputs.size()-1;j++){
 			tmpPopulationInputsAdjustedForPeriodicity.add(tmpPopulationInputs.get(j));
@@ -177,8 +179,33 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 			}
 		}
 		tmpPopulationInputsAdjustedForPeriodicity.add(tmpPopulationInputs.get(tmpPopulationInputs.size()-1));
+		//build periodic food time series (ex montly) starting from periodic population
+		Double yearlyPerCapitaConsumption=new Double(parts[4]);
+		double periodicPerCapitaConsumption=yearlyPerCapitaConsumption/productionCycleLength;
+		ArrayList<Integer> tmpFoodDemandComponentAdjustedForPeriodicity=new ArrayList<Integer>();
+		for(int f=0;f<tmpPopulationInputsAdjustedForPeriodicity.size();f++){
+			tmpFoodDemandComponentAdjustedForPeriodicity.add(new Integer((int)(periodicPerCapitaConsumption*tmpPopulationInputsAdjustedForPeriodicity.get(f))));
+		}
+		//build periodic other demand components time series (ex montly) starting from yearly other demand components
+		ArrayList<Integer> tmpOtherDemandComponentsAdjustedForPeriodicity=new ArrayList<Integer>();
+		for(int j=0;j<tmpOtherDemandComponentsInputs.size();j++){
+			int tmpOtherComponents=tmpOtherDemandComponentsInputs.get(j);
+			double tmpOtherComponentsAdjustedForPeriodicity=(double)(tmpOtherComponents/productionCycleLength);
+			for(int z=1;z<productionCycleLength;z++){
+				tmpOtherDemandComponentsAdjustedForPeriodicity.add((int)(tmpOtherComponentsAdjustedForPeriodicity));				
+			}
+			tmpOtherDemandComponentsAdjustedForPeriodicity.add(tmpOtherComponents-((int)tmpOtherComponentsAdjustedForPeriodicity*(productionCycleLength-1)));
+		}
 
-		aBuyer=new Buyer(parts[0],parts[1],new Double(parts[2]),new Double(parts[3]),new Double(parts[4]),tmpPopulationInputsAdjustedForPeriodicity,bidAndAskPrices);
+		//total periodic demand
+		ArrayList<Integer> tmpDemandAdjustedForPeriodicity=new ArrayList<Integer>();
+		for(int j=0;j<tmpFoodDemandComponentAdjustedForPeriodicity.size();j++){
+			int tmpTotDemand=tmpFoodDemandComponentAdjustedForPeriodicity.get(j)+tmpOtherDemandComponentsAdjustedForPeriodicity.get(j);
+			tmpDemandAdjustedForPeriodicity.add(new Integer(tmpTotDemand));
+		}
+		
+		
+		aBuyer=new Buyer(parts[0],parts[1],new Double(parts[2]),new Double(parts[3]),new Double(parts[4]),tmpPopulationInputsAdjustedForPeriodicity,tmpDemandAdjustedForPeriodicity,bidAndAskPrices);
 		context.add(aBuyer);
 		coord = new Coordinate(aBuyer.getLongitude(),aBuyer.getLatitude());
 		geom = fac.createPoint(coord);
