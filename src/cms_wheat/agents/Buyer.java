@@ -294,7 +294,7 @@ public class Buyer {
 					aContract=latestContractsInPossibleMarketSessionsList.get(0);
 					contractsBackwarRunner=latestContractsInPossibleMarketSessionsList.size()-1;
 					aContract1=latestContractsInPossibleMarketSessionsList.get(contractsBackwarRunner);
-
+					//some contracts in the tail may have quantity equal to zero: jump to the first positive quantity contract
 					while(latestContractsInPossibleMarketSessionsList.get(contractsBackwarRunner).getQuantity()<1 && contractsBackwarRunner>0){
 						aContract1=latestContractsInPossibleMarketSessionsList.get(contractsBackwarRunner);
 						contractsBackwarRunner--;
@@ -306,9 +306,9 @@ public class Buyer {
 					if((1+Cms_builder.toleranceInMovingDemand)*aContract.getPricePlusTransport()<aContract1.getPricePlusTransport()){
 						//					if((Cms_builder.toleranceInMovingDemand)*aContract.getPrice()<aContract1.getPrice()){
 						//if buying a very small quantity from the most expensive country the next line neutralizes the mechanism
-						demandToBeMoved=(int)(Math.min(averageConsumption*Cms_builder.shareOfDemandToBeMoved,aContract1.getQuantity()));
+//						demandToBeMoved=(int)(Math.min(averageConsumption*Cms_builder.shareOfDemandToBeMoved,aContract1.getQuantity()));
 //						demandToBeMoved=(int)(aContract1.getQuantity()*Cms_builder.shareOfDemandToBeMoved);
-//						demandToBeMoved=(int)(aContract.getQuantity()*Cms_builder.shareOfDemandToBeMoved);
+						demandToBeMoved=(int)(aContract.getQuantity()*Cms_builder.shareOfDemandToBeMoved);
 						if(demandToBeMoved<Cms_builder.minimumImportQuantity){
 							demandToBeMoved=Cms_builder.minimumImportQuantity;
 						}
