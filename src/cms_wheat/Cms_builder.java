@@ -203,8 +203,10 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 			int tmpTotDemand=tmpFoodDemandComponentAdjustedForPeriodicity.get(j)+tmpOtherDemandComponentsAdjustedForPeriodicity.get(j);
 			tmpDemandAdjustedForPeriodicity.add(new Integer(tmpTotDemand));
 		}
-		
-		
+	
+//		System.out.println(parts[0]+" "+tmpFoodDemandComponentAdjustedForPeriodicity);
+//		System.out.println(parts[0]+" "+tmpOtherDemandComponentsAdjustedForPeriodicity);	
+	
 		aBuyer=new Buyer(parts[0],parts[1],new Double(parts[2]),new Double(parts[3]),new Double(parts[4]),tmpPopulationInputsAdjustedForPeriodicity,tmpDemandAdjustedForPeriodicity,bidAndAskPrices);
 		context.add(aBuyer);
 		coord = new Coordinate(aBuyer.getLongitude(),aBuyer.getLatitude());
