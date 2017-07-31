@@ -12,7 +12,6 @@
     <string>AverageSellingPrice</string>
     <string>Iso3Code</string>
     <string>ReservationPrice</string>
-    <string>QuantityOfferedInMarketSession</string>
   </sourceIds>
   <fileName>output/z_producers.csv</fileName>
   <addTimeStamp>false</addTimeStamp>

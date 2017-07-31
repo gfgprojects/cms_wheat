@@ -72,14 +72,6 @@
         <methodName>getReservationPrice</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
-    <entry>
-      <string>QuantityOfferedInMarketSession</string>
-      <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>QuantityOfferedInMarketSession</id>
-        <className>cms_wheat.agents.Producer</className>
-        <methodName>getQuantityOfferedInMarketSession</methodName>
-      </repast.simphony.data2.engine.MethodDataSourceDefinition>
-    </entry>
   </methodDataSources>
   <countSources class="linked-hash-map"/>
   <customNADataSources class="linked-hash-map"/>
