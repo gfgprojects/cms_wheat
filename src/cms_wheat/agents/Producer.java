@@ -275,10 +275,6 @@ public class Producer {
 	public double getAverageSellingPrice(){
 		return averageSellingPrice;
 	}
-	public int getQuantityOfferedInMarketSession(){
-		return offerInThisSession;
-	}
-
 	
 
 }
