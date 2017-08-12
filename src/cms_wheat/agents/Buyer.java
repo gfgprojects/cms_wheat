@@ -51,6 +51,7 @@ public class Buyer {
 	public double pricePayedInLatestMarketSession;
 	public String varietyBoughtInLatestMarketSession,latestMarket;
 	public int distanceFromSellerInKm,averageConsumption,minimumConsumption,maximumConsumption,realizedConsumption,domesticConsumption,gapToTarget,gapToChargeToEachPossibleMarketSession,stock,domesticStock,demandToBeReallocated,population;
+	double shareOfGapToChargeToEachPossibleMarketSession;
 	Producer aProducer;
 	boolean latestPeriodVisitedMarketSessionNotFound,reallocateDemand,parametersHoldeNotFound;
 	Contract aContract,aContract1,tmpContract;
@@ -265,7 +266,7 @@ public class Buyer {
 
 					//increasing the intercept of the new available market sessions parameters holder to fill the gap to the target  
 					gapToChargeToEachPossibleMarketSession=gapToTarget/startBuyingMarketSessionsList.size();
-					if(Cms_builder.verboseFlag){System.out.println("          gap to target in each market session "+gapToChargeToEachPossibleMarketSession);}
+					if(Cms_builder.verboseFlag){System.out.println("          gap to target "+gapToTarget);}
 					for(MarketSession aMarketSession : startBuyingMarketSessionsList){
 						for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
 							if(aMarketSession.getMarketName().equals(aParametersHolder.getMarketName()) && aMarketSession.getProducerName().equals(aParametersHolder.getProducerName())){
@@ -812,18 +813,39 @@ public class Buyer {
 						}
 					}
 					//increasing the intercept of the available market sessions parameters holder to fill the gap to minimum consumption  
+//System.out.println(name+" start");
 					if(Cms_builder.verboseFlag){System.out.println("              moving demand functions to fill the gap to target level of inventories"); }
 					gapToChargeToEachPossibleMarketSession=gapToTarget/possibleMarketSessionsList.size();
-					if(Cms_builder.verboseFlag){System.out.println("                gap to target in each market session "+gapToChargeToEachPossibleMarketSession);}
+					if(Cms_builder.verboseFlag){System.out.println("                gap to target "+gapToTarget);}
+					//compute sum of intercepts
+					tmpIntSumValue=0;
 					for(MarketSession aMarketSession : possibleMarketSessionsList){
 						for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
 							if(aMarketSession.getMarketName().equals(aParametersHolder.getMarketName()) && aMarketSession.getProducerName().equals(aParametersHolder.getProducerName())){
-								aParametersHolder.increaseInterceptBy(gapToChargeToEachPossibleMarketSession);
+								tmpIntSumValue+=aParametersHolder.getIntercept();
 							}
 						}
 					}
 
+					shareOfGapToChargeToEachPossibleMarketSession=(double)gapToTarget/tmpIntSumValue;
 
+					if(Cms_builder.verboseFlag){System.out.println("                sum of intercept "+tmpIntSumValue+" shareOfGapToChargeToEachPossibleMarketSession "+shareOfGapToChargeToEachPossibleMarketSession);}
+					//modify intercepts
+					tmpIntSumValue=0;
+					for(MarketSession aMarketSession : possibleMarketSessionsList){
+						for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
+							if(aMarketSession.getMarketName().equals(aParametersHolder.getMarketName()) && aMarketSession.getProducerName().equals(aParametersHolder.getProducerName())){
+								tmpIntValue=(int)(aParametersHolder.getIntercept()*shareOfGapToChargeToEachPossibleMarketSession);
+								aParametersHolder.increaseInterceptBy(tmpIntValue);
+								tmpIntSumValue+=tmpIntValue;
+								tmpIntValue=aParametersHolder.getIntercept();
+								aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
+							}
+						}
+					}
+
+					if(Cms_builder.verboseFlag){System.out.println("                intercepts changed by "+tmpIntSumValue+" gapToTarget "+gapToTarget);}
+//System.out.println(name+" stop");
 				}
 
 
