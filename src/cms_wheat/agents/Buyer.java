@@ -423,7 +423,7 @@ public class Buyer {
 										decreaseQuantityProducerPositionInPriceRanking1=increaseQuantityProducerPositionInPriceRanking;
 										while(tmpIntSumValue+quantityBoughtAtTheSamePrice<quantityToMoveToLowerPrice && decreaseQuantityProducerPositionInPriceRanking1<decreaseQuantityProducerPositionInPriceRanking){
 											decreaseQuantityProducerPositionInPriceRanking1++;
-											if(decreaseQuantityProducerPositionInPriceRanking1 != myAssociatedProducerPositionInPriceRanking){
+											if(decreaseQuantityProducerPositionInPriceRanking1 != myAssociatedProducerPositionInPriceRanking && decreaseQuantityProducerPositionInPriceRanking1<latestContractsInPossibleMarketSessionsList.size()){
 												quantityBoughtAtTheSamePrice+=latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking1).getQuantity();
 											}
 										}
