@@ -57,6 +57,8 @@ public class Cms_builder implements ContextBuilder<Object> {
 	int batchStoppingTime=2;
 	public static int productionCycleLength,exportPolicyDecisionInterval,importPolicyDecisionInterval,globalProduction,minimumImportQuantity,producersPricesMemoryLength,startUsingInputsFromTimeTick;
 	public static double consumptionShareToSetMinimumConsumption,consumptionShareToSetMaximumConsumption,productionRateOfChangeControl,probabilityToAllowExport,probabilityToAllowImport,toleranceInMovingDemand,shareOfDemandToBeMoved,percentageOfPriceMarkDownInNewlyAccessibleMarkets,weightOfDistanceInInitializingIntercept,percentageChangeInTargetProduction,priceThresholdToIncreaseTargetProduction,priceThresholdToDecreaseTargetProduction,transportCostsTuner,demandFunctionInterceptTuner,demandFunctionSlopeTuner;
+	public static double shareOfDemandToBeMovedToLowerPrice;
+	public static double shareOfDemandToBeMovedFromHigherPrice;
 
 public Context<Object> build(Context<Object> context) {
 
@@ -86,7 +88,7 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 	demandFunctionSlopeTuner=(double)params.getValue("demandFunctionSlopeTuner");
 	startUsingInputsFromTimeTick=(int)params.getValue("startUsingInputsFromTimeTick");
 	batchStoppingTime=(int)params.getValue("batchStoppingTime");
-
+shareOfDemandToBeMovedToLowerPrice=shareOfDemandToBeMoved;
 
 	System.out.println();
 	if(verboseFlag){

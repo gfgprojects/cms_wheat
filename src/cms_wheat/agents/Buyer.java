@@ -339,7 +339,7 @@ public class Buyer {
 							increaseQuantityProducerPositionInPriceRanking=-1;
 							for(int i=0;i<myAssociatedProducerPositionInPriceRanking;i++){
 								if(latestContractsInPossibleMarketSessionsList.get(i).getPricePlusTransport()<latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()){
-									quantityToMoveToLowerPrice+=(int)(0.1*latestContractsInPossibleMarketSessionsList.get(i).getQuantity());
+									quantityToMoveToLowerPrice+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*latestContractsInPossibleMarketSessionsList.get(i).getQuantity());
 									increaseQuantityProducerPositionInPriceRanking=i;
 								}
 							}
@@ -531,7 +531,7 @@ public class Buyer {
 									increaseQuantityProducerPositionInPriceRanking1=-1;
 									while(tmpIntSumValue<quantityToMoveToLowerPrice && increaseQuantityProducerPositionInPriceRanking1<latestContractsInPossibleMarketSessionsList.size()-1){
 										increaseQuantityProducerPositionInPriceRanking1++;
-										tmpIntSumValue+=(int)Math.ceil(0.1*latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getQuantity());
+										tmpIntSumValue+=(int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getQuantity());
 									}
 
 									//now increase
@@ -542,8 +542,8 @@ public class Buyer {
 										tmpContract=latestContractsInPossibleMarketSessionsList.get(i);
 										for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
 											if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-												aParametersHolder.increaseInterceptBy((int)Math.ceil(0.1*tmpContract.getQuantity()));
-												tmpIntSumValue+=(int)(0.1*Math.ceil(tmpContract.getQuantity()));
+												aParametersHolder.increaseInterceptBy((int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
+												tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*Math.ceil(tmpContract.getQuantity()));
 												tmpIntValue=aParametersHolder.getIntercept();
 												aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
 											}
@@ -620,7 +620,7 @@ public class Buyer {
 										increaseQuantityProducerPositionInPriceRanking1=0;
 										while(tmpIntSumValue<quantityToMoveToLowerPrice && increaseQuantityProducerPositionInPriceRanking1<latestContractsInPossibleMarketSessionsList.size()-1){
 											increaseQuantityProducerPositionInPriceRanking1++;
-											tmpIntSumValue+=(int)(0.1*latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getQuantity());
+											tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getQuantity());
 										}
 										//increase demand to countries with price lower than local market
 										tmpIntSumValue=0;
@@ -628,8 +628,8 @@ public class Buyer {
 											tmpContract=latestContractsInPossibleMarketSessionsList.get(i);
 											for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
 												if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-													aParametersHolder.increaseInterceptBy((int)Math.ceil(0.1*tmpContract.getQuantity()));
-													tmpIntSumValue+=(int)(0.1*Math.ceil(tmpContract.getQuantity()));
+													aParametersHolder.increaseInterceptBy((int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
+													tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*Math.ceil(tmpContract.getQuantity()));
 													tmpIntValue=aParametersHolder.getIntercept();
 													aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
 												}
@@ -660,8 +660,8 @@ public class Buyer {
 											tmpContract=latestContractsInPossibleMarketSessionsList.get(i);
 											for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
 												if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-													aParametersHolder.increaseInterceptBy((int)Math.ceil(0.1*tmpContract.getQuantity()));
-													tmpIntSumValue+=(int)(0.1*Math.ceil(tmpContract.getQuantity()));
+													aParametersHolder.increaseInterceptBy((int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
+													tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*Math.ceil(tmpContract.getQuantity()));
 													tmpIntValue=aParametersHolder.getIntercept();
 													aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
 												}
@@ -694,7 +694,7 @@ public class Buyer {
 											while(quantityBoughtAtTheSamePrice<(quantityToMoveFromHigherPrice-quantityToMoveToLowerPrice) && decreaseQuantityProducerPositionInPriceRanking1<decreaseQuantityProducerPositionInPriceRanking){
 												decreaseQuantityProducerPositionInPriceRanking1++;
 												if(decreaseQuantityProducerPositionInPriceRanking1 != myAssociatedProducerPositionInPriceRanking){
-													quantityBoughtAtTheSamePrice+=(int)(0.1*latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking1).getQuantity());
+													quantityBoughtAtTheSamePrice+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking1).getQuantity());
 												}
 											}
 											//System.out.println("decreaseQuantityProducerPositionInPriceRanking1 prn "+decreaseQuantityProducerPositionInPriceRanking1+" quantityBoughtAtTheSamePrice "+quantityBoughtAtTheSamePrice);
@@ -706,8 +706,8 @@ public class Buyer {
 														tmpContract=latestContractsInPossibleMarketSessionsList.get(i);
 														for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
 															if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-																aParametersHolder.increaseInterceptBy((int)Math.ceil(0.1*tmpContract.getQuantity()));
-																tmpIntSumValue+=(int)(0.1*Math.ceil(tmpContract.getQuantity()));
+																aParametersHolder.increaseInterceptBy((int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
+																tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*Math.ceil(tmpContract.getQuantity()));
 																tmpIntValue=aParametersHolder.getIntercept();
 																aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
 															}
@@ -757,8 +757,8 @@ public class Buyer {
 															tmpContract=latestContractsInPossibleMarketSessionsList.get(i);
 															for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
 																if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-																	aParametersHolder.increaseInterceptBy((int)Math.ceil(0.1*tmpContract.getQuantity()));
-																	tmpIntSumValue+=(int)(0.1*Math.ceil(tmpContract.getQuantity()));
+																	aParametersHolder.increaseInterceptBy((int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
+																	tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*Math.ceil(tmpContract.getQuantity()));
 																	tmpIntValue=aParametersHolder.getIntercept();
 																	aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
 																}
@@ -845,7 +845,7 @@ public class Buyer {
 							for(int i=0;i<=decreaseQuantityProducerPositionInPriceRanking;i++){
 								if(decreaseQuantityProducerPositionInPriceRanking<latestContractsInPossibleMarketSessionsList.size()-1){
 								if(latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking+1).getPricePlusTransport()>latestContractsInPossibleMarketSessionsList.get(i).getPricePlusTransport() && quantityToMoveToLowerPrice<demandToBeMoved){
-									quantityToMoveToLowerPrice+=(int)(0.1*latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking).getQuantity());
+									quantityToMoveToLowerPrice+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking).getQuantity());
 									increaseQuantityProducerPositionInPriceRanking=i;
 								}
 							}
@@ -907,8 +907,8 @@ public class Buyer {
 								tmpContract=latestContractsInPossibleMarketSessionsList.get(i);
 								for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
 									if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-										aParametersHolder.increaseInterceptBy((int)Math.ceil(0.1*tmpContract.getQuantity()));
-										tmpIntSumValue+=(int)(0.1*Math.ceil(tmpContract.getQuantity()));
+										aParametersHolder.increaseInterceptBy((int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
+										tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*Math.ceil(tmpContract.getQuantity()));
 										tmpIntValue=aParametersHolder.getIntercept();
 										aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
 									}
@@ -981,11 +981,11 @@ public class Buyer {
 					}
 
 					shareOfGapToChargeToEachPossibleMarketSession=(double)gapToTarget/tmpIntSumValue;
-					if(shareOfGapToChargeToEachPossibleMarketSession>0.1){
-						shareOfGapToChargeToEachPossibleMarketSession=0.1;
+					if(shareOfGapToChargeToEachPossibleMarketSession>Cms_builder.shareOfDemandToBeMovedToLowerPrice){
+						shareOfGapToChargeToEachPossibleMarketSession=Cms_builder.shareOfDemandToBeMovedToLowerPrice;
 					}
-					if(shareOfGapToChargeToEachPossibleMarketSession<-0.1){
-						shareOfGapToChargeToEachPossibleMarketSession=-0.1;
+					if(shareOfGapToChargeToEachPossibleMarketSession<-Cms_builder.shareOfDemandToBeMovedToLowerPrice){
+						shareOfGapToChargeToEachPossibleMarketSession=-Cms_builder.shareOfDemandToBeMovedToLowerPrice;
 					}
 
 					if(Cms_builder.verboseFlag){System.out.println("                sum of intercept "+tmpIntSumValue+" shareOfGapToChargeToEachPossibleMarketSession "+shareOfGapToChargeToEachPossibleMarketSession);}
@@ -998,7 +998,7 @@ public class Buyer {
 								aParametersHolder.increaseInterceptBy(tmpIntValue);
 								tmpIntSumValue+=tmpIntValue;
 								tmpIntValue=aParametersHolder.getIntercept();
-//								aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
+								aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
 							}
 						}
 					}
