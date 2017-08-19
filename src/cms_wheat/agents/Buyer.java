@@ -998,7 +998,7 @@ public class Buyer {
 								aParametersHolder.increaseInterceptBy(tmpIntValue);
 								tmpIntSumValue+=tmpIntValue;
 								tmpIntValue=aParametersHolder.getIntercept();
-								aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
+//								aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
 							}
 						}
 					}
