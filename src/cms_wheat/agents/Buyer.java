@@ -618,7 +618,7 @@ public class Buyer {
 									if(quantityToMoveToLowerPrice==demandToBeMoved){
 										tmpIntSumValue=0;
 										increaseQuantityProducerPositionInPriceRanking1=0;
-										while(tmpIntSumValue<quantityToMoveToLowerPrice){
+										while(tmpIntSumValue<quantityToMoveToLowerPrice && increaseQuantityProducerPositionInPriceRanking1<latestContractsInPossibleMarketSessionsList.size()-1){
 											increaseQuantityProducerPositionInPriceRanking1++;
 											tmpIntSumValue+=(int)(0.1*latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getQuantity());
 										}
