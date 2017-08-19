@@ -981,11 +981,11 @@ public class Buyer {
 					}
 
 					shareOfGapToChargeToEachPossibleMarketSession=(double)gapToTarget/tmpIntSumValue;
-					if(shareOfGapToChargeToEachPossibleMarketSession>0.05){
-						shareOfGapToChargeToEachPossibleMarketSession=0.05;
+					if(shareOfGapToChargeToEachPossibleMarketSession>0.1){
+						shareOfGapToChargeToEachPossibleMarketSession=0.1;
 					}
-					if(shareOfGapToChargeToEachPossibleMarketSession<-0.05){
-						shareOfGapToChargeToEachPossibleMarketSession=-0.05;
+					if(shareOfGapToChargeToEachPossibleMarketSession<-0.1){
+						shareOfGapToChargeToEachPossibleMarketSession=-0.1;
 					}
 
 					if(Cms_builder.verboseFlag){System.out.println("                sum of intercept "+tmpIntSumValue+" shareOfGapToChargeToEachPossibleMarketSession "+shareOfGapToChargeToEachPossibleMarketSession);}
