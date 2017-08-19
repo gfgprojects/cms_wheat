@@ -987,7 +987,7 @@ public class Buyer {
 					if(shareOfGapToChargeToEachPossibleMarketSession<-Cms_builder.shareOfDemandToBeMovedToLowerPrice){
 						shareOfGapToChargeToEachPossibleMarketSession=-Cms_builder.shareOfDemandToBeMovedToLowerPrice;
 					}
-
+shareOfGapToChargeToEachPossibleMarketSession=0;
 					if(Cms_builder.verboseFlag){System.out.println("                sum of intercept "+tmpIntSumValue+" shareOfGapToChargeToEachPossibleMarketSession "+shareOfGapToChargeToEachPossibleMarketSession);}
 					//modify intercepts
 					tmpIntSumValue=0;
