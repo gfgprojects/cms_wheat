@@ -529,7 +529,7 @@ public class Buyer {
 									//identify latest country to increase demand
 									tmpIntSumValue=0;
 									increaseQuantityProducerPositionInPriceRanking1=-1;
-									while(tmpIntSumValue<quantityToMoveToLowerPrice){
+									while(tmpIntSumValue<quantityToMoveToLowerPrice && increaseQuantityProducerPositionInPriceRanking1<latestContractsInPossibleMarketSessionsList.size()-1){
 										increaseQuantityProducerPositionInPriceRanking1++;
 										tmpIntSumValue+=(int)Math.ceil(0.1*latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getQuantity());
 									}
@@ -981,11 +981,11 @@ public class Buyer {
 					}
 
 					shareOfGapToChargeToEachPossibleMarketSession=(double)gapToTarget/tmpIntSumValue;
-					if(shareOfGapToChargeToEachPossibleMarketSession>0.1){
-						shareOfGapToChargeToEachPossibleMarketSession=0.1;
+					if(shareOfGapToChargeToEachPossibleMarketSession>0.05){
+						shareOfGapToChargeToEachPossibleMarketSession=0.05;
 					}
-					if(shareOfGapToChargeToEachPossibleMarketSession<-0.1){
-						shareOfGapToChargeToEachPossibleMarketSession=-0.1;
+					if(shareOfGapToChargeToEachPossibleMarketSession<-0.05){
+						shareOfGapToChargeToEachPossibleMarketSession=-0.05;
 					}
 
 					if(Cms_builder.verboseFlag){System.out.println("                sum of intercept "+tmpIntSumValue+" shareOfGapToChargeToEachPossibleMarketSession "+shareOfGapToChargeToEachPossibleMarketSession);}
