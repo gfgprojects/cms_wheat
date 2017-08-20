@@ -4,6 +4,8 @@ import java.util.Iterator;
 
 import cms_wheat.Cms_builder;
 import cms_wheat.agents.Producer;
+import cms_wheat.agents.Buyer;
+import cms_wheat.utils.ZoneInfoHolder;
 
 import repast.simphony.context.Context;
 import repast.simphony.util.collections.IndexedIterable;
@@ -20,12 +22,16 @@ public class Cms_scheduler{
 	public IndexedIterable<Object> buyersList,producersList,marketsList;
 	public Context<Object> cmsContext;
 	public ArrayList<Double> crudeOilPrices;
+	ArrayList<ZoneInfoHolder> zonesList=new ArrayList<ZoneInfoHolder>();
 	Iterator<Double> crudeOilPricesIterator;
 	public static double crudeOilPrice;
 	ScheduleParameters scheduleParameters;
 	DefaultActionFactory statActionFactory;
 	IAction statAction;
 	Producer aProducer;
+	Buyer aBuyer;
+	ZoneInfoHolder aZoneInfoHolder;
+	double totalExcessSupply;
 
 //	public int productionFreq=10;
 
@@ -44,6 +50,42 @@ public class Cms_scheduler{
 		catch(ClassNotFoundException e){
 			System.out.println("Class not found");
 		}
+		//create the zonesList and fill each zone with data on excess demand and supply to be used by buyers when setting demand intercept 
+		for(int i=0;i<buyersList.size();i++){
+			aBuyer=(Buyer)buyersList.get(i);
+			aZoneInfoHolder=new ZoneInfoHolder();
+			aZoneInfoHolder.setName(aBuyer.getName());
+			aZoneInfoHolder.setConsumption(aBuyer.getAverageConsumption());
+			zonesList.add(aZoneInfoHolder);
+		}
+		for(int i=0;i<producersList.size();i++){
+			aProducer=(Producer)producersList.get(i);
+			for(int j=0;j<zonesList.size();j++){
+				aZoneInfoHolder=zonesList.get(j);
+				if(aProducer.getName().equals(aZoneInfoHolder.getName())){
+					aZoneInfoHolder.setProduction(aProducer.getProduction()/Cms_builder.productionCycleLength);
+				}				
+			}
+		}
+		for(int j=0;j<zonesList.size();j++){
+			aZoneInfoHolder=zonesList.get(j);
+			aZoneInfoHolder.setExcessSupplyAndDemand();
+		}
+		totalExcessSupply=0;
+		for(int j=0;j<zonesList.size();j++){
+			aZoneInfoHolder=zonesList.get(j);
+			totalExcessSupply+=aZoneInfoHolder.getExcessSupply();
+		}
+		for(int j=0;j<zonesList.size();j++){
+			aZoneInfoHolder=zonesList.get(j);
+			aZoneInfoHolder.setShareOfExcessSupply(totalExcessSupply);;
+		}
+		for(int i=0;i<buyersList.size();i++){
+			aBuyer=(Buyer)buyersList.get(i);
+			aBuyer.setZoneInfoHolder(zonesList);
+		}
+
+		//create Action Factory to use when scheduling
 		statActionFactory = new DefaultActionFactory();
 
 	}
@@ -108,6 +150,7 @@ public class Cms_scheduler{
 			System.out.println();
 			System.out.println("BUYERS: STEP IMPORT POLICY");
 		}
+
 		statAction=statActionFactory.createActionForIterable(buyersList,"stepImportAllowedFlag",false);
 		statAction.execute();
 	}
@@ -120,6 +163,16 @@ public class Cms_scheduler{
 		statAction.execute();
 	}
 	public void scheduleBuyersStepBuyingStrategy(){
+		if(RepastEssentials.GetTickCount()==344){
+			Cms_builder.verboseFlag=true;
+			System.out.println("===================================================================");
+			System.out.println("START SIMULATION TIME STEP: "+RepastEssentials.GetTickCount());
+			System.out.println("====================================================================");
+		}
+		if(RepastEssentials.GetTickCount()==350){
+			Cms_builder.verboseFlag=false;
+		}
+
 		if(Cms_builder.verboseFlag){
 			System.out.println();
 			System.out.println("BUYERS: STEP BUYING STRATEGY");
