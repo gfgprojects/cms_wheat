@@ -53,7 +53,7 @@ public class Buyer {
 	public int distanceFromSellerInKm,averageConsumption,minimumConsumption,maximumConsumption,realizedConsumption,domesticConsumption,gapToTarget,gapToChargeToEachPossibleMarketSession,stock,domesticStock,demandToBeReallocated,population;
 	double shareOfGapToChargeToEachPossibleMarketSession;
 	Producer aProducer;
-	boolean latestPeriodVisitedMarketSessionNotFound,reallocateDemand,parametersHoldeNotFound;
+	boolean latestPeriodVisitedMarketSessionNotFound,reallocateDemand,parametersHoldeNotFound,marketNotFound;
 	Contract aContract,aContract1,tmpContract;
 	DemandFunctionParameters aParametersHolder;
 	int interceptOfTheDemandFunction,initialInterceptOfTheDemandFunction,tmpIntercept,tmpIntValue,tmpIntSumValue,quantityBoughtAtTheSamePrice,totalReducedDemand,slopeOfTheDemandFunction,demandToBeMoved,myAssociatedProducerPositionInPriceRanking,decreaseQuantityProducerPositionInPriceRanking,increaseQuantityProducerPositionInPriceRanking1,decreaseQuantityProducerPositionInPriceRanking1,increaseQuantityProducerPositionInPriceRanking,quantityToMoveToLowerPrice,quantityToMoveFromHigherPrice;
@@ -333,14 +333,30 @@ public class Buyer {
 						//if the buyer has an associated producer (buyers without an associated producer myAssociatedProducerPositionInPriceRanking=-1)
 						if(myAssociatedProducerPositionInPriceRanking>=0){
 
-
+							//start identify positions of countries with price higher and lower than the present country
 							//identify index of the first country with price lower than the local market and the quantityToMoveToLowerPrice
 							//if I belong to the group with lowest price: index=0 and quantity=0
 							increaseQuantityProducerPositionInPriceRanking=-1;
 							for(int i=0;i<myAssociatedProducerPositionInPriceRanking;i++){
 								if(latestContractsInPossibleMarketSessionsList.get(i).getPricePlusTransport()<latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()){
-									quantityToMoveToLowerPrice+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*latestContractsInPossibleMarketSessionsList.get(i).getQuantity());
+									//identify market section of each contract
+									marketNotFound=true;
+									tmpIntValue=0;
+									while(marketNotFound && tmpIntValue<possibleMarketSessionsList.size()){
+										if(latestContractsInPossibleMarketSessionsList.get(i).getMarketName().equals(possibleMarketSessionsList.get(tmpIntValue).getMarketName()) && latestContractsInPossibleMarketSessionsList.get(i).getProducerName().equals(possibleMarketSessionsList.get(tmpIntValue).getProducerName())){
+											marketNotFound=false;
+											tmpIntValue--;
+										}
+										tmpIntValue++;
+									}
+									
+									if(!marketNotFound){
+//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+//									quantityToMoveToLowerPrice+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*latestContractsInPossibleMarketSessionsList.get(i).getQuantity());
+									
+									quantityToMoveToLowerPrice+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
 									increaseQuantityProducerPositionInPriceRanking=i;
+									}
 								}
 							}
 
@@ -355,19 +371,21 @@ public class Buyer {
 									decreaseQuantityProducerPositionInPriceRanking=i;
 								}
 							}
-
+							//stop identify positions of countries with price higher and lower than the present country
+							//start print sentence on the screen
 							if(increaseQuantityProducerPositionInPriceRanking<0 || decreaseQuantityProducerPositionInPriceRanking>=latestContractsInPossibleMarketSessionsList.size()){
 								if(increaseQuantityProducerPositionInPriceRanking<0){
 									if(Cms_builder.verboseFlag){System.out.println("              the task can be achieved by moving quantities from countries "+(decreaseQuantityProducerPositionInPriceRanking+1)+"-"+latestContractsInPossibleMarketSessionsList.size()+" (tot. q. "+quantityToMoveFromHigherPrice+"), no market with lower price exists");}
 								}
 								else{
-									if(Cms_builder.verboseFlag){System.out.println("              the task can be achieved by moving no quantities from higher price countries because this is the highest price country to countries 1-"+(increaseQuantityProducerPositionInPriceRanking+1)+" (0.1*tot. q. = "+quantityToMoveToLowerPrice+") of the price rank");}
+									if(Cms_builder.verboseFlag){System.out.println("              the task can be achieved by moving no quantities from higher price countries because this is the highest price country to countries 1-"+(increaseQuantityProducerPositionInPriceRanking+1)+" ("+Cms_builder.shareOfDemandToBeMovedToLowerPrice+"*tot. offered quantity = "+quantityToMoveToLowerPrice+") of the price rank");}
 								}
-						}
-							else{
-								if(Cms_builder.verboseFlag){System.out.println("              the task can be achieved by moving quantities from countries "+(decreaseQuantityProducerPositionInPriceRanking+1)+"-"+latestContractsInPossibleMarketSessionsList.size()+" (tot. q. "+quantityToMoveFromHigherPrice+") to countries 1-"+(increaseQuantityProducerPositionInPriceRanking+1)+" (0.1*tot. q. = "+quantityToMoveToLowerPrice+") of the price rank");}
 							}
-							//resize quantities to move
+							else{
+								if(Cms_builder.verboseFlag){System.out.println("              trying to achieve the task by moving quantities from countries "+(decreaseQuantityProducerPositionInPriceRanking+1)+"-"+latestContractsInPossibleMarketSessionsList.size()+" (tot. q. "+quantityToMoveFromHigherPrice+") to countries 1-"+(increaseQuantityProducerPositionInPriceRanking+1)+" of the price rank. "+name+" is willing to move to lower price countries "+Cms_builder.shareOfDemandToBeMovedToLowerPrice+"*sum of market supplies = "+quantityToMoveToLowerPrice);}
+							}
+							//stop print sentence on the screen
+							//start resize quantities to move
 
 							if(quantityToMoveFromHigherPrice>demandToBeMoved){
 								quantityToMoveFromHigherPrice=demandToBeMoved;
@@ -375,36 +393,83 @@ public class Buyer {
 							if(quantityToMoveToLowerPrice>demandToBeMoved){
 								quantityToMoveToLowerPrice=demandToBeMoved;
 							}
-//							quantityToMoveFromHigherPrice=Math.min(quantityToMoveFromHigherPrice,quantityToMoveToLowerPrice);
-//							quantityToMoveToLowerPrice=quantityToMoveFromHigherPrice;
+							//							quantityToMoveFromHigherPrice=Math.min(quantityToMoveFromHigherPrice,quantityToMoveToLowerPrice);
+							//							quantityToMoveToLowerPrice=quantityToMoveFromHigherPrice;
 
 							if(Cms_builder.verboseFlag){System.out.println("              "+Math.max(quantityToMoveFromHigherPrice,quantityToMoveToLowerPrice)+" will be moved");}
-
+							//stop resize quantities to move
 							//Move quantities
 
 							if(quantityToMoveFromHigherPrice<quantityToMoveToLowerPrice){//this imply moving this country demand upward unless this is the lowest price country
 
-									if(Cms_builder.verboseFlag){System.out.println("              "+quantityToMoveFromHigherPrice+" will be taken from countries "+(decreaseQuantityProducerPositionInPriceRanking+1)+"-"+latestContractsInPossibleMarketSessionsList.size()+", "+(quantityToMoveToLowerPrice-quantityToMoveFromHigherPrice)+" will be taken from countries "+(increaseQuantityProducerPositionInPriceRanking+2)+"-"+decreaseQuantityProducerPositionInPriceRanking);}
-									
-									//decrease demand to countries with high prices
-									tmpIntSumValue=0;
-									for(int i=latestContractsInPossibleMarketSessionsList.size()-1;i>decreaseQuantityProducerPositionInPriceRanking-1;i--){
-										tmpContract=latestContractsInPossibleMarketSessionsList.get(i);
-										for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
-											if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-												aParametersHolder.decreaseInterceptBy((int)Math.ceil(tmpContract.getQuantity()));
-												tmpIntSumValue+=(int)Math.ceil(tmpContract.getQuantity());
-												tmpIntValue=aParametersHolder.getIntercept();
-												aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
-											}
+								if(Cms_builder.verboseFlag){System.out.println("              "+quantityToMoveFromHigherPrice+" will be taken from countries "+(decreaseQuantityProducerPositionInPriceRanking+1)+"-"+latestContractsInPossibleMarketSessionsList.size()+", "+(quantityToMoveToLowerPrice-quantityToMoveFromHigherPrice)+" will be taken from countries "+(increaseQuantityProducerPositionInPriceRanking+2)+"-"+decreaseQuantityProducerPositionInPriceRanking);}
 
+								//decrease demand to countries with high prices
+								tmpIntSumValue=0;
+								for(int i=latestContractsInPossibleMarketSessionsList.size()-1;i>decreaseQuantityProducerPositionInPriceRanking-1;i--){
+									tmpContract=latestContractsInPossibleMarketSessionsList.get(i);
+									for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
+										if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
+											aParametersHolder.decreaseInterceptBy((int)Math.ceil(tmpContract.getQuantity()));
+											tmpIntSumValue+=(int)Math.ceil(tmpContract.getQuantity());
+											tmpIntValue=aParametersHolder.getIntercept();
+											aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
 										}
+
+									}
+								}
+
+								if(Cms_builder.verboseFlag){System.out.println("              demand reduced by "+tmpIntSumValue);}
+								//now decrease demand to my group
+								//if I am the only country with the domestic market price
+								if(increaseQuantityProducerPositionInPriceRanking+1==decreaseQuantityProducerPositionInPriceRanking-1){
+									tmpContract=latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking);
+									for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
+										if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
+											aParametersHolder.decreaseInterceptBy(quantityToMoveToLowerPrice-tmpIntSumValue);
+											tmpIntSumValue+=quantityToMoveToLowerPrice-tmpIntSumValue;
+											tmpIntValue=aParametersHolder.getIntercept();
+											aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
+										}
+
 									}
 
 									if(Cms_builder.verboseFlag){System.out.println("              demand reduced by "+tmpIntSumValue);}
-									//now decrease demand to my group
-									//if I am the only country with the domestic market price
-									if(increaseQuantityProducerPositionInPriceRanking+1==decreaseQuantityProducerPositionInPriceRanking-1){
+
+								}
+								//if more than a country with the domestic market price
+								else{
+									quantityBoughtAtTheSamePrice=0;
+									decreaseQuantityProducerPositionInPriceRanking1=increaseQuantityProducerPositionInPriceRanking;
+									while(tmpIntSumValue+quantityBoughtAtTheSamePrice<quantityToMoveToLowerPrice && decreaseQuantityProducerPositionInPriceRanking1<decreaseQuantityProducerPositionInPriceRanking){
+										decreaseQuantityProducerPositionInPriceRanking1++;
+										//qui dava index out of bond
+										if(decreaseQuantityProducerPositionInPriceRanking1 != myAssociatedProducerPositionInPriceRanking && decreaseQuantityProducerPositionInPriceRanking1<latestContractsInPossibleMarketSessionsList.size()){
+											quantityBoughtAtTheSamePrice+=latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking1).getQuantity();
+										}
+									}
+									//System.out.println("decreaseQuantityProducerPositionInPriceRanking1 prn "+decreaseQuantityProducerPositionInPriceRanking1+" quantityBoughtAtTheSamePrice "+quantityBoughtAtTheSamePrice);
+									//if I am involved
+									if(tmpIntSumValue+quantityBoughtAtTheSamePrice<quantityToMoveToLowerPrice){
+										//reduce to the others
+										for(int i=increaseQuantityProducerPositionInPriceRanking+1;i<decreaseQuantityProducerPositionInPriceRanking1;i++){
+											if(i != myAssociatedProducerPositionInPriceRanking){
+												tmpContract=latestContractsInPossibleMarketSessionsList.get(i);
+												for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
+													if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
+														aParametersHolder.decreaseInterceptBy((int)tmpContract.getQuantity());
+														tmpIntSumValue+=(int)tmpContract.getQuantity();
+														tmpIntValue=aParametersHolder.getIntercept();
+														aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
+													}
+
+												}
+
+											}
+										}
+
+										if(Cms_builder.verboseFlag){System.out.println("              demand reduced by "+tmpIntSumValue);}
+										//reduce to myself
 										tmpContract=latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking);
 										for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
 											if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
@@ -415,25 +480,29 @@ public class Buyer {
 											}
 
 										}
-
 										if(Cms_builder.verboseFlag){System.out.println("              demand reduced by "+tmpIntSumValue);}
 
+
 									}
-									//if more than a country with the domestic market price
+									//if I am not involved
 									else{
-										quantityBoughtAtTheSamePrice=0;
-										decreaseQuantityProducerPositionInPriceRanking1=increaseQuantityProducerPositionInPriceRanking;
-										while(tmpIntSumValue+quantityBoughtAtTheSamePrice<quantityToMoveToLowerPrice && decreaseQuantityProducerPositionInPriceRanking1<decreaseQuantityProducerPositionInPriceRanking){
-											decreaseQuantityProducerPositionInPriceRanking1++;
-											//qui dava index out of bond
-											if(decreaseQuantityProducerPositionInPriceRanking1 != myAssociatedProducerPositionInPriceRanking && decreaseQuantityProducerPositionInPriceRanking1<latestContractsInPossibleMarketSessionsList.size()){
-												quantityBoughtAtTheSamePrice+=latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking1).getQuantity();
+										if(Cms_builder.verboseFlag){System.out.println("              "+name+" do not move demand to lower price countries");}
+										//only the first is involved
+										if((increaseQuantityProducerPositionInPriceRanking+1)==decreaseQuantityProducerPositionInPriceRanking1){
+											tmpContract=latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking1);
+											for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
+												if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
+													aParametersHolder.decreaseInterceptBy(quantityToMoveToLowerPrice-tmpIntSumValue);
+													tmpIntSumValue+=quantityToMoveToLowerPrice-tmpIntSumValue;
+													tmpIntValue=aParametersHolder.getIntercept();
+													aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
+												}
+
 											}
+											if(Cms_builder.verboseFlag){System.out.println("              demand reduced by "+tmpIntSumValue);}
 										}
-										//System.out.println("decreaseQuantityProducerPositionInPriceRanking1 prn "+decreaseQuantityProducerPositionInPriceRanking1+" quantityBoughtAtTheSamePrice "+quantityBoughtAtTheSamePrice);
-										//if I am involved
-										if(tmpIntSumValue+quantityBoughtAtTheSamePrice<quantityToMoveToLowerPrice){
-											//reduce to the others
+										//if the latest involved is not the first
+										else{
 											for(int i=increaseQuantityProducerPositionInPriceRanking+1;i<decreaseQuantityProducerPositionInPriceRanking1;i++){
 												if(i != myAssociatedProducerPositionInPriceRanking){
 													tmpContract=latestContractsInPossibleMarketSessionsList.get(i);
@@ -447,122 +516,116 @@ public class Buyer {
 
 													}
 
+													tmpContract=latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking1);
+													for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
+														if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
+															aParametersHolder.decreaseInterceptBy(quantityToMoveToLowerPrice-tmpIntSumValue);
+															tmpIntSumValue+=quantityToMoveToLowerPrice-tmpIntSumValue;
+															tmpIntValue=aParametersHolder.getIntercept();
+															aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
+														}
+
+													}
+
+
+
 												}
 											}
 
 											if(Cms_builder.verboseFlag){System.out.println("              demand reduced by "+tmpIntSumValue);}
-											//reduce to myself
-											tmpContract=latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking);
-											for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
-												if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-													aParametersHolder.decreaseInterceptBy(quantityToMoveToLowerPrice-tmpIntSumValue);
-													tmpIntSumValue+=quantityToMoveToLowerPrice-tmpIntSumValue;
-													tmpIntValue=aParametersHolder.getIntercept();
-													aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
-												}
-
-											}
-											if(Cms_builder.verboseFlag){System.out.println("              demand reduced by "+tmpIntSumValue);}
 
 
 										}
-										//if I am not involved
-										else{
-											if(Cms_builder.verboseFlag){System.out.println("              "+name+" do not move demand to lower price countries");}
-											//only the first is involved
-											if((increaseQuantityProducerPositionInPriceRanking+1)==decreaseQuantityProducerPositionInPriceRanking1){
-												tmpContract=latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking1);
-												for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
-													if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-														aParametersHolder.decreaseInterceptBy(quantityToMoveToLowerPrice-tmpIntSumValue);
-														tmpIntSumValue+=quantityToMoveToLowerPrice-tmpIntSumValue;
-														tmpIntValue=aParametersHolder.getIntercept();
-														aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
-													}
+									}
 
-												}
-												if(Cms_builder.verboseFlag){System.out.println("              demand reduced by "+tmpIntSumValue);}
-											}
-											//if the latest involved is not the first
-											else{
-												for(int i=increaseQuantityProducerPositionInPriceRanking+1;i<decreaseQuantityProducerPositionInPriceRanking1;i++){
-													if(i != myAssociatedProducerPositionInPriceRanking){
-														tmpContract=latestContractsInPossibleMarketSessionsList.get(i);
-														for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
-															if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-																aParametersHolder.decreaseInterceptBy((int)tmpContract.getQuantity());
-																tmpIntSumValue+=(int)tmpContract.getQuantity();
-																tmpIntValue=aParametersHolder.getIntercept();
-																aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
-															}
-
-														}
-
-														tmpContract=latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking1);
-														for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
-															if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-																aParametersHolder.decreaseInterceptBy(quantityToMoveToLowerPrice-tmpIntSumValue);
-																tmpIntSumValue+=quantityToMoveToLowerPrice-tmpIntSumValue;
-																tmpIntValue=aParametersHolder.getIntercept();
-																aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
-															}
-
-														}
+								}
 
 
 
-													}
-												}
 
-												if(Cms_builder.verboseFlag){System.out.println("              demand reduced by "+tmpIntSumValue);}
-
-
-											}
+								//increase demand to countries with price lower than local market
+								//identify latest country to increase demand
+								tmpIntSumValue=0;
+								increaseQuantityProducerPositionInPriceRanking1=-1;
+								while(tmpIntSumValue<quantityToMoveToLowerPrice && increaseQuantityProducerPositionInPriceRanking1<latestContractsInPossibleMarketSessionsList.size()-1){
+									increaseQuantityProducerPositionInPriceRanking1++;
+									marketNotFound=true;
+									tmpIntValue=0;
+									while(marketNotFound && tmpIntValue<possibleMarketSessionsList.size()){
+										if(latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getMarketName().equals(possibleMarketSessionsList.get(tmpIntValue).getMarketName()) && latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getProducerName().equals(possibleMarketSessionsList.get(tmpIntValue).getProducerName())){
+											marketNotFound=false;
+											tmpIntValue--;
 										}
-
+										tmpIntValue++;
 									}
-
-
-
-
-									//increase demand to countries with price lower than local market
-									//identify latest country to increase demand
-									tmpIntSumValue=0;
-									increaseQuantityProducerPositionInPriceRanking1=-1;
-									while(tmpIntSumValue<quantityToMoveToLowerPrice && increaseQuantityProducerPositionInPriceRanking1<latestContractsInPossibleMarketSessionsList.size()-1){
-										increaseQuantityProducerPositionInPriceRanking1++;
-										tmpIntSumValue+=(int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getQuantity());
+									if(!marketNotFound){
+//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+//									tmpIntSumValue+=(int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getQuantity());
+									tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
 									}
+								}
 
-									//now increase
+								//now increase
 
-									tmpIntSumValue=0;
-									//increase quantity to countries from first to first-to-last
-									for(int i=0;i<increaseQuantityProducerPositionInPriceRanking1;i++){
-										tmpContract=latestContractsInPossibleMarketSessionsList.get(i);
+								tmpIntSumValue=0;
+								//increase quantity to countries from first to first-to-last
+								for(int i=0;i<increaseQuantityProducerPositionInPriceRanking1;i++){
+
+									tmpContract=latestContractsInPossibleMarketSessionsList.get(i);
+									marketNotFound=true;
+									tmpIntValue=0;
+									while(marketNotFound && tmpIntValue<possibleMarketSessionsList.size()){
+										if(tmpContract.getMarketName().equals(possibleMarketSessionsList.get(tmpIntValue).getMarketName()) && tmpContract.getProducerName().equals(possibleMarketSessionsList.get(tmpIntValue).getProducerName())){
+											marketNotFound=false;
+											tmpIntValue--;
+										}
+										tmpIntValue++;
+									}
+									if(!marketNotFound){
+//										System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
 										for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
 											if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-												aParametersHolder.increaseInterceptBy((int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
-												tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*Math.ceil(tmpContract.getQuantity()));
+												/*
+												aParametersHolder.increaseInterceptBy((int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
+												tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity());
+												*/
+												aParametersHolder.increaseInterceptBy((int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+												tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
 												tmpIntValue=aParametersHolder.getIntercept();
 												aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
 											}
 
 										}
 									}
-									//increase quantity to last country
-									tmpContract=latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1);
-									for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
-										if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-											aParametersHolder.increaseInterceptBy(quantityToMoveToLowerPrice-tmpIntSumValue);
-											tmpIntSumValue+=quantityToMoveToLowerPrice-tmpIntSumValue;
-											tmpIntValue=aParametersHolder.getIntercept();
-											aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
-										}
+								}
+								//increase quantity to last country
+								tmpContract=latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1);
 
+									marketNotFound=true;
+									tmpIntValue=0;
+									while(marketNotFound && tmpIntValue<possibleMarketSessionsList.size()){
+										if(tmpContract.getMarketName().equals(possibleMarketSessionsList.get(tmpIntValue).getMarketName()) && tmpContract.getProducerName().equals(possibleMarketSessionsList.get(tmpIntValue).getProducerName())){
+											marketNotFound=false;
+											tmpIntValue--;
+										}
+										tmpIntValue++;
+									}
+									if(!marketNotFound){
+//										System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+
+
+										for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
+											if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
+												aParametersHolder.increaseInterceptBy(quantityToMoveToLowerPrice-tmpIntSumValue);
+												tmpIntSumValue+=quantityToMoveToLowerPrice-tmpIntSumValue;
+												tmpIntValue=aParametersHolder.getIntercept();
+												aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
+											}
+
+										}
 									}
 
-									if(Cms_builder.verboseFlag){System.out.println("              demand increased by "+tmpIntSumValue+" to countries 1-"+(increaseQuantityProducerPositionInPriceRanking1+1));}
+								if(Cms_builder.verboseFlag){System.out.println("              demand increased by "+tmpIntSumValue+" to countries 1-"+(increaseQuantityProducerPositionInPriceRanking1+1));}
 
 
 
@@ -581,8 +644,12 @@ public class Buyer {
 										decreaseQuantityProducerPositionInPriceRanking1--;
 										tmpIntSumValue+=latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking1).getQuantity();
 									}
-									if(Cms_builder.verboseFlag){System.out.println("              "+quantityToMoveToLowerPrice+" will be moved to countries 1-"+(increaseQuantityProducerPositionInPriceRanking+1)+","+(quantityToMoveFromHigherPrice-quantityToMoveToLowerPrice)+" to countries "+(increaseQuantityProducerPositionInPriceRanking+2)+"-"+decreaseQuantityProducerPositionInPriceRanking);}
-
+									if(increaseQuantityProducerPositionInPriceRanking<0){
+										if(Cms_builder.verboseFlag){System.out.println("              no quantity can be moved to lower price countries,"+(quantityToMoveFromHigherPrice-quantityToMoveToLowerPrice)+" will be moved to countries "+(increaseQuantityProducerPositionInPriceRanking+2)+"-"+decreaseQuantityProducerPositionInPriceRanking);}
+									}
+									else{
+										if(Cms_builder.verboseFlag){System.out.println("              "+quantityToMoveToLowerPrice+" will be moved to countries 1-"+(increaseQuantityProducerPositionInPriceRanking+1)+","+(quantityToMoveFromHigherPrice-quantityToMoveToLowerPrice)+" to countries "+(increaseQuantityProducerPositionInPriceRanking+2)+"-"+decreaseQuantityProducerPositionInPriceRanking);}
+									}
 									//decrease demand to countries with high prices 
 									tmpIntSumValue=0;
 									for(int i=latestContractsInPossibleMarketSessionsList.size()-1;i>decreaseQuantityProducerPositionInPriceRanking1;i--){
@@ -617,27 +684,77 @@ public class Buyer {
 
 									if(quantityToMoveToLowerPrice==demandToBeMoved){
 										tmpIntSumValue=0;
-										increaseQuantityProducerPositionInPriceRanking1=0;
+										increaseQuantityProducerPositionInPriceRanking1=-1;
 										while(tmpIntSumValue<quantityToMoveToLowerPrice && increaseQuantityProducerPositionInPriceRanking1<latestContractsInPossibleMarketSessionsList.size()-1){
 											increaseQuantityProducerPositionInPriceRanking1++;
-											tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getQuantity());
+											marketNotFound=true;
+											tmpIntValue=0;
+											while(marketNotFound && tmpIntValue<possibleMarketSessionsList.size()){
+												if(latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getMarketName().equals(possibleMarketSessionsList.get(tmpIntValue).getMarketName()) && latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getProducerName().equals(possibleMarketSessionsList.get(tmpIntValue).getProducerName())){
+													marketNotFound=false;
+													tmpIntValue--;
+												}
+												tmpIntValue++;
+											}
+											if(!marketNotFound){
+												//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+												//tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getQuantity());
+												tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
+											}
+
+
+
 										}
 										//increase demand to countries with price lower than local market
 										tmpIntSumValue=0;
-										for(int i=0;i<increaseQuantityProducerPositionInPriceRanking1-1;i++){
+										for(int i=0;i<increaseQuantityProducerPositionInPriceRanking1;i++){
 											tmpContract=latestContractsInPossibleMarketSessionsList.get(i);
-											for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
-												if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-													aParametersHolder.increaseInterceptBy((int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
-													tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*Math.ceil(tmpContract.getQuantity()));
-													tmpIntValue=aParametersHolder.getIntercept();
-													aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
-												}
 
+											marketNotFound=true;
+											tmpIntValue=0;
+											while(marketNotFound && tmpIntValue<possibleMarketSessionsList.size()){
+												if(tmpContract.getMarketName().equals(possibleMarketSessionsList.get(tmpIntValue).getMarketName()) && tmpContract.getProducerName().equals(possibleMarketSessionsList.get(tmpIntValue).getProducerName())){
+													marketNotFound=false;
+													tmpIntValue--;
+												}
+												tmpIntValue++;
+											}
+											if(!marketNotFound){
+												//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+
+
+												for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
+													if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
+														//aParametersHolder.increaseInterceptBy((int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
+														//tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*Math.ceil(tmpContract.getQuantity()));
+														aParametersHolder.increaseInterceptBy((int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+														tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
+														tmpIntValue=aParametersHolder.getIntercept();
+														aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
+													}
+
+												}
 											}
 										}
-										if(Cms_builder.verboseFlag){System.out.println("              demand increased by "+tmpIntSumValue+" to countries 1-"+(increaseQuantityProducerPositionInPriceRanking1-1));}
-											tmpContract=latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1-1);
+										if(increaseQuantityProducerPositionInPriceRanking1==0){
+											if(Cms_builder.verboseFlag){System.out.println("              demand will be increased to the lowest price country ");}
+											tmpContract=latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1);
+										}
+										else{
+											if(Cms_builder.verboseFlag){System.out.println("              demand increased by "+tmpIntSumValue+" to countries 1-"+(increaseQuantityProducerPositionInPriceRanking1));}
+											tmpContract=latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1);
+										}
+										marketNotFound=true;
+										tmpIntValue=0;
+										while(marketNotFound && tmpIntValue<possibleMarketSessionsList.size()){
+											if(tmpContract.getMarketName().equals(possibleMarketSessionsList.get(tmpIntValue).getMarketName()) && tmpContract.getProducerName().equals(possibleMarketSessionsList.get(tmpIntValue).getProducerName())){
+												marketNotFound=false;
+												tmpIntValue--;
+											}
+											tmpIntValue++;
+										}
+										if(!marketNotFound){
+											//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
 											for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
 												if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
 													aParametersHolder.increaseInterceptBy(quantityToMoveToLowerPrice-tmpIntSumValue);
@@ -647,8 +764,9 @@ public class Buyer {
 												}
 
 											}
-										if(Cms_builder.verboseFlag){System.out.println("              demand increased by "+tmpIntSumValue+" to country "+(increaseQuantityProducerPositionInPriceRanking1));}
-	
+											if(Cms_builder.verboseFlag){System.out.println("              demand increased by "+tmpIntSumValue+" to country "+(increaseQuantityProducerPositionInPriceRanking1+1));}
+
+										}
 
 
 										//										System.out.println("to be implemented "+increaseQuantityProducerPositionInPriceRanking1+" "+increaseQuantityProducerPositionInPriceRanking);
@@ -658,43 +776,98 @@ public class Buyer {
 										tmpIntSumValue=0;
 										for(int i=0;i<increaseQuantityProducerPositionInPriceRanking+1;i++){
 											tmpContract=latestContractsInPossibleMarketSessionsList.get(i);
-											for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
-												if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-													aParametersHolder.increaseInterceptBy((int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
-													tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*Math.ceil(tmpContract.getQuantity()));
-													tmpIntValue=aParametersHolder.getIntercept();
-													aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
-												}
 
+											marketNotFound=true;
+											tmpIntValue=0;
+											while(marketNotFound && tmpIntValue<possibleMarketSessionsList.size()){
+												if(tmpContract.getMarketName().equals(possibleMarketSessionsList.get(tmpIntValue).getMarketName()) && tmpContract.getProducerName().equals(possibleMarketSessionsList.get(tmpIntValue).getProducerName())){
+													marketNotFound=false;
+													tmpIntValue--;
+												}
+												tmpIntValue++;
+											}
+											if(!marketNotFound){
+												//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+
+
+												for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
+													if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
+														//aParametersHolder.increaseInterceptBy((int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
+														//tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*Math.ceil(tmpContract.getQuantity()));
+														aParametersHolder.increaseInterceptBy((int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+														tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
+														tmpIntValue=aParametersHolder.getIntercept();
+														aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
+													}
+
+												}
 											}
 										}
+										if(increaseQuantityProducerPositionInPriceRanking<0){
+										}
+										else{
 										if(Cms_builder.verboseFlag){System.out.println("              demand increased by "+tmpIntSumValue+" to countries 1-"+(increaseQuantityProducerPositionInPriceRanking+1));}
-
+										}
 										//increase demand to countries with price equal to local market
 										//if there are not other countries with the same price 
 										if((increaseQuantityProducerPositionInPriceRanking+1)==(decreaseQuantityProducerPositionInPriceRanking-1)){
 											tmpContract=latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking+1);
-											for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
-												if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-													aParametersHolder.increaseInterceptBy(quantityToMoveFromHigherPrice-quantityToMoveToLowerPrice);
-													tmpIntSumValue+=quantityToMoveFromHigherPrice-quantityToMoveToLowerPrice;
-													tmpIntValue=aParametersHolder.getIntercept();
-													aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
-												}
 
+											//identify the market session where the contract was signed
+											marketNotFound=true;
+											tmpIntValue=0;
+											while(marketNotFound && tmpIntValue<possibleMarketSessionsList.size()){
+												if(tmpContract.getMarketName().equals(possibleMarketSessionsList.get(tmpIntValue).getMarketName()) && tmpContract.getProducerName().equals(possibleMarketSessionsList.get(tmpIntValue).getProducerName())){
+													marketNotFound=false;
+													tmpIntValue--;
+												}
+												tmpIntValue++;
 											}
-											if(Cms_builder.verboseFlag){System.out.println("              demand increased by "+(quantityToMoveFromHigherPrice-quantityToMoveToLowerPrice)+" to myself (country "+(myAssociatedProducerPositionInPriceRanking+1)+") for a total quantity of "+tmpIntSumValue);}
+											if(!marketNotFound){
+												//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+
+
+												//identify the parameter holder associated to the contract
+
+
+												for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
+													if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
+														aParametersHolder.increaseInterceptBy(quantityToMoveFromHigherPrice-quantityToMoveToLowerPrice);
+														tmpIntSumValue+=quantityToMoveFromHigherPrice-quantityToMoveToLowerPrice;
+														tmpIntValue=aParametersHolder.getIntercept();
+														aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
+													}
+
+												}
+												if(Cms_builder.verboseFlag){System.out.println("              demand increased by "+(quantityToMoveFromHigherPrice-quantityToMoveToLowerPrice)+" to myself (country "+(myAssociatedProducerPositionInPriceRanking+1)+") for a total quantity of "+tmpIntSumValue);}
+											}
 
 										}
 										//if there are additional countries with the same price
 										else{
+											//identify if I am involved
 
 											quantityBoughtAtTheSamePrice=0;
 											decreaseQuantityProducerPositionInPriceRanking1=increaseQuantityProducerPositionInPriceRanking;
 											while(quantityBoughtAtTheSamePrice<(quantityToMoveFromHigherPrice-quantityToMoveToLowerPrice) && decreaseQuantityProducerPositionInPriceRanking1<decreaseQuantityProducerPositionInPriceRanking){
 												decreaseQuantityProducerPositionInPriceRanking1++;
 												if(decreaseQuantityProducerPositionInPriceRanking1 != myAssociatedProducerPositionInPriceRanking){
-													quantityBoughtAtTheSamePrice+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking1).getQuantity());
+
+													//identify the market session where the contract was signed
+													marketNotFound=true;
+													tmpIntValue=0;
+													while(marketNotFound && tmpIntValue<possibleMarketSessionsList.size()){
+														if(latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking1).getMarketName().equals(possibleMarketSessionsList.get(tmpIntValue).getMarketName()) && latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking1).getProducerName().equals(possibleMarketSessionsList.get(tmpIntValue).getProducerName())){
+															marketNotFound=false;
+															tmpIntValue--;
+														}
+														tmpIntValue++;
+													}
+													if(!marketNotFound){
+													//	System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+													//quantityBoughtAtTheSamePrice+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking1).getQuantity());
+													quantityBoughtAtTheSamePrice+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
+													}
 												}
 											}
 											//System.out.println("decreaseQuantityProducerPositionInPriceRanking1 prn "+decreaseQuantityProducerPositionInPriceRanking1+" quantityBoughtAtTheSamePrice "+quantityBoughtAtTheSamePrice);
@@ -704,14 +877,34 @@ public class Buyer {
 												for(int i=increaseQuantityProducerPositionInPriceRanking+1;i<decreaseQuantityProducerPositionInPriceRanking1;i++){
 													if(i != myAssociatedProducerPositionInPriceRanking){
 														tmpContract=latestContractsInPossibleMarketSessionsList.get(i);
-														for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
-															if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-																aParametersHolder.increaseInterceptBy((int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
-																tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*Math.ceil(tmpContract.getQuantity()));
-																tmpIntValue=aParametersHolder.getIntercept();
-																aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
-															}
 
+														//identify the market session where the contract was signed
+														marketNotFound=true;
+														tmpIntValue=0;
+														while(marketNotFound && tmpIntValue<possibleMarketSessionsList.size()){
+															if(tmpContract.getMarketName().equals(possibleMarketSessionsList.get(tmpIntValue).getMarketName()) && tmpContract.getProducerName().equals(possibleMarketSessionsList.get(tmpIntValue).getProducerName())){
+																marketNotFound=false;
+																tmpIntValue--;
+															}
+															tmpIntValue++;
+														}
+														if(!marketNotFound){
+															//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+
+
+
+
+															for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
+																if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
+																	//aParametersHolder.increaseInterceptBy((int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
+																	//tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*Math.ceil(tmpContract.getQuantity()));
+																	aParametersHolder.increaseInterceptBy((int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+																	tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
+																	tmpIntValue=aParametersHolder.getIntercept();
+																	aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
+																}
+
+															}
 														}
 
 													}
@@ -720,14 +913,31 @@ public class Buyer {
 												if(Cms_builder.verboseFlag){System.out.println("              demand increased by "+tmpIntSumValue);}
 												//myself
 												tmpContract=latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking);
-												for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
-													if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-														aParametersHolder.increaseInterceptBy(quantityToMoveFromHigherPrice-tmpIntSumValue);
-														tmpIntSumValue+=quantityToMoveFromHigherPrice-tmpIntSumValue;
-														tmpIntValue=aParametersHolder.getIntercept();
-														aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
-													}
 
+												//identify the market session where the contract was signed
+												marketNotFound=true;
+												tmpIntValue=0;
+												while(marketNotFound && tmpIntValue<possibleMarketSessionsList.size()){
+													if(tmpContract.getMarketName().equals(possibleMarketSessionsList.get(tmpIntValue).getMarketName()) && tmpContract.getProducerName().equals(possibleMarketSessionsList.get(tmpIntValue).getProducerName())){
+														marketNotFound=false;
+														tmpIntValue--;
+													}
+													tmpIntValue++;
+												}
+												if(!marketNotFound){
+												//	System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+
+
+
+													for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
+														if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
+															aParametersHolder.increaseInterceptBy(quantityToMoveFromHigherPrice-tmpIntSumValue);
+															tmpIntSumValue+=quantityToMoveFromHigherPrice-tmpIntSumValue;
+															tmpIntValue=aParametersHolder.getIntercept();
+															aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
+														}
+
+													}
 												}
 												if(Cms_builder.verboseFlag){System.out.println("              demand increased by "+tmpIntSumValue);}
 
@@ -739,14 +949,31 @@ public class Buyer {
 												//only the first is involved
 												if((increaseQuantityProducerPositionInPriceRanking+1)==decreaseQuantityProducerPositionInPriceRanking1){
 													tmpContract=latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking1);
-													for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
-														if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-															aParametersHolder.increaseInterceptBy(quantityToMoveFromHigherPrice-tmpIntSumValue);
-															tmpIntSumValue+=quantityToMoveFromHigherPrice-tmpIntSumValue;
-															tmpIntValue=aParametersHolder.getIntercept();
-															aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
-														}
 
+													//identify the market session where the contract was signed
+													marketNotFound=true;
+													tmpIntValue=0;
+													while(marketNotFound && tmpIntValue<possibleMarketSessionsList.size()){
+														if(tmpContract.getMarketName().equals(possibleMarketSessionsList.get(tmpIntValue).getMarketName()) && tmpContract.getProducerName().equals(possibleMarketSessionsList.get(tmpIntValue).getProducerName())){
+															marketNotFound=false;
+															tmpIntValue--;
+														}
+														tmpIntValue++;
+													}
+													if(!marketNotFound){
+														//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+
+
+
+														for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
+															if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
+																aParametersHolder.increaseInterceptBy(quantityToMoveFromHigherPrice-tmpIntSumValue);
+																tmpIntSumValue+=quantityToMoveFromHigherPrice-tmpIntSumValue;
+																tmpIntValue=aParametersHolder.getIntercept();
+																aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
+															}
+
+														}
 													}
 													if(Cms_builder.verboseFlag){System.out.println("              demand increased by "+tmpIntSumValue);}
 												}
@@ -755,25 +982,64 @@ public class Buyer {
 													for(int i=increaseQuantityProducerPositionInPriceRanking+1;i<decreaseQuantityProducerPositionInPriceRanking1;i++){
 														if(i != myAssociatedProducerPositionInPriceRanking){
 															tmpContract=latestContractsInPossibleMarketSessionsList.get(i);
-															for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
-																if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-																	aParametersHolder.increaseInterceptBy((int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
-																	tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*Math.ceil(tmpContract.getQuantity()));
-																	tmpIntValue=aParametersHolder.getIntercept();
-																	aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
-																}
 
+															//identify the market session where the contract was signed
+															marketNotFound=true;
+															tmpIntValue=0;
+															while(marketNotFound && tmpIntValue<possibleMarketSessionsList.size()){
+																if(tmpContract.getMarketName().equals(possibleMarketSessionsList.get(tmpIntValue).getMarketName()) && tmpContract.getProducerName().equals(possibleMarketSessionsList.get(tmpIntValue).getProducerName())){
+																	marketNotFound=false;
+																	tmpIntValue--;
+																}
+																tmpIntValue++;
 															}
+															if(!marketNotFound){
+																//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+
+
+
+
+																for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
+																	if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
+																		//aParametersHolder.increaseInterceptBy((int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
+																		//tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*Math.ceil(tmpContract.getQuantity()));
+																		aParametersHolder.increaseInterceptBy((int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+																		tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
+																		tmpIntValue=aParametersHolder.getIntercept();
+																		aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
+																	}
+
+																}
+															}
+												if(Cms_builder.verboseFlag){System.out.println("              demand increased by "+tmpIntSumValue);}
 
 															tmpContract=latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking1);
-															for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
-																if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-																	aParametersHolder.increaseInterceptBy(quantityToMoveFromHigherPrice-tmpIntSumValue);
-																	tmpIntSumValue+=quantityToMoveFromHigherPrice-tmpIntSumValue;
-																	tmpIntValue=aParametersHolder.getIntercept();
-																	aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
-																}
 
+															//identify the market session where the contract was signed
+															marketNotFound=true;
+															tmpIntValue=0;
+															while(marketNotFound && tmpIntValue<possibleMarketSessionsList.size()){
+																if(tmpContract.getMarketName().equals(possibleMarketSessionsList.get(tmpIntValue).getMarketName()) && tmpContract.getProducerName().equals(possibleMarketSessionsList.get(tmpIntValue).getProducerName())){
+																	marketNotFound=false;
+																	tmpIntValue--;
+																}
+																tmpIntValue++;
+															}
+															if(!marketNotFound){
+																//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+
+
+
+
+																for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
+																	if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
+																		aParametersHolder.increaseInterceptBy(quantityToMoveFromHigherPrice-tmpIntSumValue);
+																		tmpIntSumValue+=quantityToMoveFromHigherPrice-tmpIntSumValue;
+																		tmpIntValue=aParametersHolder.getIntercept();
+																		aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
+																	}
+
+																}
 															}
 
 
@@ -787,7 +1053,7 @@ public class Buyer {
 												}
 											}
 										}
-								}
+									}
 								}
 							}
 						}
@@ -797,58 +1063,42 @@ public class Buyer {
 
 						//if the buyer has not an associated producer
 						else{
-/*							
-							//identify involved countries
-							quantityToMoveToLowerPrice=0;
-							increaseQuantityProducerPositionInPriceRanking=0;
-							while(quantityToMoveToLowerPrice<demandToBeMoved && increaseQuantityProducerPositionInPriceRanking<latestContractsInPossibleMarketSessionsList.size()){
-								quantityToMoveToLowerPrice+=(int)(0.1*latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking).getQuantity());
-							System.out.print(" "+quantityToMoveToLowerPrice);
-								increaseQuantityProducerPositionInPriceRanking++;
-							}
 
-							System.out.print(name+" position "+increaseQuantityProducerPositionInPriceRanking+" toLower "+quantityToMoveToLowerPrice+" toMove "+demandToBeMoved+" ");
-							quantityToMoveFromHigherPrice=0;
-							decreaseQuantityProducerPositionInPriceRanking=latestContractsInPossibleMarketSessionsList.size()-1;
-							while(quantityToMoveFromHigherPrice<demandToBeMoved && latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking).getPricePlusTransport()>latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking).getPricePlusTransport()){
-								quantityToMoveFromHigherPrice+=latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking).getQuantity();
-								decreaseQuantityProducerPositionInPriceRanking--;
-							}
-
-							//if there is not enough quantity bought at high price
-
-							if(quantityToMoveFromHigherPrice<quantityToMoveToLowerPrice){
-								quantityToMoveToLowerPrice=0;
-								increaseQuantityProducerPositionInPriceRanking=0;
-								while(quantityToMoveToLowerPrice<quantityToMoveFromHigherPrice && increaseQuantityProducerPositionInPriceRanking<latestContractsInPossibleMarketSessionsList.size()){
-									quantityToMoveToLowerPrice+=(int)(0.1*latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking).getQuantity());
-									increaseQuantityProducerPositionInPriceRanking++;
-								}
-
-						
-							}
-
-
-
-							System.out.println(" position "+decreaseQuantityProducerPositionInPriceRanking+" fromhigher "+quantityToMoveFromHigherPrice);
-*/
+							//identify index of the first market to reduce demand
 
 							decreaseQuantityProducerPositionInPriceRanking=latestContractsInPossibleMarketSessionsList.size()-1;
 							while(quantityToMoveFromHigherPrice<demandToBeMoved && decreaseQuantityProducerPositionInPriceRanking>=0){
 								quantityToMoveFromHigherPrice+=latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking).getQuantity();
 								decreaseQuantityProducerPositionInPriceRanking--;
 							}
-//							System.out.print(name+" position "+(decreaseQuantityProducerPositionInPriceRanking+1)+" fromHigher "+quantityToMoveFromHigherPrice+" toMove "+demandToBeMoved+" ");
 
+
+
+							//identify index of the last market to increase demand
 
 							increaseQuantityProducerPositionInPriceRanking=0;
 							for(int i=0;i<=decreaseQuantityProducerPositionInPriceRanking;i++){
 								if(decreaseQuantityProducerPositionInPriceRanking<latestContractsInPossibleMarketSessionsList.size()-1){
-								if(latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking+1).getPricePlusTransport()>latestContractsInPossibleMarketSessionsList.get(i).getPricePlusTransport() && quantityToMoveToLowerPrice<demandToBeMoved){
-									quantityToMoveToLowerPrice+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking).getQuantity());
-									increaseQuantityProducerPositionInPriceRanking=i;
+									if(latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking+1).getPricePlusTransport()>latestContractsInPossibleMarketSessionsList.get(i).getPricePlusTransport() && quantityToMoveToLowerPrice<demandToBeMoved){
+
+										//identify market section in which the contract was signed
+										marketNotFound=true;
+										tmpIntValue=0;
+										while(marketNotFound && tmpIntValue<possibleMarketSessionsList.size()){
+											if(latestContractsInPossibleMarketSessionsList.get(i).getMarketName().equals(possibleMarketSessionsList.get(tmpIntValue).getMarketName()) && latestContractsInPossibleMarketSessionsList.get(i).getProducerName().equals(possibleMarketSessionsList.get(tmpIntValue).getProducerName())){
+												marketNotFound=false;
+												tmpIntValue--;
+											}
+											tmpIntValue++;
+										}
+										if(!marketNotFound){
+										//	System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+										//quantityToMoveToLowerPrice+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking).getQuantity());
+										quantityToMoveToLowerPrice+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
+										increaseQuantityProducerPositionInPriceRanking=i;
+										}
+									}
 								}
-							}
 							}
 
 //							System.out.print(" position "+(increaseQuantityProducerPositionInPriceRanking)+" tolower "+quantityToMoveToLowerPrice);
@@ -870,8 +1120,12 @@ public class Buyer {
 
 
 
-
-							if(Cms_builder.verboseFlag){System.out.println("              the task can be achieved by moving quantities from countries "+(decreaseQuantityProducerPositionInPriceRanking+1)+"-"+latestContractsInPossibleMarketSessionsList.size()+" (tot. q. "+quantityToMoveFromHigherPrice+") to countries 1-"+(increaseQuantityProducerPositionInPriceRanking+1)+" (0.1*tot. q. = "+quantityToMoveToLowerPrice+") of the price rank");}
+							if(increaseQuantityProducerPositionInPriceRanking==0){
+							if(Cms_builder.verboseFlag){System.out.println("              the task can be achieved by moving quantities from countries "+(decreaseQuantityProducerPositionInPriceRanking+2)+"-"+latestContractsInPossibleMarketSessionsList.size()+" (tot. q. "+quantityToMoveFromHigherPrice+") to countries 1-"+(increaseQuantityProducerPositionInPriceRanking+1)+" ("+Cms_builder.shareOfDemandToBeMovedToLowerPrice+"*tot. market supplies = "+quantityToMoveToLowerPrice+") of the price rank");}
+							}
+							else{
+							if(Cms_builder.verboseFlag){System.out.println("              the task can be achieved by moving quantities from countries "+(decreaseQuantityProducerPositionInPriceRanking+2)+"-"+latestContractsInPossibleMarketSessionsList.size()+" (tot. q. "+quantityToMoveFromHigherPrice+") to countries 1-"+(increaseQuantityProducerPositionInPriceRanking)+" ("+Cms_builder.shareOfDemandToBeMovedToLowerPrice+"*tot. market supplies = "+quantityToMoveToLowerPrice+") of the price rank");}
+							}
 							//decrease demand to countries with high prices
 							tmpIntSumValue=0;
 							for(int i=latestContractsInPossibleMarketSessionsList.size()-1;i>decreaseQuantityProducerPositionInPriceRanking+1;i--){
@@ -887,7 +1141,7 @@ public class Buyer {
 								}
 							}
 							if(demandToBeMoved>tmpIntSumValue){	
-								tmpContract=latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking);
+								tmpContract=latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking+1);
 								for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
 									if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
 										aParametersHolder.decreaseInterceptBy(demandToBeMoved-tmpIntSumValue);
@@ -901,31 +1155,72 @@ public class Buyer {
 							totalReducedDemand=tmpIntSumValue;
 
 							if(Cms_builder.verboseFlag){System.out.println("              demand reduced by "+tmpIntSumValue);}
+
+
+
 							//increase demand to countries with low prices
 							tmpIntSumValue=0;
 							for(int i=0;i<increaseQuantityProducerPositionInPriceRanking-1;i++){
 								tmpContract=latestContractsInPossibleMarketSessionsList.get(i);
-								for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
-									if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-										aParametersHolder.increaseInterceptBy((int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
-										tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*Math.ceil(tmpContract.getQuantity()));
-										tmpIntValue=aParametersHolder.getIntercept();
-										aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
-									}
 
+
+								//identify the market session where the contract was signed
+								marketNotFound=true;
+								tmpIntValue=0;
+								while(marketNotFound && tmpIntValue<possibleMarketSessionsList.size()){
+									if(tmpContract.getMarketName().equals(possibleMarketSessionsList.get(tmpIntValue).getMarketName()) && tmpContract.getProducerName().equals(possibleMarketSessionsList.get(tmpIntValue).getProducerName())){
+										marketNotFound=false;
+										tmpIntValue--;
+									}
+									tmpIntValue++;
+								}
+								if(!marketNotFound){
+									//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+
+									for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
+										if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
+											//aParametersHolder.increaseInterceptBy((int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
+											//tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*Math.ceil(tmpContract.getQuantity()));
+											aParametersHolder.increaseInterceptBy((int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+											tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
+											tmpIntValue=aParametersHolder.getIntercept();
+											aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
+										}
+
+									}
 								}
 							}
 
-							if(totalReducedDemand>tmpIntSumValue){	
+							if(totalReducedDemand>tmpIntSumValue){
+							if(increaseQuantityProducerPositionInPriceRanking==0){
 								tmpContract=latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking);
-								for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
-									if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
-										aParametersHolder.increaseInterceptBy(totalReducedDemand-tmpIntSumValue);
-										tmpIntSumValue+=totalReducedDemand-tmpIntSumValue;
-										tmpIntValue=aParametersHolder.getIntercept();
-										aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
-									}
+							}
+							else{	
+								tmpContract=latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking-1);
+							}
 
+								//identify the market session where the contract was signed
+								marketNotFound=true;
+								tmpIntValue=0;
+								while(marketNotFound && tmpIntValue<possibleMarketSessionsList.size()){
+									if(tmpContract.getMarketName().equals(possibleMarketSessionsList.get(tmpIntValue).getMarketName()) && tmpContract.getProducerName().equals(possibleMarketSessionsList.get(tmpIntValue).getProducerName())){
+										marketNotFound=false;
+										tmpIntValue--;
+									}
+									tmpIntValue++;
+								}
+								if(!marketNotFound){
+									//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+
+									for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
+										if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
+											aParametersHolder.increaseInterceptBy(totalReducedDemand-tmpIntSumValue);
+											tmpIntSumValue+=totalReducedDemand-tmpIntSumValue;
+											tmpIntValue=aParametersHolder.getIntercept();
+											aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
+										}
+
+									}
 								}
 							}
 							if(Cms_builder.verboseFlag){System.out.println("              demand increased by "+tmpIntSumValue);}
@@ -981,6 +1276,9 @@ public class Buyer {
 					}
 
 					shareOfGapToChargeToEachPossibleMarketSession=(double)gapToTarget/tmpIntSumValue;
+					if(tmpIntSumValue<0){
+						shareOfGapToChargeToEachPossibleMarketSession=0;
+					}
 					if(shareOfGapToChargeToEachPossibleMarketSession>Cms_builder.shareOfDemandToBeMovedToLowerPrice){
 						shareOfGapToChargeToEachPossibleMarketSession=Cms_builder.shareOfDemandToBeMovedToLowerPrice;
 					}
