@@ -20,7 +20,7 @@
 <parameter name="percentageChangeInTargetProduction" type="constant" constant_type="double" value="0.0"></parameter>
 <parameter name="priceThresholdToIncreaseTargetProduction" type="constant" constant_type="double" value="8.0"></parameter>
 <parameter name="priceThresholdToDecreaseTargetProduction" type="constant" constant_type="double" value="2.0"></parameter>
-<parameter name="transportCostsTuner" type="constant" constant_type="double" value="0.1"></parameter>
+<parameter name="transportCostsTuner" type="constant" constant_type="double" value="0.01"></parameter>
 <parameter name="demandFunctionInterceptTuner" type="constant" constant_type="double" value="0.2"></parameter>
 <parameter name="demandFunctionSlopeTuner" type="constant" constant_type="double" value="0.8"></parameter>
 <parameter name="startUsingInputsFromTimeTick" type="constant" constant_type="int" value="199"></parameter>
