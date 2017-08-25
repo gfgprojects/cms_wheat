@@ -22,7 +22,7 @@
 <parameter name="priceThresholdToDecreaseTargetProduction" type="constant" constant_type="double" value="2.0"></parameter>
 <parameter name="transportCostsTuner" type="constant" constant_type="double" value="0.05"></parameter>
 <parameter name="demandFunctionInterceptTuner" type="constant" constant_type="double" value="0.2"></parameter>
-<parameter name="demandFunctionSlopeTuner" type="constant" constant_type="double" value="0.8"></parameter>
+<parameter name="demandFunctionSlopeTuner" type="constant" constant_type="double" value="0.5"></parameter>
 <parameter name="startUsingInputsFromTimeTick" type="constant" constant_type="int" value="199"></parameter>
 <parameter name="batchStoppingTime" type="constant" constant_type="int" value="600"></parameter>
 </sweep>
