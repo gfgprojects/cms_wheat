@@ -1279,12 +1279,14 @@ public class Buyer {
 					if(tmpIntSumValue<0){
 						shareOfGapToChargeToEachPossibleMarketSession=0;
 					}
+					/*
 					if(shareOfGapToChargeToEachPossibleMarketSession>Cms_builder.shareOfDemandToBeMovedToLowerPrice){
 						shareOfGapToChargeToEachPossibleMarketSession=Cms_builder.shareOfDemandToBeMovedToLowerPrice;
 					}
 					if(shareOfGapToChargeToEachPossibleMarketSession<-Cms_builder.shareOfDemandToBeMovedToLowerPrice){
 						shareOfGapToChargeToEachPossibleMarketSession=-Cms_builder.shareOfDemandToBeMovedToLowerPrice;
 					}
+					*/
 					if(Cms_builder.verboseFlag){System.out.println("                sum of intercept "+tmpIntSumValue+" shareOfGapToChargeToEachPossibleMarketSession "+shareOfGapToChargeToEachPossibleMarketSession);}
 					//modify intercepts
 					tmpIntSumValue=0;
