@@ -163,7 +163,7 @@ public class Cms_scheduler{
 		statAction.execute();
 	}
 	public void scheduleBuyersStepBuyingStrategy(){
-
+/*
 		if(RepastEssentials.GetTickCount()==101){
 			Cms_builder.verboseFlag=true;
 			System.out.println("===================================================================");
@@ -173,7 +173,7 @@ public class Cms_scheduler{
 		if(RepastEssentials.GetTickCount()==105){
 			Cms_builder.verboseFlag=false;
 		}
-
+*/
 		if(Cms_builder.verboseFlag){
 			System.out.println();
 			System.out.println("BUYERS: STEP BUYING STRATEGY");
