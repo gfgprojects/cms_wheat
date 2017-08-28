@@ -353,8 +353,12 @@ public class Buyer {
 									if(!marketNotFound){
 //System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
 //									quantityToMoveToLowerPrice+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*latestContractsInPossibleMarketSessionsList.get(i).getQuantity());
+tmpDoubleValue=Math.exp(Cms_builder.exponentOfLogisticInDemandToBeMoved*(latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()-latestContractsInPossibleMarketSessionsList.get(i).getPricePlusTransport()));
+tmpDoubleValue=(1-tmpDoubleValue)/(1+tmpDoubleValue);
+//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity())+" p gap "+(latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()-latestContractsInPossibleMarketSessionsList.get(i).getPricePlusTransport())+" logistic num "+tmpDoubleValue+" modified willing to ask "+(int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+
 									
-									quantityToMoveToLowerPrice+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
+									quantityToMoveToLowerPrice+=(int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
 									increaseQuantityProducerPositionInPriceRanking=i;
 									}
 								}
@@ -367,6 +371,7 @@ public class Buyer {
 							decreaseQuantityProducerPositionInPriceRanking=latestContractsInPossibleMarketSessionsList.size();
 							for(int i=latestContractsInPossibleMarketSessionsList.size()-1;i>myAssociatedProducerPositionInPriceRanking;i--){
 								if(latestContractsInPossibleMarketSessionsList.get(i).getPricePlusTransport()>latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()){
+//									System.out.println(latestContractsInPossibleMarketSessionsList.get(i).getProducerName()+" p gap "+(latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()-latestContractsInPossibleMarketSessionsList.get(i).getPricePlusTransport()));
 									quantityToMoveFromHigherPrice+=latestContractsInPossibleMarketSessionsList.get(i).getQuantity();
 									decreaseQuantityProducerPositionInPriceRanking=i;
 								}
@@ -559,9 +564,11 @@ public class Buyer {
 										tmpIntValue++;
 									}
 									if(!marketNotFound){
-//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+tmpDoubleValue=Math.exp(Cms_builder.exponentOfLogisticInDemandToBeMoved*(latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()-latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getPricePlusTransport()));
+tmpDoubleValue=(1-tmpDoubleValue)/(1+tmpDoubleValue);
+//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity())+" p gap "+(latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()-latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getPricePlusTransport())+" logistic num "+tmpDoubleValue+" modified willing to ask "+(int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
 //									tmpIntSumValue+=(int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getQuantity());
-									tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
+									tmpIntSumValue+=(int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
 									}
 								}
 
@@ -582,15 +589,18 @@ public class Buyer {
 										tmpIntValue++;
 									}
 									if(!marketNotFound){
-//										System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+										//										System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+										tmpDoubleValue=Math.exp(Cms_builder.exponentOfLogisticInDemandToBeMoved*(latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()-latestContractsInPossibleMarketSessionsList.get(i).getPricePlusTransport()));
+										tmpDoubleValue=(1-tmpDoubleValue)/(1+tmpDoubleValue);
+									//	System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity())+" p gap "+(latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()-latestContractsInPossibleMarketSessionsList.get(i).getPricePlusTransport())+" logistic num "+tmpDoubleValue+" modified willing to ask "+(int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
 										for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
 											if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
 												/*
-												aParametersHolder.increaseInterceptBy((int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
-												tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity());
-												*/
-												aParametersHolder.increaseInterceptBy((int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
-												tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
+												   aParametersHolder.increaseInterceptBy((int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
+												   tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity());
+												   */
+												aParametersHolder.increaseInterceptBy((int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+												tmpIntSumValue+=(int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
 												tmpIntValue=aParametersHolder.getIntercept();
 												aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
 											}
@@ -611,9 +621,10 @@ public class Buyer {
 										tmpIntValue++;
 									}
 									if(!marketNotFound){
-//										System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+										//										System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
 
 
+										//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity())+" p gap "+(latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()-latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getPricePlusTransport())+" logistic num "+tmpDoubleValue+" modified willing to ask "+(int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
 										for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
 											if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
 												aParametersHolder.increaseInterceptBy(quantityToMoveToLowerPrice-tmpIntSumValue);
@@ -699,7 +710,12 @@ public class Buyer {
 											if(!marketNotFound){
 												//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
 												//tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getQuantity());
-												tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
+
+												tmpDoubleValue=Math.exp(Cms_builder.exponentOfLogisticInDemandToBeMoved*(latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()-latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getPricePlusTransport()));
+												tmpDoubleValue=(1-tmpDoubleValue)/(1+tmpDoubleValue);
+												//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity())+" p gap "+(latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()-latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getPricePlusTransport())+" logistic num "+tmpDoubleValue+" modified willing to ask "+(int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+
+												tmpIntSumValue+=(int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
 											}
 
 
@@ -722,13 +738,16 @@ public class Buyer {
 											if(!marketNotFound){
 												//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
 
+										tmpDoubleValue=Math.exp(Cms_builder.exponentOfLogisticInDemandToBeMoved*(latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()-latestContractsInPossibleMarketSessionsList.get(i).getPricePlusTransport()));
+										tmpDoubleValue=(1-tmpDoubleValue)/(1+tmpDoubleValue);
+										//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity())+" p gap "+(latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()-latestContractsInPossibleMarketSessionsList.get(i).getPricePlusTransport())+" logistic num "+tmpDoubleValue+" modified willing to ask "+(int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
 
 												for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
 													if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
 														//aParametersHolder.increaseInterceptBy((int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
 														//tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*Math.ceil(tmpContract.getQuantity()));
-														aParametersHolder.increaseInterceptBy((int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
-														tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
+														aParametersHolder.increaseInterceptBy((int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+														tmpIntSumValue+=(int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
 														tmpIntValue=aParametersHolder.getIntercept();
 														aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
 													}
@@ -789,13 +808,16 @@ public class Buyer {
 											if(!marketNotFound){
 												//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
 
+										tmpDoubleValue=Math.exp(Cms_builder.exponentOfLogisticInDemandToBeMoved*(latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()-latestContractsInPossibleMarketSessionsList.get(i).getPricePlusTransport()));
+										tmpDoubleValue=(1-tmpDoubleValue)/(1+tmpDoubleValue);
+										//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity())+" p gap "+(latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()-latestContractsInPossibleMarketSessionsList.get(i).getPricePlusTransport())+" logistic num "+tmpDoubleValue+" modified willing to ask "+(int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
 
 												for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
 													if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
 														//aParametersHolder.increaseInterceptBy((int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
 														//tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*Math.ceil(tmpContract.getQuantity()));
-														aParametersHolder.increaseInterceptBy((int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
-														tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
+														aParametersHolder.increaseInterceptBy((int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+														tmpIntSumValue+=(int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
 														tmpIntValue=aParametersHolder.getIntercept();
 														aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
 													}
@@ -864,9 +886,13 @@ public class Buyer {
 														tmpIntValue++;
 													}
 													if(!marketNotFound){
-													//	System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
-													//quantityBoughtAtTheSamePrice+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking1).getQuantity());
-													quantityBoughtAtTheSamePrice+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
+														//	System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+														//quantityBoughtAtTheSamePrice+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*latestContractsInPossibleMarketSessionsList.get(decreaseQuantityProducerPositionInPriceRanking1).getQuantity());
+
+														tmpDoubleValue=Math.exp(Cms_builder.exponentOfLogisticInDemandToBeMoved*(latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()-latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getPricePlusTransport()));
+														tmpDoubleValue=(1-tmpDoubleValue)/(1+tmpDoubleValue);
+													//	System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity())+" p gap "+(latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()-latestContractsInPossibleMarketSessionsList.get(increaseQuantityProducerPositionInPriceRanking1).getPricePlusTransport())+" logistic num "+tmpDoubleValue+" modified willing to ask "+(int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+														quantityBoughtAtTheSamePrice+=(int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
 													}
 												}
 											}
@@ -891,6 +917,9 @@ public class Buyer {
 														if(!marketNotFound){
 															//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(0.05*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
 
+															tmpDoubleValue=Math.exp(Cms_builder.exponentOfLogisticInDemandToBeMoved*(latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()-latestContractsInPossibleMarketSessionsList.get(i).getPricePlusTransport()));
+															tmpDoubleValue=(1-tmpDoubleValue)/(1+tmpDoubleValue);
+															//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity())+" p gap "+(latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()-latestContractsInPossibleMarketSessionsList.get(i).getPricePlusTransport())+" logistic num "+tmpDoubleValue+" modified willing to ask "+(int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
 
 
 
@@ -898,8 +927,8 @@ public class Buyer {
 																if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
 																	//aParametersHolder.increaseInterceptBy((int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
 																	//tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*Math.ceil(tmpContract.getQuantity()));
-																	aParametersHolder.increaseInterceptBy((int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
-																	tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
+																	aParametersHolder.increaseInterceptBy((int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+																	tmpIntSumValue+=(int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
 																	tmpIntValue=aParametersHolder.getIntercept();
 																	aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
 																}
@@ -998,13 +1027,16 @@ public class Buyer {
 
 
 
+																tmpDoubleValue=Math.exp(Cms_builder.exponentOfLogisticInDemandToBeMoved*(latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()-latestContractsInPossibleMarketSessionsList.get(i).getPricePlusTransport()));
+																tmpDoubleValue=(1-tmpDoubleValue)/(1+tmpDoubleValue);
+																//System.out.println(possibleMarketSessionsList.get(tmpIntValue).getMarketName()+" "+possibleMarketSessionsList.get(tmpIntValue).getProducerName()+" supply "+possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()+" willing to ask for "+(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity())+" p gap "+(latestContractsInPossibleMarketSessionsList.get(myAssociatedProducerPositionInPriceRanking).getPricePlusTransport()-latestContractsInPossibleMarketSessionsList.get(i).getPricePlusTransport())+" logistic num "+tmpDoubleValue+" modified willing to ask "+(int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
 
 																for(DemandFunctionParameters aParametersHolder : demandFunctionParametersList){
 																	if(tmpContract.getMarketName().equals(aParametersHolder.getMarketName()) && tmpContract.getProducerName().equals(aParametersHolder.getProducerName())){
 																		//aParametersHolder.increaseInterceptBy((int)Math.ceil(Cms_builder.shareOfDemandToBeMovedToLowerPrice*tmpContract.getQuantity()));
 																		//tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*Math.ceil(tmpContract.getQuantity()));
-																		aParametersHolder.increaseInterceptBy((int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
-																		tmpIntSumValue+=(int)(Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
+																		aParametersHolder.increaseInterceptBy((int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity()));
+																		tmpIntSumValue+=(int)(tmpDoubleValue*Cms_builder.shareOfDemandToBeMovedToLowerPrice*possibleMarketSessionsList.get(tmpIntValue).getOfferedQuantity());
 																		tmpIntValue=aParametersHolder.getIntercept();
 																		aParametersHolder.setSlope((tmpIntValue*Cms_builder.demandFunctionSlopeTuner)/(5*(1+Cms_builder.demandFunctionSlopeTuner)));
 																	}
