@@ -89,14 +89,24 @@ public class Producer {
 	}
 
 	public void stepExportAllowedFlag(){
-			if(RandomHelper.nextDouble()<Cms_builder.probabilityToAllowExport){
+		if(RandomHelper.nextDouble()<Cms_builder.probabilityToAllowExport){
 			exportAllowed=true;
 		}
 		else{
 			exportAllowed=false;
 		}
-			if(Cms_builder.verboseFlag){System.out.println("         producer:    "+name+" exportAllowed "+exportAllowed);}
+/*
+		if(name.equals("Russian Federation")){
+//Timing Russian Federation 
+//415 realizzazione produzione
+//416 variazione quantità messe in vendita
+			if(RepastEssentials.GetTickCount()>2 && RepastEssentials.GetTickCount()<6){
+				exportAllowed=false;
+			}
 
+		}
+		*/
+		if(Cms_builder.verboseFlag){System.out.println("         producer:    "+name+" exportAllowed "+exportAllowed);}
 	}
 
 	public ArrayList<ElementOfSupplyOrDemandCurve> getSupplyCurve(String theVariety){

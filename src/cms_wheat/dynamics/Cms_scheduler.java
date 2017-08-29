@@ -163,17 +163,15 @@ public class Cms_scheduler{
 		statAction.execute();
 	}
 	public void scheduleBuyersStepBuyingStrategy(){
-/*
-		if(RepastEssentials.GetTickCount()==101){
+		if(RepastEssentials.GetTickCount()==415){
 			Cms_builder.verboseFlag=true;
 			System.out.println("===================================================================");
 			System.out.println("START SIMULATION TIME STEP: "+RepastEssentials.GetTickCount());
 			System.out.println("====================================================================");
 		}
-		if(RepastEssentials.GetTickCount()==105){
+		if(RepastEssentials.GetTickCount()==417){
 			Cms_builder.verboseFlag=false;
 		}
-*/
 		if(Cms_builder.verboseFlag){
 			System.out.println();
 			System.out.println("BUYERS: STEP BUYING STRATEGY");
