@@ -99,7 +99,7 @@ public class Producer {
 		if(name.equals("Russian Federation")){
 //Timing Russian Federation 
 //415 realizzazione produzione
-//416 variazione quantità messe in vendita
+//416 variazione quantita' messe in vendita
 			if(RepastEssentials.GetTickCount()>2 && RepastEssentials.GetTickCount()<6){
 				exportAllowed=false;
 			}
