@@ -3,7 +3,7 @@
 <parameter name="verboseFlag" type="constant" constant_type="boolean" value="false"></parameter>
 <parameter name="autarkyAtTheBeginning" type="constant" constant_type="boolean" value="false"></parameter>
 <parameter name="productionCycleLength" type="constant" constant_type="int" value="12"></parameter>
-<parameter name="exportPolicyDecisionInterval" type="constant" constant_type="int" value="12"></parameter>
+<parameter name="exportPolicyDecisionInterval" type="constant" constant_type="int" value="1"></parameter>
 <parameter name="importPolicyDecisionInterval" type="constant" constant_type="int" value="12"></parameter>
 <parameter name="globalProduction" type="constant" constant_type="int" value="5000000"></parameter>
 <parameter name="producersPricesMemoryLength" type="constant" constant_type="int" value="12"></parameter>
