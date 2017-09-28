@@ -150,7 +150,7 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 	try{
 		lines=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/buyers.csv"), Charset.forName("UTF-8"));
 		linesBuyersFeed=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/buyers_Feed.csv"), Charset.forName("UTF-8"));
-		linesBuyersOtherUses=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/buyers_ProcessingWasteOther.csv"), Charset.forName("UTF-8"));
+		linesBuyersOtherUses=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/buyers_Misc.csv"), Charset.forName("UTF-8"));
 //		linesBuyersOtherUses=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/buyers_Other_Uses.csv"), Charset.forName("UTF-8"));
 		linesBuyersSeed=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/buyers_Seed.csv"), Charset.forName("UTF-8"));
 	} catch (IOException e) {
