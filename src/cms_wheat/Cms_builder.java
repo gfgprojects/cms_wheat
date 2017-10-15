@@ -170,7 +170,7 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 			int tmpPop = (int)((new Double(parts[j])).doubleValue()*1000);
 			tmpPopulationInputs.add(new Integer(tmpPop));
 			int tmpFood=(new Double(partsFood[j])).intValue();
-			tmpFood=(int)(tmpFood/productionCycleLength);
+//			tmpFood=(int)(tmpFood/productionCycleLength);
 			tmpFoodInputs.add(new Integer(tmpFood));
 			int tmpFeed=new Integer(partsFeed[j-1]);
 			int tmpOtherUses=new Integer(partsOtherUses[j-1]);
@@ -201,6 +201,7 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 		}
 		*/
 		//if food component is computed according to smoothed FAO data in buyers_Food.csv
+/*
 		for(int j=0;j<tmpFoodInputs.size()-1;j++){
 			tmpFoodDemandComponentAdjustedForPeriodicity.add(tmpFoodInputs.get(j));
 			double foodChange=(double)(tmpFoodInputs.get(j+1)-tmpFoodInputs.get(j))/productionCycleLength;
@@ -209,7 +210,16 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 			}
 		}
 		tmpFoodDemandComponentAdjustedForPeriodicity.add(tmpFoodInputs.get(tmpFoodInputs.size()-1));
-
+*/
+		for(int j=0;j<tmpFoodInputs.size()-1;j++){
+			int tmpFood=tmpFoodInputs.get(j);
+			double tmpFoodAdjustedForPeriodicity=(double)(tmpFood/productionCycleLength);
+			for(int z=1;z<productionCycleLength;z++){
+				tmpFoodDemandComponentAdjustedForPeriodicity.add((int)(tmpFoodAdjustedForPeriodicity));				
+			}
+			tmpFoodDemandComponentAdjustedForPeriodicity.add(tmpFood-((int)(tmpFoodAdjustedForPeriodicity*(productionCycleLength-1))));
+		}
+		
 
 		//build periodic other demand components time series (ex montly) starting from yearly other demand components
 		ArrayList<Integer> tmpOtherDemandComponentsAdjustedForPeriodicity=new ArrayList<Integer>();
