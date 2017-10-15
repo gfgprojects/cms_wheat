@@ -43,7 +43,7 @@ public class Cms_builder implements ContextBuilder<Object> {
 	Coordinate coord;
 	Point geom;
 	RepastMapLayer mapLayer;
-	List<String> lines,linesBuyersFeed,linesBuyersOtherUses,linesBuyersSeed;
+	List<String> lines,linesBuyersFood,linesBuyersFeed,linesBuyersOtherUses,linesBuyersSeed;
 	String tmpVarieties="";
 	String tmpMarkets="";
 	ArrayList<Market> marketsList;
@@ -149,6 +149,7 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 	//Buyers creation
 	try{
 		lines=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/buyers.csv"), Charset.forName("UTF-8"));
+		linesBuyersFood=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/buyers_Food.csv"), Charset.forName("UTF-8"));
 		linesBuyersFeed=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/buyers_Feed.csv"), Charset.forName("UTF-8"));
 		linesBuyersOtherUses=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/buyers_Misc.csv"), Charset.forName("UTF-8"));
 //		linesBuyersOtherUses=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/buyers_Other_Uses.csv"), Charset.forName("UTF-8"));
@@ -158,14 +159,18 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 	}
 	for(int i=1;i<lines.size()-1;i++){
 		String[] parts = ((String)lines.get(i)).split(",");
+		String[] partsFood = ((String)linesBuyersFood.get(i)).split(",");
 		String[] partsFeed = ((String)linesBuyersFeed.get(i)).split(",");
 		String[] partsOtherUses = ((String)linesBuyersOtherUses.get(i)).split(",");
 		String[] partsSeed = ((String)linesBuyersSeed.get(i)).split(",");
 		ArrayList<Integer> tmpPopulationInputs=new ArrayList<Integer>();
+		ArrayList<Integer> tmpFoodInputs=new ArrayList<Integer>();
 		ArrayList<Integer> tmpOtherDemandComponentsInputs=new ArrayList<Integer>();
 		for(int j=5;j<parts.length;j++){
 			int tmpPop = (int)((new Double(parts[j])).doubleValue()*1000);
 			tmpPopulationInputs.add(new Integer(tmpPop));
+			int tmpFood=(new Double(partsFood[j])).intValue();
+			tmpFoodInputs.add(new Integer(tmpFood));
 			int tmpFeed=new Integer(partsFeed[j-1]);
 			int tmpOtherUses=new Integer(partsOtherUses[j-1]);
 			int tmpSeed=new Integer(partsSeed[j-1]);
@@ -186,10 +191,26 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 		//build periodic food time series (ex montly) starting from periodic population
 		Double yearlyPerCapitaConsumption=new Double(parts[4]);
 		double periodicPerCapitaConsumption=yearlyPerCapitaConsumption/productionCycleLength;
+
 		ArrayList<Integer> tmpFoodDemandComponentAdjustedForPeriodicity=new ArrayList<Integer>();
+		//if food component is computed according to population using data in buyers.csv
+		/*
 		for(int f=0;f<tmpPopulationInputsAdjustedForPeriodicity.size();f++){
 			tmpFoodDemandComponentAdjustedForPeriodicity.add(new Integer((int)(periodicPerCapitaConsumption*tmpPopulationInputsAdjustedForPeriodicity.get(f))));
 		}
+		*/
+		//if food component is computed according to smoothed FAO data in buyers_Food.csv
+		for(int j=0;j<tmpFoodInputs.size()-1;j++){
+			tmpFoodDemandComponentAdjustedForPeriodicity.add(tmpFoodInputs.get(j));
+			double foodChange=(double)(tmpFoodInputs.get(j+1)-tmpFoodInputs.get(j))/productionCycleLength;
+			for(int z=1;z<productionCycleLength;z++){
+				tmpFoodDemandComponentAdjustedForPeriodicity.add(tmpFoodInputs.get(j)+(int)(z*foodChange));				
+			}
+		}
+		tmpFoodDemandComponentAdjustedForPeriodicity.add(tmpFoodInputs.get(tmpFoodInputs.size()-1));
+
+
+
 		//build periodic other demand components time series (ex montly) starting from yearly other demand components
 		ArrayList<Integer> tmpOtherDemandComponentsAdjustedForPeriodicity=new ArrayList<Integer>();
 		for(int j=0;j<tmpOtherDemandComponentsInputs.size();j++){
