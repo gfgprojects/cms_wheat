@@ -169,7 +169,7 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 		for(int j=5;j<parts.length;j++){
 			int tmpPop = (int)((new Double(parts[j])).doubleValue()*1000);
 			tmpPopulationInputs.add(new Integer(tmpPop));
-			int tmpFood=(new Double(partsFood[j])).intValue();
+			int tmpFood=(new Double(partsFood[j-1])).intValue();
 //			tmpFood=(int)(tmpFood/productionCycleLength);
 			tmpFoodInputs.add(new Integer(tmpFood));
 			int tmpFeed=new Integer(partsFeed[j-1]);
