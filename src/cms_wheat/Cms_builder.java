@@ -152,7 +152,6 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 		linesBuyersFood=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/buyers_Food.csv"), Charset.forName("UTF-8"));
 		linesBuyersFeed=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/buyers_Feed.csv"), Charset.forName("UTF-8"));
 		linesBuyersOtherUses=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/buyers_Misc.csv"), Charset.forName("UTF-8"));
-//		linesBuyersOtherUses=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/buyers_Other_Uses.csv"), Charset.forName("UTF-8"));
 		linesBuyersSeed=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/buyers_Seed.csv"), Charset.forName("UTF-8"));
 	} catch (IOException e) {
 		e.printStackTrace();
@@ -211,7 +210,7 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 		}
 		tmpFoodDemandComponentAdjustedForPeriodicity.add(tmpFoodInputs.get(tmpFoodInputs.size()-1));
 */
-		for(int j=0;j<tmpFoodInputs.size()-1;j++){
+		for(int j=0;j<tmpFoodInputs.size();j++){
 			int tmpFood=tmpFoodInputs.get(j);
 			double tmpFoodAdjustedForPeriodicity=(double)(tmpFood/productionCycleLength);
 			for(int z=1;z<productionCycleLength;z++){
@@ -219,7 +218,7 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 			}
 			tmpFoodDemandComponentAdjustedForPeriodicity.add(tmpFood-((int)(tmpFoodAdjustedForPeriodicity*(productionCycleLength-1))));
 		}
-		
+
 
 		//build periodic other demand components time series (ex montly) starting from yearly other demand components
 		ArrayList<Integer> tmpOtherDemandComponentsAdjustedForPeriodicity=new ArrayList<Integer>();
