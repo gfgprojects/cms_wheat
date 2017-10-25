@@ -132,6 +132,11 @@ public class Producer {
 		for(Double aPrice : supplyPrices){
 			supplyCurve.add(new ElementOfSupplyOrDemandCurve(aPrice,(double)offerInThisSession));
 		}
+
+		fuelPrice=Cms_scheduler.crudeOilPrice;
+		productionCosts=fixUnitCost+fuelPrice*crudeOilBarrelPerNHectars;
+		reservationPrice=(new BigDecimal((1+markUp)*productionCosts).setScale(3,RoundingMode.HALF_EVEN)).doubleValue();
+
 		if(Cms_builder.verboseFlag){System.out.println("           "+name+" stock "+stock+" remaining market sessions "+remainingMarketSessions);}
 		if(Cms_builder.verboseFlag){System.out.println("           supply curve sent to market by "+name+" for product "+theVariety+" (some points)");}
 		return supplyCurve;
@@ -186,9 +191,10 @@ public class Producer {
 			}
 			//end annealing
 */			
-			fuelPrice=Cms_scheduler.crudeOilPrice;
-			productionCosts=fixUnitCost+fuelPrice*crudeOilBarrelPerNHectars;
-			reservationPrice=(new BigDecimal((1+markUp)*productionCosts).setScale(3,RoundingMode.HALF_EVEN)).doubleValue();
+//reservation price setting moved to getSupplyCurve
+			//fuelPrice=Cms_scheduler.crudeOilPrice;
+			//productionCosts=fixUnitCost+fuelPrice*crudeOilBarrelPerNHectars;
+			//reservationPrice=(new BigDecimal((1+markUp)*productionCosts).setScale(3,RoundingMode.HALF_EVEN)).doubleValue();
 //			System.out.println(name+ " fuel price "+fuelPrice+" productionCosts "+productionCosts+" reservatioPrice "+reservationPrice);
 			 
 			stock+=production;
