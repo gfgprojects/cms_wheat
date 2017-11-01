@@ -152,7 +152,7 @@ public class Buyer {
 
 
 	public void stepBuyingStrategy(IndexedIterable<Object> theProducersList){
-System.out.println("         buyer: "+name+" step buying strategy.");
+//System.out.println("         buyer: "+name+" step buying strategy.");
 		if(Cms_builder.verboseFlag){System.out.println("         buyer: "+name+" step buying strategy.");}
 		possibleMarketSessionsList=new ArrayList<MarketSession>();
 		continueBuyingMarketSessionsList=new ArrayList<MarketSession>();
@@ -1350,7 +1350,7 @@ tmpDoubleValue=(1-tmpDoubleValue)/(1+tmpDoubleValue);
 					aProducer=aMarketSession.getProducer();
 					if(name.equals(aProducer.getName())){
 							System.out.println("Setting intercept to myself");
-						initialInterceptOfTheDemandFunction=(int)((1+Cms_builder.demandFunctionSlopeTuner)*Math.min(myZoneInfoHolder.getConsumption(),myZoneInfoHolder.getProduction()));
+						initialInterceptOfTheDemandFunction=(int)((1+Cms_builder.demandFunctionSlopeTuner)*Cms_builder.demandFunctionInterceptTuner*Math.min(myZoneInfoHolder.getConsumption(),myZoneInfoHolder.getProduction()));
 						aParametersHolder=new DemandFunctionParameters(initialInterceptOfTheDemandFunction,aMarketSession.getMarketName(),aMarketSession.getProducerName());
 						aParametersHolder.setSlope(Cms_builder.demandFunctionSlopeTuner*Math.min(myZoneInfoHolder.getConsumption(),myZoneInfoHolder.getProduction())/5);
 						demandFunctionParametersList.add(aParametersHolder);					
@@ -1368,7 +1368,7 @@ tmpDoubleValue=(1-tmpDoubleValue)/(1+tmpDoubleValue);
 						}
 						//create the parameter holder 
 						if(myZoneInfoHolder.getExcessDemand()>0 && aZoneInfoHolder.getExcessSupply()>0){
-							tmpDoubleValue=myZoneInfoHolder.getExcessDemand()*aZoneInfoHolder.getShareOfExcessSupply();
+							tmpDoubleValue=myZoneInfoHolder.getExcessDemand()*Cms_builder.demandFunctionInterceptTuner*aZoneInfoHolder.getShareOfExcessSupply();
 							tmpIntercept=(int) Math.round((1+Cms_builder.demandFunctionSlopeTuner-Cms_builder.weightOfDistanceInInitializingIntercept)*tmpDoubleValue);
 							if(tmpIntercept<0){
 								tmpIntercept=0;
@@ -1379,7 +1379,7 @@ tmpDoubleValue=(1-tmpDoubleValue)/(1+tmpDoubleValue);
 						}
 						else{
 							System.out.println("Setting intercept: I have excess supply or the other country has excess demand");
-							tmpDoubleValue=shareOfProductionABuyerIsWillingToBuyFromAProducerWithNoExcessSupply*aZoneInfoHolder.getProduction();
+							tmpDoubleValue=shareOfProductionABuyerIsWillingToBuyFromAProducerWithNoExcessSupply*Cms_builder.demandFunctionInterceptTuner*aZoneInfoHolder.getProduction();
 							aParametersHolder=new DemandFunctionParameters((int)((1+Cms_builder.demandFunctionSlopeTuner)*tmpDoubleValue),aMarketSession.getMarketName(),aMarketSession.getProducerName());							
 							aParametersHolder.setSlope(Cms_builder.demandFunctionSlopeTuner*tmpDoubleValue/5);
 						}
