@@ -125,7 +125,7 @@ public class Cms_scheduler{
 		Cms_builder.schedule.schedule(scheduleParameters,this,"schedulePrintProductionIfVerbouse");
 		for(int i=0;i<producersList.size();i++){
 			aProducer=(Producer)producersList.get(i);
-			int tfp=aProducer.getTimeOfFirstProduction()-2;
+			int tfp=aProducer.getTimeOfFirstProduction()-5;
 			if(tfp<1){
 				tfp=12-tfp;
 			}
