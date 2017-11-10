@@ -125,7 +125,12 @@ public class Cms_scheduler{
 		Cms_builder.schedule.schedule(scheduleParameters,this,"schedulePrintProductionIfVerbouse");
 		for(int i=0;i<producersList.size();i++){
 			aProducer=(Producer)producersList.get(i);
-			scheduleParameters=ScheduleParameters.createRepeating(aProducer.getTimeOfFirstProduction(),Cms_builder.productionCycleLength,33.0);
+			int tfp=aProducer.getTimeOfFirstProduction()-6;
+			if(tfp<1){
+				tfp=12-tfp;
+			}
+			scheduleParameters=ScheduleParameters.createRepeating(tfp,Cms_builder.productionCycleLength,33.0);
+//			scheduleParameters=ScheduleParameters.createRepeating(aProducer.getTimeOfFirstProduction(),Cms_builder.productionCycleLength,33.0);
 			Cms_builder.schedule.schedule(scheduleParameters,aProducer,"makeProduction");
 		}
 	}
