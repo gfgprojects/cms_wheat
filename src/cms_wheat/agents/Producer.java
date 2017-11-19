@@ -136,7 +136,7 @@ public class Producer {
 		fuelPrice=Cms_scheduler.crudeOilPrice;
 		productionCosts=fixUnitCost+fuelPrice*crudeOilBarrelPerNHectars;
 		reservationPrice=(new BigDecimal((1+markUp)*productionCosts).setScale(3,RoundingMode.HALF_EVEN)).doubleValue();
-
+		
 		if(Cms_builder.verboseFlag){System.out.println("           "+name+" stock "+stock+" remaining market sessions "+remainingMarketSessions);}
 		if(Cms_builder.verboseFlag){System.out.println("           supply curve sent to market by "+name+" for product "+theVariety+" (some points)");}
 		return supplyCurve;
