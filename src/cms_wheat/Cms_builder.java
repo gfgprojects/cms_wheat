@@ -235,7 +235,7 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 		ArrayList<Integer> tmpDemandAdjustedForPeriodicity=new ArrayList<Integer>();
 
 		
-		tmpDemandAdjustedForPeriodicity.add(new Integer((int)(1.0*(tmpFoodDemandComponentAdjustedForPeriodicity.get(0)+tmpOtherDemandComponentsAdjustedForPeriodicity.get(0)))));
+		tmpDemandAdjustedForPeriodicity.add(new Integer((int)(0.99*(tmpFoodDemandComponentAdjustedForPeriodicity.get(0)+tmpOtherDemandComponentsAdjustedForPeriodicity.get(0)))));
 		for(int j=1;j<tmpFoodDemandComponentAdjustedForPeriodicity.size();j++){
 			int tmpTotDemand=tmpFoodDemandComponentAdjustedForPeriodicity.get(j)+tmpOtherDemandComponentsAdjustedForPeriodicity.get(j);
 			tmpDemandAdjustedForPeriodicity.add(new Integer(tmpTotDemand));
