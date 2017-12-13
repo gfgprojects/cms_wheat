@@ -15,12 +15,14 @@ public class DemandFunctionParameters{
 	}
 	public void setSlope(double thisDemandFunctionParametersSlope){
 		slope=(int)thisDemandFunctionParametersSlope;
-		if(Cms_builder.verboseFlag){System.out.println("          new parameters; demand at p=0: "+intercept+" at p=10 "+(intercept-slope*10)+", market: "+market+", producer: "+producer);}
+		if(Cms_builder.verboseFlag){System.out.println("                 parameter slope changed; demand at p=0: "+intercept+" at p=10 "+(intercept-slope*10)+", market: "+market+", producer: "+producer);}
+//System.out.println("                 parameter slope changed; demand at p=0: "+intercept+" at p=10 "+(intercept-slope*10)+", market: "+market+", producer: "+producer);
 	}
 
 	public void setIntercept(int theNewIntercept){
 		intercept=theNewIntercept;
-		if(Cms_builder.verboseFlag){System.out.println("                 demand at p=0 set to "+theNewIntercept+", market: "+market+", producer: "+producer);}
+System.out.println("                 demand at p=0 set to "+theNewIntercept+", market: "+market+", producer: "+producer);
+//		if(Cms_builder.verboseFlag){System.out.println("                 demand at p=0 set to "+theNewIntercept+", market: "+market+", producer: "+producer);}
 	}
 	public void increaseInterceptBy(int interceptIncrease){
 		intercept+=interceptIncrease;

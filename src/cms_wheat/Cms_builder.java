@@ -36,7 +36,7 @@ import org.geotools.referencing.GeodeticCalculator;
 
 public class Cms_builder implements ContextBuilder<Object> {
 	public static boolean verboseFlag=false;
-	public static boolean autarkyAtTheBeginning=true;
+	public static boolean autarkyAtTheBeginning=false;
 	Producer aProducer;
 	Buyer aBuyer;
 	Market aMarket;
@@ -64,31 +64,33 @@ public class Cms_builder implements ContextBuilder<Object> {
 public Context<Object> build(Context<Object> context) {
 
 Parameters params = RunEnvironment.getInstance().getParameters();
-	verboseFlag=(boolean)params.getValue("verboseFlag");
-	autarkyAtTheBeginning=(boolean)params.getValue("autarkyAtTheBeginning");
-	productionCycleLength=(int)params.getValue("productionCycleLength");
-	exportPolicyDecisionInterval=(int)params.getValue("exportPolicyDecisionInterval");
-	importPolicyDecisionInterval=(int)params.getValue("importPolicyDecisionInterval");
-	globalProduction=(int)params.getValue("globalProduction");
-	producersPricesMemoryLength=(int)params.getValue("producersPricesMemoryLength");
-	minimumImportQuantity=(int)params.getValue("minimumImportQuantity");
-	weightOfDistanceInInitializingIntercept=(double)params.getValue("weightOfDistanceInInitializingIntercept");
-	consumptionShareToSetMinimumConsumption=(double)params.getValue("consumptionShareToSetMinimumConsumption");
-	consumptionShareToSetMaximumConsumption=(double)params.getValue("consumptionShareToSetMaximumConsumption");
-	productionRateOfChangeControl=(double)params.getValue("productionRateOfChangeControl");
-	probabilityToAllowExport=(double)params.getValue("probabilityToAllowExport");
-	probabilityToAllowImport=(double)params.getValue("probabilityToAllowImport");
-	toleranceInMovingDemand=(double)params.getValue("toleranceInMovingDemand");
+	verboseFlag=false;
+	autarkyAtTheBeginning=false;
+	productionCycleLength=12;
+	exportPolicyDecisionInterval=1;
+	importPolicyDecisionInterval=12;
+	globalProduction=5000000;
+	producersPricesMemoryLength=12;
+	minimumImportQuantity=100;
+	weightOfDistanceInInitializingIntercept=0.0;
+	consumptionShareToSetMinimumConsumption=0.75;
+	consumptionShareToSetMaximumConsumption=1.25;
+	productionRateOfChangeControl=0.0;
+	probabilityToAllowExport=1.0;
+	probabilityToAllowImport=1.0;
+	toleranceInMovingDemand=0.0;
+	percentageChangeInTargetProduction=0.0;
+	priceThresholdToIncreaseTargetProduction=8.0;
+	priceThresholdToDecreaseTargetProduction=2.0;
+	startUsingInputsFromTimeTick=199;
+	batchStoppingTime=470;
+
 	shareOfDemandToBeMoved=(double)params.getValue("shareOfDemandToBeMoved");
 	percentageOfPriceMarkDownInNewlyAccessibleMarkets=(double)params.getValue("percentageOfPriceMarkDownInNewlyAccessibleMarkets");
-	percentageChangeInTargetProduction=(double)params.getValue("percentageChangeInTargetProduction");
-	priceThresholdToIncreaseTargetProduction=(double)params.getValue("priceThresholdToIncreaseTargetProduction");
-	priceThresholdToDecreaseTargetProduction=(double)params.getValue("priceThresholdToDecreaseTargetProduction");
 	transportCostsTuner=(double)params.getValue("transportCostsTuner");
 	demandFunctionInterceptTuner=(double)params.getValue("demandFunctionInterceptTuner");
 	demandFunctionSlopeTuner=(double)params.getValue("demandFunctionSlopeTuner");
-	startUsingInputsFromTimeTick=(int)params.getValue("startUsingInputsFromTimeTick");
-	batchStoppingTime=(int)params.getValue("batchStoppingTime");
+
 //shareOfDemandToBeMovedToLowerPrice=shareOfDemandToBeMoved;
 //shareOfDemandToBeMovedFromHigherPrice=shareOfDemandToBeMoved;
 	System.out.println();
