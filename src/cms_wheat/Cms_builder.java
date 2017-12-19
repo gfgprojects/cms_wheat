@@ -83,7 +83,7 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 	priceThresholdToIncreaseTargetProduction=8.0;
 	priceThresholdToDecreaseTargetProduction=2.0;
 	startUsingInputsFromTimeTick=199;
-	batchStoppingTime=470;
+	batchStoppingTime=600; //470 in differential evolution
 
 	shareOfDemandToBeMoved=(double)params.getValue("shareOfDemandToBeMoved");
 	percentageOfPriceMarkDownInNewlyAccessibleMarkets=(double)params.getValue("percentageOfPriceMarkDownInNewlyAccessibleMarkets");
