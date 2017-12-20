@@ -95,17 +95,17 @@ public class Producer {
 		else{
 			exportAllowed=false;
 		}
-/*
 		if(name.equals("Russian Federation")){
 //Timing Russian Federation 
+//periodo di raccolta luglio
+//band da agosto a dicembre
 //415 realizzazione produzione
 //416 variazione quantita' messe in vendita
-			if(RepastEssentials.GetTickCount()>2 && RepastEssentials.GetTickCount()<6){
+			if(RepastEssentials.GetTickCount()>415 && RepastEssentials.GetTickCount()<421){
 				exportAllowed=false;
 			}
 
 		}
-		*/
 		if(Cms_builder.verboseFlag){System.out.println("         producer:    "+name+" exportAllowed "+exportAllowed);}
 	}
 
