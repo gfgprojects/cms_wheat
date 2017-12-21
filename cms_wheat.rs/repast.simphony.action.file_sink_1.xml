@@ -1,0 +1,16 @@
+<repast.simphony.data2.engine.FileSinkDescriptor>
+  <name>sessions</name>
+  <dataSet>marketSession</dataSet>
+  <delimiter>,</delimiter>
+  <format>TABULAR</format>
+  <sourceIds class="linked-hash-set">
+    <string>tick</string>
+    <string>SessionDescription</string>
+    <string>MarketPrice</string>
+    <string>QuantityExchanged</string>
+    <string>OfferedQuantity</string>
+    <string>QsQdRatio</string>
+  </sourceIds>
+  <fileName>output/z_sessions.csv</fileName>
+  <addTimeStamp>false</addTimeStamp>
+</repast.simphony.data2.engine.FileSinkDescriptor>
