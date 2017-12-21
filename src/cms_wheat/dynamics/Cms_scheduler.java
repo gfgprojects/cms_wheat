@@ -191,7 +191,7 @@ public class Cms_scheduler{
 			crudeOilPrice=crudeOilPricesIterator.next();
 			crudeOilPricesIterator.remove();
 			if(Cms_builder.verboseFlag){System.out.println("Global: crude oil price updated: "+crudeOilPrice);}
-//			System.out.println("Global: crude oil price updated: "+crudeOilPrice);
+//			System.out.println("Time "+RepastEssentials.GetTickCount()+" Global: crude oil price updated: "+crudeOilPrice);
 		}
 	}
 	public void scheduleMarketsPerformSessions(){
