@@ -82,8 +82,8 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 	percentageChangeInTargetProduction=0.0;
 	priceThresholdToIncreaseTargetProduction=8.0;
 	priceThresholdToDecreaseTargetProduction=2.0;
-	startUsingInputsFromTimeTick=1; //199
-	batchStoppingTime=270; //se startUsing=199 allora 600, o 470 in differential evolution
+	startUsingInputsFromTimeTick=199; //199
+	batchStoppingTime=470; //se startUsing=199 allora 600, o 470 in differential evolution
 
 	shareOfDemandToBeMoved=(double)params.getValue("shareOfDemandToBeMoved");
 	percentageOfPriceMarkDownInNewlyAccessibleMarkets=(double)params.getValue("percentageOfPriceMarkDownInNewlyAccessibleMarkets");
@@ -237,7 +237,7 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 		ArrayList<Integer> tmpDemandAdjustedForPeriodicity=new ArrayList<Integer>();
 
 		
-		tmpDemandAdjustedForPeriodicity.add(new Integer((int)(1.0*(tmpFoodDemandComponentAdjustedForPeriodicity.get(0)+tmpOtherDemandComponentsAdjustedForPeriodicity.get(0)))));
+		tmpDemandAdjustedForPeriodicity.add(new Integer((int)(0.9964*(tmpFoodDemandComponentAdjustedForPeriodicity.get(0)+tmpOtherDemandComponentsAdjustedForPeriodicity.get(0)))));
 		for(int j=1;j<tmpFoodDemandComponentAdjustedForPeriodicity.size();j++){
 			int tmpTotDemand=tmpFoodDemandComponentAdjustedForPeriodicity.get(j)+tmpOtherDemandComponentsAdjustedForPeriodicity.get(j);
 			tmpDemandAdjustedForPeriodicity.add(new Integer(tmpTotDemand));

@@ -21,7 +21,6 @@ public class DemandFunctionParameters{
 
 	public void setIntercept(int theNewIntercept){
 		intercept=theNewIntercept;
-System.out.println("                 demand at p=0 set to "+theNewIntercept+", market: "+market+", producer: "+producer);
 //		if(Cms_builder.verboseFlag){System.out.println("                 demand at p=0 set to "+theNewIntercept+", market: "+market+", producer: "+producer);}
 	}
 	public void increaseInterceptBy(int interceptIncrease){
