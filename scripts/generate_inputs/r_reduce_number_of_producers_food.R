@@ -1,4 +1,3 @@
-
 #generate file for inputs in the ABM
 #at the end includes the oil price file generation
 

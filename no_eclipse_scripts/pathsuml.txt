@@ -1,5 +1,0 @@
-path_to_output_folder
-path_to_overview_file
-path_to_umlgraph_jar
-list_of_packages_separed_by_a_white_space
-

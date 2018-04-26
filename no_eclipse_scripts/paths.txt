@@ -1,5 +1,0 @@
-path to repast jars
-repast version
-oath to model folder
-path to other java libraries
- 
