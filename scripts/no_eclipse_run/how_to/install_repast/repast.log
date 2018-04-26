@@ -1,0 +1,515 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.3.1)  14 APR 2017 17:18
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**repast.tex
+(./repast.tex
+LaTeX2e <2016/03/31>
+Babel <3.9r> and hyphenation patterns for 83 language(s) loaded.
+(/usr/local/texlive/2016/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
+(/usr/local/texlive/2016/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/local/texlive/2016/texmf-dist/tex/latex/tools/verbatim.sty
+Package: verbatim 2014/10/28 v1.5q LaTeX2e package for verbatim enhancements
+\every@verbatim=\toks14
+\verbatim@line=\toks15
+\verbatim@in@stream=\read1
+) (./repast.aux)
+\openout1 = `repast.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 6.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 6.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 6.
+
+Overfull \hbox (38.05629pt too wide) in paragraph at lines 26--27
+[]\OT1/cmr/m/n/10 This can be done from the Repast up-date site: http://mirror.
+anl.gov/repastsimphony.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 33--41
+
+ []
+
+[1
+
+{/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+Overfull \hbox (27.74675pt too wide) in paragraph at lines 74--74
+[]\OT1/cmtt/m/n/10 java -cp /home/computer/repast/repast.simphony.runtime_<vers
+ion>/lib/*:[] 
+ []
+
+
+Overfull \hbox (17.24684pt too wide) in paragraph at lines 75--75
+[]          \OT1/cmtt/m/n/10 /home/computer/repast/repast.simphony.runtime_<ver
+sion>/bin[] 
+ []
+
+
+Overfull \hbox (101.24611pt too wide) in paragraph at lines 85--85
+[]\OT1/cmtt/m/n/10 java -cp <path to eclipse plugins directory>/repast.simphony
+.runtime_<version>/lib/*:[] 
+ []
+
+
+Overfull \hbox (90.7462pt too wide) in paragraph at lines 86--86
+[]          \OT1/cmtt/m/n/10 <path to eclipse plugins directory>/repast.simphon
+y.runtime_<version>/bin[] 
+ []
+
+[2]
+Overfull \hbox (85.49625pt too wide) in paragraph at lines 117--117
+[]\OT1/cmtt/m/n/10 System.out.println("I am a just created random walker. My po
+sition is "+position);[] 
+ []
+
+
+Overfull \hbox (28.90543pt too wide) in paragraph at lines 135--136
+[]\OT1/cmtt/m/n/10 Random_walker_builder\OT1/cmr/m/n/10 . Then you have to cre-
+ate the []\OT1/cmtt/m/n/10 Random_walker_builder.java
+ []
+
+
+Overfull \hbox (22.4968pt too wide) in paragraph at lines 142--142
+[]\OT1/cmtt/m/n/10 public class Random_walker_builder implements ContextBuilder
+<Object> {[] 
+ []
+
+[3]
+Underfull \hbox (badness 10000) in paragraph at lines 162--166
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 167--168
+
+ []
+
+
+Overfull \hbox (17.24684pt too wide) in paragraph at lines 173--173
+[]                \OT1/cmtt/m/n/10 repast/simphony/engine/schedule/ScheduledMet
+hod.class[] 
+ []
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 180.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 180.
+
+Overfull \hbox (38.24666pt too wide) in paragraph at lines 186--186
+[]\OT1/cmtt/m/n/10 javac -cp /home/computer/repast/repast.simphony.dataLoader_<
+version>/bin:[] 
+ []
+
+[4] [5]
+Overfull \hbox (52.74678pt too wide) in paragraph at lines 290--290
+ []\OT1/cmtt/m/n/10 java -cp /home/computer/repast/repast.simphony.runtime_<ver
+sion>/lib/*:[] 
+ []
+
+
+Overfull \hbox (42.24687pt too wide) in paragraph at lines 291--291
+ []          \OT1/cmtt/m/n/10 /home/computer/repast/repast.simphony.runtime_<ve
+rsion>/bin[] 
+ []
+
+
+Overfull \hbox (36.99692pt too wide) in paragraph at lines 292--292
+ []  \OT1/cmtt/m/n/10 repast.simphony.runtime.RepastMain /home/computer/myfirst
+_rs_model[] 
+ []
+
+[6]
+Overfull \hbox (90.7462pt too wide) in paragraph at lines 332--332
+[]\OT1/cmtt/m/n/10 javac -d ../bin -cp /home/computer/repast/repast.simphony.da
+taLoader_<version>/bin:[] 
+ []
+
+
+Overfull \hbox (18.80434pt too wide) in paragraph at lines 350--351
+[]\OT1/cmr/m/n/10 At the end of this pro-cess, the struc-ture of []\OT1/cmtt/m/
+n/10 /home/computer/myfirst_rs_model/
+ []
+
+[7]
+Underfull \hbox (badness 10000) in paragraph at lines 363--367
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 368--372
+
+ []
+
+
+Overfull \hbox (27.74675pt too wide) in paragraph at lines 381--381
+[]\OT1/cmtt/m/n/10 java -cp /home/computer/repast/repast.simphony.runtime_<vers
+ion>/lib/*:[] 
+ []
+
+
+Overfull \hbox (27.74675pt too wide) in paragraph at lines 382--382
+[]          \OT1/cmtt/m/n/10 /home/computer/repast/repast.simphony.runtime_<ver
+sion>/bin:.[] 
+ []
+
+
+Overfull \hbox (59.24648pt too wide) in paragraph at lines 383--383
+[]  \OT1/cmtt/m/n/10 repast.simphony.runtime.RepastMain /home/computer/myfirst_
+rs_model/scenatio[] 
+ []
+
+[8]
+Overfull \hbox (85.49625pt too wide) in paragraph at lines 407--407
+[]\OT1/cmtt/m/n/10 System.out.println("I am a just created random walker. My po
+sition is "+position);[] 
+ []
+
+
+Overfull \hbox (90.7462pt too wide) in paragraph at lines 414--414
+[]    \OT1/cmtt/m/n/10 My identification number is "+myIdentificationNumber+" p
+osition is "+position);[] 
+ []
+
+
+Overfull \hbox (27.74675pt too wide) in paragraph at lines 424--424
+[]\OT1/cmtt/m/n/10 System.out.println("Id "+myIdentificationNumber+" position"+
+ position);[] 
+ []
+
+
+Overfull \hbox (69.99922pt too wide) in paragraph at lines 432--433
+[]\OT1/cmr/m/n/10 Then we cre-ate the pop-u-la-tion by us-ing a for state-ment 
+in the []\OT1/cmtt/m/n/10 Random_walker_builder.java 
+ []
+
+
+Overfull \hbox (22.4968pt too wide) in paragraph at lines 442--442
+[]\OT1/cmtt/m/n/10 public class Random_walker_builder implements ContextBuilder
+<Object> {[] 
+ []
+
+[9]
+Overfull \hbox (64.49643pt too wide) in paragraph at lines 461--461
+[]\OT1/cmtt/m/n/10 I am a just created random walker. My identification number 
+is 0 position is 0[] 
+ []
+
+
+Overfull \hbox (64.49643pt too wide) in paragraph at lines 462--462
+[]\OT1/cmtt/m/n/10 I am a just created random walker. My identification number 
+is 1 position is 0[] 
+ []
+
+
+Overfull \hbox (64.49643pt too wide) in paragraph at lines 463--463
+[]\OT1/cmtt/m/n/10 I am a just created random walker. My identification number 
+is 2 position is 0[] 
+ []
+
+
+Overfull \hbox (39.44337pt too wide) in paragraph at lines 482--483
+[]\OT1/cmr/m/n/10 To this aim it is pos-si-ble to use the []\OT1/cmtt/m/n/10 Ge
+tTickCount() \OT1/cmr/m/n/10 method of the []\OT1/cmtt/m/n/10 RepastEssentials
+ []
+
+
+Overfull \hbox (27.74675pt too wide) in paragraph at lines 490--490
+[]\OT1/cmtt/m/n/10 System.out.println("Id "+myIdentificationNumber+" position"+
+ position);[] 
+ []
+
+
+Overfull \hbox (27.74675pt too wide) in paragraph at lines 509--509
+[]\OT1/cmtt/m/n/10 /home/computer/repast/repast.simphony.essentials_<version>/b
+in:. *.java[] 
+ []
+
+[10] [11]
+Overfull \hbox (1.49698pt too wide) in paragraph at lines 587--587
+[]      \OT1/cmtt/m/n/10 context="myMinimalModel" file="data_source_aggregate.x
+ml" />[] 
+ []
+
+[12]
+Overfull \hbox (1.49698pt too wide) in paragraph at lines 639--639
+[]     \OT1/cmtt/m/n/10 context="myMinimalModel" file="data_source_individual.x
+ml" />[] 
+ []
+
+
+Overfull \hbox (1.49698pt too wide) in paragraph at lines 650--650
+[]      \OT1/cmtt/m/n/10 context="myMinimalModel" file="data_source_aggregate.x
+ml" />[] 
+ []
+
+
+Overfull \hbox (6.74693pt too wide) in paragraph at lines 652--652
+[]      \OT1/cmtt/m/n/10 context="myMinimalModel" file="data_source_individual.
+xml" />[] 
+ []
+
+[13] [14]
+Overfull \hbox (1.49698pt too wide) in paragraph at lines 725--725
+[]      \OT1/cmtt/m/n/10 context="myMinimalModel" file="data_source_aggregate.x
+ml" />[] 
+ []
+
+
+Overfull \hbox (6.74693pt too wide) in paragraph at lines 727--727
+[]      \OT1/cmtt/m/n/10 context="myMinimalModel" file="data_source_individual.
+xml" />[] 
+ []
+
+
+Overfull \hbox (18.80434pt too wide) in paragraph at lines 733--734
+[]\OT1/cmr/m/n/10 At the end of this pro-cess, the struc-ture of []\OT1/cmtt/m/
+n/10 /home/computer/myfirst_rs_model/
+ []
+
+[15]
+Overfull \hbox (32.9967pt too wide) in paragraph at lines 802--802
+[]     \OT1/cmtt/m/n/10 context="myMinimalModel" file="write_aggregate_data_to_
+file.xml" />[] 
+ []
+
+
+Overfull \hbox (38.24666pt too wide) in paragraph at lines 804--804
+[]     \OT1/cmtt/m/n/10 context="myMinimalModel" file="write_individual_data_to
+_file.xml" />[] 
+ []
+
+
+Overfull \hbox (1.49698pt too wide) in paragraph at lines 815--815
+[]      \OT1/cmtt/m/n/10 context="myMinimalModel" file="aggregate_data_source.x
+ml" />[] 
+ []
+
+[16]
+Overfull \hbox (32.9967pt too wide) in paragraph at lines 819--819
+[]     \OT1/cmtt/m/n/10 context="myMinimalModel" file="write_aggregate_data_to_
+file.xml" />[] 
+ []
+
+
+Overfull \hbox (38.24666pt too wide) in paragraph at lines 821--821
+[]     \OT1/cmtt/m/n/10 context="myMinimalModel" file="write_individual_data_to
+_file.xml" />[] 
+ []
+
+
+Overfull \hbox (18.80434pt too wide) in paragraph at lines 825--826
+[]\OT1/cmr/m/n/10 At the end of this pro-cess, the struc-ture of []\OT1/cmtt/m/
+n/10 /home/computer/myfirst_rs_model/
+ []
+
+
+Overfull \hbox (1.49698pt too wide) in paragraph at lines 857--857
+[] \OT1/cmtt/m/n/10 <parameter name="numberOfWalkers" displayName="Number of wa
+lkers"[] 
+ []
+
+[17]
+Overfull \hbox (22.4968pt too wide) in paragraph at lines 878--878
+[]\OT1/cmtt/m/n/10 public class Random_walker_builder implements ContextBuilder
+<Object> {[] 
+ []
+
+
+Overfull \hbox (48.74657pt too wide) in paragraph at lines 884--884
+[]        \OT1/cmtt/m/n/10 numberOfRandomWalker = (Integer)params.getValue("num
+berOfWalkers");[] 
+ []
+
+[18]
+Overfull \hbox (41.66617pt too wide) in paragraph at lines 949--950
+[]\OT1/cmr/m/n/10 Suppose you save this file in the sce-nario folder with the n
+ame []\OT1/cmtt/m/n/10 batch_parameters.xml\OT1/cmr/m/n/10 . 
+ []
+
+
+Overfull \hbox (27.74675pt too wide) in paragraph at lines 956--956
+[]\OT1/cmtt/m/n/10 java -cp /home/computer/repast/repast.simphony.runtime_<vers
+ion>/lib/*:[] 
+ []
+
+
+Overfull \hbox (27.74675pt too wide) in paragraph at lines 959--959
+[]  \OT1/cmtt/m/n/10 -params /home/computer/myfirst_rs_model/scenario/batch_par
+ameters.xml[] 
+ []
+
+[19]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 995.
+
+ (/usr/local/texlive/2016/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 995.
+
+Overfull \hbox (65.46191pt too wide) in paragraph at lines 1008--1010
+\OT1/cmr/m/n/10 the class where the av-er-age is com-puted. We name them as []\
+OT1/cmtt/m/n/10 PositionNonAggregateDataSource
+ []
+
+[20]
+Overfull \hbox (17.24684pt too wide) in paragraph at lines 1023--1023
+[]\OT1/cmtt/m/n/10 // +++++++ src/randomwalker/utils/PositionNonAggregateDataSo
+urce.java[] 
+ []
+
+
+Overfull \hbox (64.49643pt too wide) in paragraph at lines 1031--1031
+[]\OT1/cmtt/m/n/10 public class PositionNonAggregateDataSource implements NonAg
+gregateDataSource{[] 
+ []
+
+
+Overfull \hbox (53.99652pt too wide) in paragraph at lines 1053--1053
+[]\OT1/cmtt/m/n/10 //   ++++++++ src/randomwalker/utils/PositionAverageAggregat
+eDataSource.java[] 
+ []
+
+[21]
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 1070--1070
+[]\OT1/cmtt/m/n/10 public  PositionAverageAggregateDataSource(Context<Object> c
+ontext){[] 
+ []
+
+
+Overfull \hbox (48.74657pt too wide) in paragraph at lines 1072--1072
+[]\OT1/cmtt/m/n/10 PositionNonAggregateDataSource myds = new PositionNonAggrega
+teDataSource();[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 1074--1074
+[]\OT1/cmtt/m/n/10 AggregateDSCreator positionDScreator = new AggregateDSCreato
+r(myds);[] 
+ []
+
+
+Overfull \hbox (53.99652pt too wide) in paragraph at lines 1075--1075
+[]\OT1/cmtt/m/n/10 averagePositionOfRandomWalkersDataSource= positionDScreator.
+createMeanSource[] 
+ []
+
+
+Overfull \hbox (53.99652pt too wide) in paragraph at lines 1076--1076
+[]                                        \OT1/cmtt/m/n/10 ("my average positio
+n data source");[] 
+ []
+
+
+Overfull \hbox (90.7462pt too wide) in paragraph at lines 1078--1078
+[]\OT1/cmtt/m/n/10 averagePositionOfRandomWalkers=(Double)averagePositionOfRand
+omWalkersDataSource.get[] 
+ []
+
+
+Overfull \hbox (148.4957pt too wide) in paragraph at lines 1079--1079
+[]  \OT1/cmtt/m/n/10 (randomWalkersUtilsContext.getObjects(Class.forName("rando
+mwalker.agents.RandomWalker")),0);[] 
+ []
+
+
+Overfull \hbox (573.74199pt too wide) in paragraph at lines 1091--1091
+[]\OT1/cmtt/m/n/10 averagePositionOfRandomWalkers=(Double)averagePositionOfRand
+omWalkersDataSource.get(randomWalkersUtilsContext.getObjects(Class.forName("ran
+domwalker.agents.RandomWalker")),0);[] 
+ []
+
+[22]
+Overfull \hbox (368.99377pt too wide) in paragraph at lines 1121--1121
+[]\OT1/cmtt/m/n/10 //System.out.println("Time "+RepastEssentials.GetTickCount()
++" created agent with Id "+myIdentificationNumber+" position is "+position);[] 
+
+ []
+
+
+Overfull \hbox (258.74474pt too wide) in paragraph at lines 1131--1131
+[]\OT1/cmtt/m/n/10 // System.out.println("Time "+RepastEssentials.GetTickCount(
+)+" Id "+myIdentificationNumber+" position "+position);[] 
+ []
+
+[23]
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 1161--1161
+[]\OT1/cmtt/m/n/10 public class RandomWalkerBuilder implements ContextBuilder<O
+bject> {[] 
+ []
+
+
+Overfull \hbox (263.99469pt too wide) in paragraph at lines 1170--1170
+[]\OT1/cmtt/m/n/10 System.out.println("run "+RunState.getInstance().getRunInfo(
+).getRunNumber()+" randomSeed "+RandomHelper.getSeed());[] 
+ []
+
+
+Overfull \hbox (248.24483pt too wide) in paragraph at lines 1172--1172
+[]\OT1/cmtt/m/n/10 //DataSetRegistry registry = (DataSetRegistry)RunState.getIn
+stance().getFromRegistry(DataConstants.REGISTRY_KEY);[] 
+ []
+
+
+Overfull \hbox (48.74657pt too wide) in paragraph at lines 1177--1177
+[]        \OT1/cmtt/m/n/10 numberOfRandomWalker = (Integer)params.getValue("num
+berOfWalkers");[] 
+ []
+
+[24] [25] (./repast.aux) ) 
+Here is how much of TeX's memory you used:
+ 283 strings out of 493014
+ 3391 string characters out of 6133352
+ 58601 words of memory out of 5000000
+ 3893 multiletter control sequences out of 15000+600000
+ 8063 words of font info for 29 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 24i,8n,19p,521b,247s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2016/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmr10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmr12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmr17.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmr6.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmr7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmr8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cms
+y10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt
+10.pfb>
+Output written on repast.pdf (25 pages, 163219 bytes).
+PDF statistics:
+ 125 PDF objects out of 1000 (max. 8388607)
+ 87 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+

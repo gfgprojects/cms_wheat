@@ -1,0 +1,239 @@
+\documentclass{article}
+\usepackage{hyperref,color}
+\begin{document}
+
+\begin{center}
+	{\bf
+	Running the Commodity Markets Simulator without eclipse
+}
+
+by
+
+%Paola D'Orazio and Gianfranco Giulioni
+Gianfranco Giulioni
+\end{center}
+
+
+
+
+\section{Installation}
+This document reports the instructions for installing and running the model in Unix like Operating Systems using a command line approach. Therefore, the instructions will be also valid for Linux and recent Mac machines.
+
+The examples and the command line outcomes given below relate to a user named \verb+coolcoder+. You should easily be able to adapt the paths to you own user account. 
+
+The following colors are used:\\
+\color{red}red \color{black} to denote a command;\\
+\color{blue}blue \color{black} to denote an ordinary file in command line output;\\
+\color{green}green \color{black} to denote an executable file in command line output;\\
+\color{magenta}magenta \color{black} to denote the contents of text files.\\
+
+\subsection{Java Development Kit (JDK)}
+Follow the instructions given in the previous chapter to install or update JDK if needed. 
+\subsection{Repast Simphony (RS)}
+Also in this case, you can follow the instructions given in the previous chapter. However, the process therein described implies the installation of eclipse. We will give here an alternative way to install the RS library and using it directly.
+
+First of all you have to download all the packages which make up the RS library.\footnote{Note that the installation process described in RS web site implies downloading the RS library and put them in the eclipse plugins folder.}
+
+You can download all the jars by using the \verb+wget+ command with the recursion option (\verb+-r+).\footnote{If the command is not available in your system you have to install it.}
+
+The following steps have to be taken to install RS.
+
+Suppose, for example, you have the directory \verb+/Users/coolcoder/abm_java_libraries+. Create the directory\\
+\verb+mkdir repast+\\
+inside this directory an move into it\\
+\verb+cd repast+\\
+
+Download the files from the RS repository\\
+%\verb+wget -r http://mirror.anl.gov/repastsimphony/plugins/+\\
+\verb+wget -r -l1 --no-parent -nd --no-check-certificate +\\
+\verb+             https://repo.anl-external.org/repos/repast/plugins/+\\
+
+Some minutes are needed to complete the download.% Press \verb/ctrl+c/ to release the cursor.
+
+The directory now should contain many jar files.
+
+Give the following command:\\
+\verb+ls *.jar|awk -F'.jar' '{print "unzip "$0" -d "$1}'|sh+
+
+Each jar file now has the corresponding folder.
+Remove all the jar files by typing:\\
+\verb+rm *.jar+
+
+Now the RS library is installed in your system and is ready to be used.
+To test your installation type the command:\\
+\begin{verbatim}
+java -cp /Users/coolcoder/abm_java_libraries/
+               repast/repast.simphony.runtime_<version>/lib/*:
+         /Users/coolcoder/abm_java_libraries/
+               repast/repast.simphony.runtime_<version>/bin 
+         repast.simphony.runtime.RepastMain
+\end{verbatim}
+where you have to replace \verb+<version>+ with the version identification number (for example \verb+2.3.0+).
+
+After a while, the RS GUI window should pop up.
+
+Close the window because we will run the model in BATCH mode only.
+
+
+
+\subsection{CMS}
+
+Now you have to choose or create the CMS destination folder.
+Suppose it is called \verb+models+ and has the following absolute path: \\
+\verb+/Users/coolcoder/models+
+
+You can use again the two methods described in the previous chapter (git or compressed archive) to install the model. 
+
+Briefly, using git, change directory in \verb+models+ and give the following command:
+
+\vskip2mm
+\noindent\verb+~/models$ +\color{red}\verb+git clone https://github.com/gfgprojects/cms.git+ \color{black}
+
+\vskip2mm
+That's it!
+
+Otherwise, you have to download the zip archive: point your browser to\\ 
+\verb+https://github.com/gfgprojects/cms+\\
+Click on the ``clone or download'' button and choose ``download zip''.
+
+This will download the \verb+cms-master.zip+ file in your system.
+
+Move the archive in\\
+\verb+/Users/coolcoder/models+
+
+Unpacking it, the \verb+cms-master+ folder is created.
+
+Rename the \verb+cms-master+ in \verb+cms+.
+
+Delete the \verb+cms-master.zip+ file.
+
+\vskip1cm
+Regardless of the method used, you should have the following directories tree: 
+
+\begin{verbatim}
+/Users/coolcoder/models/cms
+/Users/coolcoder/models/cms/src
+/Users/coolcoder/models/cms/docs
+/Users/coolcoder/models/cms/cms.rs
+/Users/coolcoder/models/cms/scenario
+\end{verbatim}
+
+Now, \verb+cd+ into the \verb+cms+ directory and get its absolute path  
+
+
+
+\vskip2mm
+\noindent\verb+~/models$ +\color{red}\verb+cd cms+ \color{black}\\
+\verb+~/models/cms$ +\color{red}\verb+pwd+ \color{blue}\\
+\verb+/Users/coolcoder/models/cms+
+\color{black}
+\vskip2mm
+
+
+Save this information because it will be used in the configuration phase. \\ We will refer to it as the model base directory.
+
+\section{Testing the installation}
+
+\subsection{Configuration}
+
+Create a new directory outside the model base directory. \\ We will refer to it as the data directory.
+
+Suppose the data directory is called \verb+cms_data+ and has the following absolute path: \\
+\verb+/Users/coolcoder/Documents/cms_data+
+
+\verb+cd+ into the data directory.
+
+Find out the Repast installation directory:
+
+\vskip2mm
+\noindent\verb+~/Documents/cms_data$ +\color{red}\verb+sudo find / -name "repast.simphony.core*"+ \color{black}
+\verb+Password:+ \\ \color{blue}
+\verb+/Users/coolcoder/abm_java_libraries/repast/repast.simphony.core_2.3.1 +\\
+\color{black}
+\vskip2mm
+
+In this expression, \verb+/Users/coolcoder/abm_java_libraries/repast+ is repast base directory and \verb+2.3.1+ is repast version.
+
+Prepare a text file named \verb+paths.txt+ having the repast base directory in its first line, repast version in the second line, the model base directory in the third line and the directory where the other needed java libraries are located:
+
+\color{magenta}
+\vskip2mm \noindent
+\verb+/Users/coolcoder/abm_java_libraries/repast+ \\
+\verb+2.3.1+ \\
+\verb+/Users/coolcoder/models/cms+
+\verb+/Users/coolcoder/abm_java_libraries+ \\
+\vskip2mm
+
+\color{black}
+You must adapt the paths and the repast version of this file to your settings.
+
+Save this file into the data directory.
+
+Move the \verb+configure+ file from the cms scenario folder to the data directory:
+
+\verb+mv /Users/coolcoder/models/cms/scenario/configure . +
+
+
+The contents of your data folder is now:
+
+\vskip2mm
+\noindent\verb+~/Documents/cms_data$ +\color{red}\verb+ls+ \color{blue}\\
+\verb+configure+ \\
+\verb+paths.txt+
+\color{black}
+
+\vskip2mm
+Make the \verb+configure+ file executable and run it:
+
+\vskip2mm
+\noindent\verb+~/Documents/cms_data$ +\color{red}\verb|chmod +x configure| \color{black}\\
+\verb+~/Documents/cms_data$ +\color{red}\verb|./configure| \color{black}
+
+\vskip2mm
+This creates three additional files:
+
+\vskip2mm
+\noindent\verb+~/Documents/cms_data$ +\color{red}\verb+ls+ \color{blue}\\
+\verb+compile+\\ \color{green}
+\verb+configure+\\ \color{blue}
+\verb+paths.txt+ \\
+\verb+run_batch+ \\
+\verb+sourcefilespath+
+\color{black}
+
+\vskip2mm
+Make the \verb+compile+ and \verb+run_batch+ files executable:
+
+\vskip2mm
+\noindent\verb+~/Documents/cms_data$ +\color{red}\verb|chmod +x compile| \color{black}\\
+\verb+~/Documents/cms_data$ +\color{red}\verb|chmod +x run_batch| \color{black}
+\vskip2mm
+
+
+\subsection{Running CMS}
+
+We recall that the streamlined installation was built to run the model in BATCH mode in a fast way avoiding the slowness of the batch wizard. Therefore we will only give instruction for the command line batch run.
+
+First of all compile the model by typing:
+\vskip2mm
+\noindent\verb+~/Documents/cms_data$ +\color{red}\verb|./compile| \color{black}
+\vskip2mm
+
+The batch run is started with the following command:
+\vskip2mm
+\noindent\verb+~/Documents/cms_data$ +\color{red}\verb|./run_batch| \color{black}
+\vskip2mm
+
+\subsection{Changing parameters}
+
+Open the\\
+\verb+/Users/coolcoder/models/cms/scenario/batch_parameters.xml+ \\
+file with your favorite text editor. Change the parameter values and save the file.
+
+Run the model with the command
+\vskip2mm
+\noindent\verb+~/Documents/cms_data$ +\color{red}\verb|./run_batch| \color{black}
+\vskip2mm
+
+
+\end{document}
