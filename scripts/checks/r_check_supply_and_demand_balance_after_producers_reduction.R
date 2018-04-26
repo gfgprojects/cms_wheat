@@ -1,4 +1,5 @@
-#check at repast input folder
+#to be run after scripts/generate_inputs/r_reduce_number_of_producers_food.R
+#expected result: no systematic difference between production and demand
 
 production<-read.csv("../../data/producers.csv")
 total_prod<-colSums(production[,8:ncol(production)])
