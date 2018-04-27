@@ -17,6 +17,10 @@ last.year.of.demand<-as.numeric(unlist(strsplit(names(food)[ncol(food)],"[.]"))[
 first.year.of.production<-first.year.of.demand-1
 last.year.of.production<-last.year.of.demand
 
-plot(seq(first.year.of.production,first.year.of.production-1+length(total_prod)),total_prod,type="l",main="production (black) and demand (red)",xlab="time",ylab="quantity")
-lines(seq(first.year.of.demand,first.year.of.production-1+length(total_prod)),total_dem,col=2)
+plot(0.5+seq(first.year.of.production,first.year.of.production-1+length(total_prod)),total_prod,type="l",main="production (black) and demand (red)",xlab="time",ylab="quantity")
+lines(0.5+seq(first.year.of.demand,first.year.of.production-1+length(total_prod)),total_dem,col=2)
+
+for(x in seq(first.year.of.production,first.year.of.production-1+length(total_prod))){
+	lines(c(x,x),c(min(c(total_prod,total_dem)),max(c(total_prod,total_dem))),lty=2,col="gray50")
+}
 
