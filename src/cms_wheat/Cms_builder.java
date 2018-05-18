@@ -69,7 +69,7 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 	productionCycleLength=12;
 	exportPolicyDecisionInterval=1;
 	importPolicyDecisionInterval=12;
-	globalProduction=5000000;
+	globalProduction=50000000;
 	producersPricesMemoryLength=12;
 	minimumImportQuantity=100;
 	weightOfDistanceInInitializingIntercept=0.0;
@@ -82,8 +82,8 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 	percentageChangeInTargetProduction=0.0;
 	priceThresholdToIncreaseTargetProduction=8.0;
 	priceThresholdToDecreaseTargetProduction=2.0;
-	startUsingInputsFromTimeTick=192; //199
-	batchStoppingTime=460; //se startUsing=199 allora 600, o 470 in differential evolution
+	startUsingInputsFromTimeTick=192; //192
+	batchStoppingTime=460; //se startUsing=199 allora 600, o 460 in differential evolution
 
 	shareOfDemandToBeMoved=(double)params.getValue("shareOfDemandToBeMoved");
 	percentageOfPriceMarkDownInNewlyAccessibleMarkets=(double)params.getValue("percentageOfPriceMarkDownInNewlyAccessibleMarkets");
@@ -180,6 +180,7 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 //			tmpOtherDemandComponents=0;
 			tmpOtherDemandComponentsInputs.add(new Integer(tmpOtherDemandComponents));
 		}
+
 		//build periodic population time series (ex montly) starting from yearly time series
 		ArrayList<Integer> tmpPopulationInputsAdjustedForPeriodicity=new ArrayList<Integer>();
 		for(int j=0;j<tmpPopulationInputs.size()-1;j++){
@@ -236,8 +237,8 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 		//total periodic demand
 		ArrayList<Integer> tmpDemandAdjustedForPeriodicity=new ArrayList<Integer>();
 
-		
-		tmpDemandAdjustedForPeriodicity.add(new Integer((int)(0.994*(tmpFoodDemandComponentAdjustedForPeriodicity.get(0)+tmpOtherDemandComponentsAdjustedForPeriodicity.get(0)))));
+		//0.994
+		tmpDemandAdjustedForPeriodicity.add(new Integer((int)(0.98*(tmpFoodDemandComponentAdjustedForPeriodicity.get(0)+tmpOtherDemandComponentsAdjustedForPeriodicity.get(0)))));
 		tmpDemandAdjustedForPeriodicity.add(new Integer((int)(1.0*(tmpFoodDemandComponentAdjustedForPeriodicity.get(0)+tmpOtherDemandComponentsAdjustedForPeriodicity.get(0)))));
 		for(int j=1;j<tmpFoodDemandComponentAdjustedForPeriodicity.size();j++){
 			int tmpTotDemand=tmpFoodDemandComponentAdjustedForPeriodicity.get(j)+tmpOtherDemandComponentsAdjustedForPeriodicity.get(j);
