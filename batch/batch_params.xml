@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
 <sweep runs="1">
-<parameter name="shareOfDemandToBeMoved" type="constant" constant_type="double" value="0.062107"></parameter>
-<parameter name="percentageOfPriceMarkDownInNewlyAccessibleMarkets" type="constant" constant_type="double" value="0.106102"></parameter>
-<parameter name="transportCostsTuner" type="constant" constant_type="double" value="0.039155"></parameter>
-<parameter name="demandFunctionInterceptTuner" type="constant" constant_type="double" value="1.0"></parameter>
-<parameter name="demandFunctionSlopeTuner" type="constant" constant_type="double" value="0.550333"></parameter>
+<parameter name="shareOfDemandToBeMoved" type="constant" constant_type="double" value="0.1"></parameter>
+<parameter name="percentageOfPriceMarkDownInNewlyAccessibleMarkets" type="constant" constant_type="double" value="0.05"></parameter>
+<parameter name="transportCostsTuner" type="constant" constant_type="double" value="0.05"></parameter>
+<parameter name="demandFunctionInterceptTuner" type="constant" constant_type="double" value="0.5"></parameter>
+<parameter name="demandFunctionSlopeTuner" type="constant" constant_type="double" value="0.5"></parameter>
 </sweep>
