@@ -127,7 +127,7 @@ public class Cms_scheduler{
 			aProducer=(Producer)producersList.get(i);
 			int tfp=aProducer.getTimeOfFirstProduction()-0;
 			if(tfp<1){
-				tfp=12-tfp;
+				tfp=12+tfp;
 			}
 			scheduleParameters=ScheduleParameters.createRepeating(tfp,Cms_builder.productionCycleLength,33.0);
 //			scheduleParameters=ScheduleParameters.createRepeating(aProducer.getTimeOfFirstProduction(),Cms_builder.productionCycleLength,33.0);
