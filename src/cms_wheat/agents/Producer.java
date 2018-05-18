@@ -81,7 +81,7 @@ public class Producer {
 		productionInputsIterator.remove();
 //		productionShare=(double)productionInputs.get(0)/Cms_builder.globalProduction;
 		productionShare=(double)production/Cms_builder.globalProduction;
-		sizeInGuiDisplay=productionShare*100;
+		sizeInGuiDisplay=productionShare*20;
 		if(Cms_builder.verboseFlag){System.out.println("Created producer: "+name+", ISO3.code "+iso3Code+", latitude: "+latitude+", longitude: "+longitude);}
 		if(Cms_builder.verboseFlag){System.out.println("        sells in "+numberOfMarkets+" market(s): "+markets);}
 		if(Cms_builder.verboseFlag){System.out.println("        produces: "+varieties);}
@@ -95,6 +95,9 @@ public class Producer {
 		else{
 			exportAllowed=false;
 		}
+
+// start Russian ban
+/*
 		if(name.equals("Russian Federation")){
 //Timing Russian Federation 
 //periodo di raccolta luglio
@@ -103,9 +106,13 @@ public class Producer {
 //416 variazione quantita' messe in vendita
 			if(RepastEssentials.GetTickCount()>415 && RepastEssentials.GetTickCount()<421){
 				exportAllowed=false;
+System.out.println(RepastEssentials.GetTickCount()+" time "+name+" exportFlag: "+exportAllowed);
 			}
 
 		}
+*/
+// end Russian ban
+
 		if(Cms_builder.verboseFlag){System.out.println("         producer:    "+name+" exportAllowed "+exportAllowed);}
 	}
 
@@ -174,7 +181,6 @@ public class Producer {
 				production=productionInputsIterator.next();
 				targetProduction=production;
 				productionInputsIterator.remove();
-//				System.out.println("time "+RepastEssentials.GetTickCount()+" country "+name+" production: "+production);
 			}
 /*			
 			//satart annealing
@@ -200,6 +206,11 @@ public class Producer {
 			stock+=production;
 			remainingMarketSessions=totalMarketSessions;
 			toBeSoldInEachMarketSessionToExhaustStock=stock/remainingMarketSessions;
+/*
+			if(name.equals("Russian Federation")){
+System.out.println(RepastEssentials.GetTickCount()+" time "+name+" production realized: "+production);
+}
+*/
 		if(Cms_builder.verboseFlag){System.out.println(name+" production realized: "+production);}
 		if(Cms_builder.verboseFlag){System.out.println(name+" state after production stock: "+stock+" remaining sessions: "+remainingMarketSessions);}
 

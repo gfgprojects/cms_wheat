@@ -94,11 +94,12 @@ public class Buyer {
 		populationInputsIterator=populationInputs.iterator();
 		population=populationInputsIterator.next();
 		populationInputsIterator.remove();
-		demandShare=perCapitaConsumption*population/Cms_builder.globalProduction;
+//		demandShare=perCapitaConsumption*population/Cms_builder.globalProduction;
 //		averageConsumption=(int)(demandShare*Cms_builder.globalProduction/Cms_builder.productionCycleLength);
 		demandInputsIterator=demandInputs.iterator();
 		averageConsumption=demandInputsIterator.next();
 		demandInputsIterator.remove();
+		demandShare=(double)averageConsumption/Cms_builder.globalProduction;
 		minimumConsumption=(int)(Cms_builder.consumptionShareToSetMinimumConsumption*averageConsumption);
 		maximumConsumption=(int)(Cms_builder.consumptionShareToSetMaximumConsumption*averageConsumption);
 
@@ -106,7 +107,7 @@ public class Buyer {
 //		stock=stockTargetLevel;
 		stock=0;
 		domesticStock=0;
-		sizeInGuiDisplay=demandShare*100;
+		sizeInGuiDisplay=demandShare*20*12;
 		initialInterceptOfTheDemandFunction=(int)((Cms_builder.demandFunctionInterceptTuner)*averageConsumption);
 //		slopeOfTheDemandFunction=(int)(3*initialInterceptOfTheDemandFunction/possiblePrices.get(possiblePrices.size()-1));
 //		slopeOfTheDemandFunction=(int)(1*averageConsumption/possiblePrices.get(possiblePrices.size()-1));
