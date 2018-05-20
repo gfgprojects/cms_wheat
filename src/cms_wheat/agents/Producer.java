@@ -97,7 +97,6 @@ public class Producer {
 		}
 
 // start Russian ban
-/*
 		if(name.equals("Russian Federation")){
 //Timing Russian Federation 
 //periodo di raccolta luglio
@@ -106,11 +105,10 @@ public class Producer {
 //416 variazione quantita' messe in vendita
 			if(RepastEssentials.GetTickCount()>415 && RepastEssentials.GetTickCount()<421){
 				exportAllowed=false;
-System.out.println(RepastEssentials.GetTickCount()+" time "+name+" exportFlag: "+exportAllowed);
+//System.out.println(RepastEssentials.GetTickCount()+" time "+name+" exportFlag: "+exportAllowed);
 			}
 
 		}
-*/
 // end Russian ban
 
 		if(Cms_builder.verboseFlag){System.out.println("         producer:    "+name+" exportAllowed "+exportAllowed);}
