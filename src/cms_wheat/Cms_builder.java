@@ -27,6 +27,7 @@ import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.util.collections.IndexedIterable;
 import repast.simphony.engine.schedule.ISchedule;
 import repast.simphony.parameter.Parameters;
+import repast.simphony.random.RandomHelper;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -90,7 +91,7 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 	transportCostsTuner=(double)params.getValue("transportCostsTuner");
 	demandFunctionInterceptTuner=(double)params.getValue("demandFunctionInterceptTuner");
 	demandFunctionSlopeTuner=(double)params.getValue("demandFunctionSlopeTuner");
-
+RandomHelper.setSeed(-1866858664);
 //shareOfDemandToBeMovedToLowerPrice=shareOfDemandToBeMoved;
 //shareOfDemandToBeMovedFromHigherPrice=shareOfDemandToBeMoved;
 //	System.out.println();
