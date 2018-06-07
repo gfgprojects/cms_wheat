@@ -108,6 +108,9 @@ public class Buyer {
 		stock=0;
 		domesticStock=0;
 		sizeInGuiDisplay=demandShare*20*12;
+		if(sizeInGuiDisplay<50){
+		sizeInGuiDisplay=50;
+		}
 		initialInterceptOfTheDemandFunction=(int)((Cms_builder.demandFunctionInterceptTuner)*averageConsumption);
 //		slopeOfTheDemandFunction=(int)(3*initialInterceptOfTheDemandFunction/possiblePrices.get(possiblePrices.size()-1));
 //		slopeOfTheDemandFunction=(int)(1*averageConsumption/possiblePrices.get(possiblePrices.size()-1));
