@@ -82,6 +82,9 @@ public class Producer {
 //		productionShare=(double)productionInputs.get(0)/Cms_builder.globalProduction;
 		productionShare=(double)production/Cms_builder.globalProduction;
 		sizeInGuiDisplay=productionShare*20;
+			if(sizeInGuiDisplay<8){
+		sizeInGuiDisplay=8;
+		}
 		if(Cms_builder.verboseFlag){System.out.println("Created producer: "+name+", ISO3.code "+iso3Code+", latitude: "+latitude+", longitude: "+longitude);}
 		if(Cms_builder.verboseFlag){System.out.println("        sells in "+numberOfMarkets+" market(s): "+markets);}
 		if(Cms_builder.verboseFlag){System.out.println("        produces: "+varieties);}
