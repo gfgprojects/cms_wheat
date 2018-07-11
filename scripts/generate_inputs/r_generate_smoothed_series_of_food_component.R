@@ -67,7 +67,7 @@ FoodC.wide<-read.csv(paste(getwd(),dirOutput,"/buyersC_Food.csv",sep=""))
 # f=0.25
 # ho messo f=0.37 perché per valori più bassi l'africa del sud viene inserita tra i produttori, ma con valori piccoli
 if(lowess.method){ 
-FoodC.wide.smooth0<-apply(data.matrix(FoodC.wide[,-(1:4)]),1,lowess,f=0.25)
+FoodC.wide.smooth0<-apply(data.matrix(FoodC.wide[,-(1:4)]),1,lowess,f=0.5)
 # FoodC.wide.smooth0<-apply(data.matrix(FoodC.wide[,-(1:4)]),1,lowess,f=0.25)
 }else{
 # Smoothing

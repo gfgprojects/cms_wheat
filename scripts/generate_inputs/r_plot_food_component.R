@@ -28,7 +28,11 @@ monthly_food_matrix<-rbind(monthly_food_matrix,monthly_food)
   food.smooth<-dati.food.smooth[,5:ncol(dati.food.smooth)]
 #}else{
   dati.population<-read.csv("data/buyersC.csv")
+
+  yearly.consuption.per.person<-dati_food[,6]/(dati.population[,7]*1000)
+
   food.population<-dati.population[,5]*dati.population[,6:ncol(dati.population)]*1000
+#  food.population<-yearly.consuption.per.person*dati.population[,6:ncol(dati.population)]*1000
 #}
 
 food.fao<-food.fao[order(dati_food[,1]),]
