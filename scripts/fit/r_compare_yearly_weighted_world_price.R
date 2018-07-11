@@ -1,7 +1,7 @@
 #####read non weighted and weighted world average price
 y.prices1<-read.csv("data/e_world_yearly_prices.csv")
 #y.prices<-y.prices1[-1,]
-#y.prices<-y.prices1
+y.prices<-y.prices1
 weighted.world.yearly.prices.real<-y.prices$WorldPriceWeighted
 #normalized.weighted.world.yearly.prices.real<-weighted.world.yearly.prices.real/weighted.world.yearly.prices.real[1]
 normalized.weighted.world.yearly.prices.real<-weighted.world.yearly.prices.real/min(weighted.world.yearly.prices.real)
@@ -10,6 +10,7 @@ normalized.weighted.world.yearly.prices.real<-weighted.world.yearly.prices.real/
 #####compute non weighted and weighted world average price from simulation sim_output
 
 data.sessions<-read.csv("../../output/z_sessions.csv")
+#data.sessions<-read.csv("/Users/giulioni/Documents/rs_model_cms_wheat_run/output/z_sessions.csv")
 data.sessions<-data.sessions[,-1]
 sessions<-levels(data.sessions$SessionDescription)
 
@@ -68,7 +69,7 @@ first.year.of.demand<-as.numeric(unlist(strsplit(names(food)[5],"[.]"))[3])
 staircase.time<-staircase.time+first.year.of.demand
 middle.staircase.points<-seq(0.5,length(normalized.weighted.world.yearly.prices.real))+first.year.of.demand
 
-plot(middle.staircase.points,normalized.weighted.world.yearly.prices.real,type="l")
+plot(middle.staircase.points,normalized.weighted.world.yearly.prices.real,type="l",ylim=c(1,3.0))
 lines(middle.staircase.points,normalized.weighted.world.yearly.prices.sim,col=2)
 #lines(staircase.time,staircase.price.real)
 #lines(staircase.time,staircase.price.sim,col=2)
