@@ -1,0 +1,21 @@
+write("<html>","index.html")
+write("<body>","index.html",append=T)
+write("<h1>Wheat exchanges visualization</h1>","index.html",append=T)
+write("<h2>click on a year</h2>","index.html",append=T)
+for(period in 1:(length(years.considered)-1)){
+	linkName<-paste("year_",years.considered[period],".html",sep="")
+	linkHtmlCode<-paste("<a href=\"",linkName,"\">",years.considered[period],"</a>, ")
+	write(linkHtmlCode,"index.html",append=T)
+}
+	linkName<-paste("year_",(years.considered[period+1]),".html",sep="")
+	linkHtmlCode<-paste("<a href=\"",linkName,"\">",years.considered[period+1],"</a> ")
+	write(linkHtmlCode,"index.html",append=T)
+write("<h2>Some images to watch the dynamics of commercial relationships</h2>","index.html",append=T)
+write("<h3>All the relationships</h3>","index.html",append=T)
+write("<img src=\"wheat_world.gif\" width=\"500\" alt=\"wheat world exchanges\">","index.html",append=T)
+write("<h3>Southern Europe</h3>","index.html",append=T)
+write("<img src=\"wheat_southern_europe.gif\" width=\"500\" alt=\"wheat Southern Europe exchanges\">","index.html",append=T)
+write("</body>","index.html",append=T)
+write("</html>","index.html",append=T)
+system("mv index.html html/")
+
