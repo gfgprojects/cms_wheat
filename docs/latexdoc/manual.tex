@@ -17,7 +17,7 @@
 
 %	\includegraphics[width=0.15\textwidth]{example-image-1x1}\par\vspace{1cm}
 	\begin{center}
-	{\color{blue}\scshape\Huge CMS \par}
+	{\color{blue}\scshape\Huge CMS-Wheat \par}
 	\end{center}
 
 	\vspace{2cm}
@@ -25,7 +25,8 @@
 	\noindent
 	{\color{blue}\scshape\Huge C}{\scshape\LARGE ommodity} 
 	{\color{blue}\scshape\Huge M}{\scshape\LARGE arkets} 
-	{\color{blue}\scshape\Huge S}{\scshape\LARGE imulator}\\
+	{\color{blue}\scshape\Huge S}{\scshape\LARGE imulator}
+	{\color{blue}\scshape\Huge -W\LARGE heat}\\
 
  
 	
@@ -407,9 +408,9 @@ The Repast suite website: \url{http://repast.sourceforge.net} has information ne
 Note that RS is provided as a plugin of the eclipse Integrated Development Environment. The Repast development team provides a customized version of eclipse, so you could encounter problems with already installed versions of eclipse. 
 %Note that the streamlined installation provided below show how to avoid using eclipse.
 
-\subsection{CMS}
+\subsection{CMS-Wheat}
 
-CMS has to be installed as an eclipse RS project. We will give hereafter the instructions to achieve this goal.
+CMS-Wheat has to be installed as an eclipse RS project. We will give hereafter the instructions to achieve this goal.
 
 First of all, open the eclipse downloaded and installed as described in the previous section.
 
@@ -418,18 +419,18 @@ Suppose your workspace has the following path:\\
 
 Open the RS perspective. To do that click Window $\rightarrow$ Perspective $\rightarrow$ open perspective $\rightarrow$ other and choose Repast Simphony in the window that appears.
 
-Create a new RS project called \verb+cms+ (file $\rightarrow$ new $\rightarrow$ Repast Simphony project)
+Create a new RS project called \verb+cms_wheat+ (file $\rightarrow$ new $\rightarrow$ Repast Simphony project)
 
-This creates the \verb+cms+ folder and a series of sub folders inside the workspace:
+This creates the \verb+cms_wheat+ folder and a series of sub folders inside the workspace:
 
-The following figure show the cms rs project folders tree.
+The following figure show the \verb+cms_wheat+ rs project folders tree.
 
 \vskip2mm
 \noindent
 \includegraphics[scale=0.35]{fig_cms_rs_navigation}
 
 \vskip2mm
-Now, the \verb+cms+ files have to be added to the just created RS project folders tree.
+Now, the \verb+cms_wheat+ files have to be added to the just created RS project folders tree.
 
 We give here two alternatives: via git and using a zipped archive.
 
@@ -437,15 +438,15 @@ We give here two alternatives: via git and using a zipped archive.
 
 As you probably know, this is a largely used way to share code developments.
 
-So, let us show how to fetch the \verb+csm+ files via git. To do that, you must have a git client installed in your system. Many system comes with a git client already installed, otherwise you have to install it. Mac and windows users can consider to install the GitHub Desktop software.
+So, let us show how to fetch the \verb+csm_wheat+ files via git. To do that, you must have a git client installed in your system. Many system comes with a git client already installed, otherwise you have to install it. Mac and windows users can consider to install the GitHub Desktop software.
 
 You can verify if git is installed in your system by checking if your command line interface recognize the \verb+git+ command.  
-If your check is successful, change directory to the \verb+cms+ project folder:\\
-\verb+cd /Users/coolcoder/Documents/workspace/cms+\\
+If your check is successful, change directory to the \verb+cms_wheat+ project folder:\\
+\verb+cd /Users/coolcoder/Documents/workspace/cms_wheat+\\
 and type the following commands:
 \begin{verbatim}
 git init
-git remote add origin https://github.com/gfgprojects/cms.git
+git remote add origin https://github.com/gfgprojects/cms_wheat.git
 git fetch origin master
 git reset --hard FETCH_HEAD
 \end{verbatim}
@@ -453,8 +454,8 @@ git reset --hard FETCH_HEAD
 Then, if you plan to pull or push updates, add the command:\\
 \verb+git push --set-upstream origin master+
 
-Now, the \verb+cms+ files should show up in the RS project folders.
-Refresh the \verb+cms+ RS project with the navigation tab selected in the side bar (file $\rightarrow$ refresh) to make them visible in eclipse.
+Now, the \verb+cms_wheat+ files should show up in the RS project folders.
+Refresh the \verb+cms_wheat+ RS project with the navigation tab selected in the side bar (file $\rightarrow$ refresh) to make them visible in eclipse.
 
 The following figure show how the src sub folders should look like.
 
@@ -467,14 +468,14 @@ The following figure show how the src sub folders should look like.
 \subsubsection{Using a zip archive}
 
 Point your browser to\\ 
-\verb+https://github.com/gfgprojects/cms+\\
+\verb+https://github.com/gfgprojects/cms_wheat+\\
 Click on the ``clone or download'' button and choose ``download zip''.
 
-This will download the \verb+cms-master.zip+ file in your system.
+This will download the \verb+cms_wheat-master.zip+ file in your system.
 
-Unpacking it creates the cms-master folder.
-Move the whole content of this folder in the cms RS project folder:\\  
-\verb+/Users/coolcoder/Documents/workspace/cms/+\\
+Unpacking it creates the cms\_wheat-master folder.
+Move the whole content of this folder in the cms\_wheat RS project folder:\\  
+\verb+/Users/coolcoder/Documents/workspace/cms_wheat/+\\
 Choose to overwrite existing files and folders if you will be asked (this will merge folders). 
 
 Now refresh eclipse (file $\rightarrow$ refresh).
