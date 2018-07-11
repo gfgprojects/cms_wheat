@@ -1,0 +1,18 @@
+<repast.simphony.data2.engine.FileSinkDescriptor>
+  <name>producers</name>
+  <dataSet>producers</dataSet>
+  <delimiter>,</delimiter>
+  <format>TABULAR</format>
+  <sourceIds class="linked-hash-set">
+    <string>tick</string>
+    <string>Name</string>
+    <string>Production</string>
+    <string>Stock</string>
+    <string>TargetProduction</string>
+    <string>AverageSellingPrice</string>
+    <string>Iso3Code</string>
+    <string>ReservationPrice</string>
+  </sourceIds>
+  <fileName>output/z_producers.csv</fileName>
+  <addTimeStamp>false</addTimeStamp>
+</repast.simphony.data2.engine.FileSinkDescriptor>

@@ -1,0 +1,19 @@
+<repast.simphony.data2.engine.FileSinkDescriptor>
+  <name>buyers</name>
+  <dataSet>buyers</dataSet>
+  <delimiter>,</delimiter>
+  <format>TABULAR</format>
+  <sourceIds class="linked-hash-set">
+    <string>tick</string>
+    <string>Name</string>
+    <string>RealizedConsumption</string>
+    <string>DomesticConsumption</string>
+    <string>ImportedQuantity</string>
+    <string>MinimumConsumption</string>
+    <string>MaximumConsumption</string>
+    <string>Iso3Code</string>
+    <string>AverageConsumption</string>
+  </sourceIds>
+  <fileName>output/z_buyers.csv</fileName>
+  <addTimeStamp>false</addTimeStamp>
+</repast.simphony.data2.engine.FileSinkDescriptor>
