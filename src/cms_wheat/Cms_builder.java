@@ -22,7 +22,6 @@ import repast.simphony.context.space.gis.GeographyFactoryFinder;
 import repast.simphony.context.space.gis.GeographyFactory;
 import repast.simphony.space.gis.Geography;
 import repast.simphony.space.gis.GeographyParameters;
-import repast.simphony.gis.display.RepastMapLayer;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.util.collections.IndexedIterable;
 import repast.simphony.engine.schedule.ISchedule;
@@ -38,13 +37,14 @@ import org.geotools.referencing.GeodeticCalculator;
 public class Cms_builder implements ContextBuilder<Object> {
 	public static boolean verboseFlag=false;
 	public static boolean autarkyAtTheBeginning=false;
+
+	public static boolean allowDemadsShiftAccordingToGapToTarget=false;
 	Producer aProducer;
 	Buyer aBuyer;
 	Market aMarket;
 	Coordinate coord;
 	Point geom;
-	RepastMapLayer mapLayer;
-	List<String> lines,linesBuyersFood,linesBuyersFeed,linesBuyersOtherUses,linesBuyersSeed;
+	List<String> lines,lines1,linesBuyersFood,linesBuyersFeed,linesBuyersOtherUses,linesBuyersSeed;
 	String tmpVarieties="";
 	String tmpMarkets="";
 	ArrayList<Market> marketsList;
@@ -57,7 +57,7 @@ public class Cms_builder implements ContextBuilder<Object> {
 	
 	int batchStoppingTime=2;
 	public static int productionCycleLength,exportPolicyDecisionInterval,importPolicyDecisionInterval,globalProduction,minimumImportQuantity,producersPricesMemoryLength,startUsingInputsFromTimeTick;
-	public static double consumptionShareToSetMinimumConsumption,consumptionShareToSetMaximumConsumption,productionRateOfChangeControl,probabilityToAllowExport,probabilityToAllowImport,toleranceInMovingDemand,shareOfDemandToBeMoved,percentageOfPriceMarkDownInNewlyAccessibleMarkets,weightOfDistanceInInitializingIntercept,percentageChangeInTargetProduction,priceThresholdToIncreaseTargetProduction,priceThresholdToDecreaseTargetProduction,transportCostsTuner,demandFunctionInterceptTuner,demandFunctionSlopeTuner;
+	public static double consumptionShareToSetMinimumConsumption,consumptionShareToSetMaximumConsumption,productionRateOfChangeControl,probabilityToAllowExport,probabilityToAllowImport,toleranceInMovingDemand,shareOfDemandToBeMoved,percentageOfPriceMarkDownInNewlyAccessibleMarkets,weightOfDistanceInInitializingIntercept,percentageChangeInTargetProduction,priceThresholdToIncreaseTargetProduction,priceThresholdToDecreaseTargetProduction,transportCostsTuner,demandFunctionInterceptTuner,demandFunctionSlopeTuner,demandFunctionReferencePrice;
 	public static double shareOfDemandToBeMovedToLowerPrice=0.01;
 	public static double exponentOfLogisticInDemandToBeMoved=-2;
 //	public static double shareOfDemandToBeMovedFromHigherPrice;
@@ -83,18 +83,19 @@ Parameters params = RunEnvironment.getInstance().getParameters();
 	percentageChangeInTargetProduction=0.0;
 	priceThresholdToIncreaseTargetProduction=8.0;
 	priceThresholdToDecreaseTargetProduction=2.0;
-	startUsingInputsFromTimeTick=192; //192
-	batchStoppingTime=460; //se startUsing=199 allora 600, o 460 in differential evolution
-
+	startUsingInputsFromTimeTick=24; //192
+//	batchStoppingTime=460; //se startUsing=199 allora 600, o 460 in differential evolution
+	batchStoppingTime=313; //313  505
 	shareOfDemandToBeMoved=(double)params.getValue("shareOfDemandToBeMoved");
 	percentageOfPriceMarkDownInNewlyAccessibleMarkets=(double)params.getValue("percentageOfPriceMarkDownInNewlyAccessibleMarkets");
 	transportCostsTuner=(double)params.getValue("transportCostsTuner");
 	demandFunctionInterceptTuner=(double)params.getValue("demandFunctionInterceptTuner");
 	demandFunctionSlopeTuner=(double)params.getValue("demandFunctionSlopeTuner");
+	demandFunctionReferencePrice=(double)params.getValue("demandFunctionReferencePrice");
 RandomHelper.setSeed(-1866858664);
 //shareOfDemandToBeMovedToLowerPrice=shareOfDemandToBeMoved;
 //shareOfDemandToBeMovedFromHigherPrice=shareOfDemandToBeMoved;
-//	System.out.println();
+//	System.out.println("InterceptTuner "+demandFunctionInterceptTuner);
 	if(verboseFlag){
 		System.out.println();
 		System.out.println("===================================================================");
@@ -117,27 +118,38 @@ RandomHelper.setSeed(-1866858664);
 		System.out.println("");
 	}
 	bidAndAskPrices=new ArrayList<Double>();
-	for(int i=0;i<1000;i++){
+	for(int i=0;i<3000;i++){
 		bidAndAskPrices.add((new BigDecimal(i*0.01)).setScale(2,RoundingMode.HALF_EVEN).doubleValue());
 	}
 
 
 	//Producers creation
 	try{
-		lines=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/producers.csv"), Charset.forName("UTF-8"));
+		lines1=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/producers_s.csv"), Charset.forName("UTF-8"));
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+
+	try{
+		lines=Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/data/producers_w.csv"), Charset.forName("UTF-8"));
 	} catch (IOException e) {
 		e.printStackTrace();
 	}
 	for(int i=1;i<lines.size()-1;i++){
 		String[] parts = ((String)lines.get(i)).split(",");
+		String[] parts1 = ((String)lines1.get(i)).split(",");
 		ArrayList<Integer> tmpProductionInputs=new ArrayList<Integer>();
+		ArrayList<Integer> tmpProductionInputs1=new ArrayList<Integer>();
 		for(int j=7;j<parts.length;j++){
-			Integer tmpInt=new Integer(parts[j]);
+			Integer tmpInt=Integer.valueOf(parts[j]);
 			int tmpIntegerValue=(int)(tmpInt*1.0);
-			tmpProductionInputs.add(new Integer(tmpIntegerValue));
+			tmpProductionInputs.add(Integer.valueOf(tmpIntegerValue));
+			tmpInt=Integer.valueOf(parts1[j]);
+			tmpIntegerValue=(int)(tmpInt*1.0);
+			tmpProductionInputs1.add(Integer.valueOf(tmpIntegerValue));
 		}
-		aProducer=new Producer(parts[0],parts[1],new Double(parts[2]),new Double(parts[3]),parts[4],parts[5],tmpProductionInputs,bidAndAskPrices);
-		aProducer.setup((new Integer(parts[6])).intValue());
+		aProducer=new Producer(parts[0],parts[1],Double.valueOf(parts[2]),Double.valueOf(parts[3]),parts[4],parts[5],tmpProductionInputs,tmpProductionInputs1,bidAndAskPrices);
+		aProducer.setup((Integer.valueOf(parts[6])).intValue(),(Integer.valueOf(parts1[6])).intValue());
 		tmpMarkets=tmpMarkets+"|"+parts[4];
 		tmpVarieties=tmpVarieties+"|"+parts[5];
 		context.add(aProducer);
@@ -159,6 +171,8 @@ RandomHelper.setSeed(-1866858664);
 	} catch (IOException e) {
 		e.printStackTrace();
 	}
+//		String[] partsTmp = ((String)lines.get(1)).split(",");
+//			System.out.println(partsTmp[4]);
 	for(int i=1;i<lines.size()-1;i++){
 		String[] parts = ((String)lines.get(i)).split(",");
 		String[] partsFood = ((String)linesBuyersFood.get(i)).split(",");
@@ -168,20 +182,19 @@ RandomHelper.setSeed(-1866858664);
 		ArrayList<Integer> tmpPopulationInputs=new ArrayList<Integer>();
 		ArrayList<Integer> tmpFoodInputs=new ArrayList<Integer>();
 		ArrayList<Integer> tmpOtherDemandComponentsInputs=new ArrayList<Integer>();
-		for(int j=5;j<parts.length;j++){
-			int tmpPop = (int)((new Double(parts[j])).doubleValue()*1000);
-			tmpPopulationInputs.add(new Integer(tmpPop));
-			int tmpFood=(new Double(partsFood[j-1])).intValue();
+		for(int j=4;j<partsFood.length;j++){
+			int tmpPop = (int)((Double.valueOf(parts[j])).doubleValue()*1000);
+			tmpPopulationInputs.add(Integer.valueOf(tmpPop));
+			int tmpFood=(Double.valueOf(partsFood[j-0])).intValue();
 //			tmpFood=(int)(tmpFood/productionCycleLength);
-			tmpFoodInputs.add(new Integer(tmpFood));
-			int tmpFeed=new Integer(partsFeed[j-1]);
-			int tmpOtherUses=new Integer(partsOtherUses[j-1]);
-			int tmpSeed=new Integer(partsSeed[j-1]);
+			tmpFoodInputs.add(Integer.valueOf(tmpFood));
+			int tmpFeed=Integer.valueOf(partsFeed[j-0]);
+			int tmpOtherUses=Integer.valueOf(partsOtherUses[j-0]);
+			int tmpSeed=Integer.valueOf(partsSeed[j-0]);
 			int tmpOtherDemandComponents=tmpFeed+tmpOtherUses+tmpSeed;
 //			tmpOtherDemandComponents=0;
-			tmpOtherDemandComponentsInputs.add(new Integer(tmpOtherDemandComponents));
+			tmpOtherDemandComponentsInputs.add(Integer.valueOf(tmpOtherDemandComponents));
 		}
-
 		//build periodic population time series (ex montly) starting from yearly time series
 		ArrayList<Integer> tmpPopulationInputsAdjustedForPeriodicity=new ArrayList<Integer>();
 		for(int j=0;j<tmpPopulationInputs.size()-1;j++){
@@ -190,17 +203,23 @@ RandomHelper.setSeed(-1866858664);
 			for(int z=1;z<productionCycleLength;z++){
 				tmpPopulationInputsAdjustedForPeriodicity.add(tmpPopulationInputs.get(j)+(int)(z*popChange));				
 			}
+//			System.out.println("j "+j+" popsize "+tmpPopulationInputs.get(j)+" popsize "+tmpPopulationInputsAdjustedForPeriodicity.size());
 		}
 		tmpPopulationInputsAdjustedForPeriodicity.add(tmpPopulationInputs.get(tmpPopulationInputs.size()-1));
-		//build periodic food time series (ex montly) starting from periodic population
-		Double yearlyPerCapitaConsumption=new Double(parts[4]);
+		for(int z=1;z<productionCycleLength;z++){
+				tmpPopulationInputsAdjustedForPeriodicity.add(tmpPopulationInputs.get(tmpPopulationInputs.size()-1));				
+			}
+
+
+			//build periodic food time series (ex montly) starting from periodic population
+		Double yearlyPerCapitaConsumption=Double.valueOf(parts[4]);
 		double periodicPerCapitaConsumption=yearlyPerCapitaConsumption/productionCycleLength;
 
 		ArrayList<Integer> tmpFoodDemandComponentAdjustedForPeriodicity=new ArrayList<Integer>();
 		//if food component is computed according to population using data in buyers.csv
 		/*
 		for(int f=0;f<tmpPopulationInputsAdjustedForPeriodicity.size();f++){
-			tmpFoodDemandComponentAdjustedForPeriodicity.add(new Integer((int)(periodicPerCapitaConsumption*tmpPopulationInputsAdjustedForPeriodicity.get(f))));
+			tmpFoodDemandComponentAdjustedForPeriodicity.add(Integer.valueOf((int)(periodicPerCapitaConsumption*tmpPopulationInputsAdjustedForPeriodicity.get(f))));
 		}
 		*/
 		//if food component is computed according to smoothed FAO data in buyers_Food.csv
@@ -239,17 +258,17 @@ RandomHelper.setSeed(-1866858664);
 		ArrayList<Integer> tmpDemandAdjustedForPeriodicity=new ArrayList<Integer>();
 
 		//0.994
-		tmpDemandAdjustedForPeriodicity.add(new Integer((int)(0.98*(tmpFoodDemandComponentAdjustedForPeriodicity.get(0)+tmpOtherDemandComponentsAdjustedForPeriodicity.get(0)))));
-		tmpDemandAdjustedForPeriodicity.add(new Integer((int)(1.0*(tmpFoodDemandComponentAdjustedForPeriodicity.get(0)+tmpOtherDemandComponentsAdjustedForPeriodicity.get(0)))));
+		tmpDemandAdjustedForPeriodicity.add(Integer.valueOf((int)(1.0*(tmpFoodDemandComponentAdjustedForPeriodicity.get(0)+tmpOtherDemandComponentsAdjustedForPeriodicity.get(0)))));
+		tmpDemandAdjustedForPeriodicity.add(Integer.valueOf((int)(1.0*(tmpFoodDemandComponentAdjustedForPeriodicity.get(0)+tmpOtherDemandComponentsAdjustedForPeriodicity.get(0)))));
 		for(int j=1;j<tmpFoodDemandComponentAdjustedForPeriodicity.size();j++){
 			int tmpTotDemand=tmpFoodDemandComponentAdjustedForPeriodicity.get(j)+tmpOtherDemandComponentsAdjustedForPeriodicity.get(j);
-			tmpDemandAdjustedForPeriodicity.add(new Integer(tmpTotDemand));
+			tmpDemandAdjustedForPeriodicity.add(Integer.valueOf(tmpTotDemand));
 		}
 //		System.out.println(parts[0]+" "+tmpFoodDemandComponentAdjustedForPeriodicity);
 //		System.out.println(parts[0]+" "+tmpOtherDemandComponentsAdjustedForPeriodicity);	
-//		System.out.println(parts[0]+" "+tmpDemandAdjustedForPeriodicity);
+//		System.out.println(parts[0]+" length of demand "+tmpDemandAdjustedForPeriodicity.size()+" length of pop "+tmpPopulationInputsAdjustedForPeriodicity.size());
 
-		aBuyer=new Buyer(parts[0],parts[1],new Double(parts[2]),new Double(parts[3]),new Double(parts[4]),tmpPopulationInputsAdjustedForPeriodicity,tmpDemandAdjustedForPeriodicity,bidAndAskPrices);
+		aBuyer=new Buyer(parts[0],parts[1],Double.valueOf(parts[2]),Double.valueOf(parts[3]),Double.valueOf(parts[4]),tmpPopulationInputsAdjustedForPeriodicity,tmpDemandAdjustedForPeriodicity,bidAndAskPrices);
 		context.add(aBuyer);
 		coord = new Coordinate(aBuyer.getLongitude(),aBuyer.getLatitude());
 		geom = fac.createPoint(coord);
@@ -272,7 +291,7 @@ RandomHelper.setSeed(-1866858664);
 	}
 	for(int i=1;i<lines.size()-1;i++){
 		String[] parts = ((String)lines.get(i)).split(",");
-		aMarket=new Market(parts[0],new Double(parts[1]),new Double(parts[2]),new Double(parts[3]));
+		aMarket=new Market(parts[0],Double.valueOf(parts[1]),Double.valueOf(parts[2]),Double.valueOf(parts[3]));
 		marketsList.add(aMarket);
 	}
 
@@ -342,7 +361,7 @@ RandomHelper.setSeed(-1866858664);
 		for(int j=0;j<varieties.size();j++){
 			System.out.println("     "+varieties.get(j));
 		}
-		System.out.println("Please cross check against typos");
+		System.out.println("Please cross check against typos in configuration files");
 		System.out.println("");
 	}
 
@@ -397,9 +416,12 @@ RandomHelper.setSeed(-1866858664);
 		String[] parts = ((String)lines.get(1)).split(",");
 		ArrayList<Double> tmpCrudeOilPricesInputs=new ArrayList<Double>();
 		for(int j=1;j<parts.length;j++){
-			tmpCrudeOilPricesInputs.add(new Double(parts[j]));
+			tmpCrudeOilPricesInputs.add(Double.valueOf(parts[j]));
 		}
 		
+	if(verboseFlag){
+		System.out.println("Monthly oil price: "+tmpCrudeOilPricesInputs);
+	}
 
 	//System.out.println("Scheduling events");
 	if(verboseFlag){
