@@ -25,4 +25,4 @@ convert image -fuzz XX% -fill red -opaque white result
 convert spain.png -fill red -font Times-New-Roman -pointsize 50 -gravity north -annotate +0+100 "NorthWest" tmp.png
 
 #comando finale
-convert case.png -crop 1622x804+124+400 +repage -fill '#ca0c11' -font Times-New-Roman -pointsize 50 -gravity north -annotate +0+0 "year" -transparent '#eeeeee' tmp.png
+convert case.png -crop 1622x804+124+400 +repage -fill '#ca0c11' -font Times-New-Roman -pointsize 50 -gravity north -annotate +0+0 "year" -fuzz 2% -transparent '#edeeee' tmp.png
